@@ -1,0 +1,10 @@
+# pyproject.toml
+
+[build-system]
+# Specifies the build system requirements
+requires = [
+    "setuptools>=61.0",  # Ensures setuptools is at least version 61.0
+    "wheel"               # Required to build wheel distributions
+]
+# Specifies the build backend to use
+build-backend = "setuptools.build_meta"
