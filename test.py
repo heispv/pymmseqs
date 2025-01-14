@@ -1,4 +1,4 @@
-from pymmseqs.wrapper import createdb
+from pymseqs.wrapper import createdb
 import os
 
 os.makedirs('testing_folder', exist_ok=True)

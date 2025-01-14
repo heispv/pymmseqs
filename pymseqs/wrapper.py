@@ -1,4 +1,4 @@
-# pymmseqs/wrapper.py
+# pymseqs/wrapper.py
 
 import os
 import subprocess
@@ -22,7 +22,7 @@ def get_mmseqs_binary():
     from sysconfig import get_path
     system = platform.system()
     binary_name = 'mmseqs.exe' if system == 'Windows' else 'mmseqs'
-    binary_path = os.path.join(get_path('purelib'), 'pymmseqs', 'bin', binary_name)
+    binary_path = os.path.join(get_path('purelib'), 'pymseqs', 'bin', binary_name)
     
     if not os.path.exists(binary_path):
         raise FileNotFoundError(f"mmseqs2 binary not found at {binary_path}. Please ensure it is installed correctly.")
@@ -83,12 +83,12 @@ def search(query, db, result, **kwargs):
 
 def main():
     """
-    Entry point for the pymmseqs CLI.
+    Entry point for the pymseqs CLI.
     Parses command-line arguments and invokes the appropriate function.
     """
     import argparse
 
-    parser = argparse.ArgumentParser(description='pymmseqs CLI')
+    parser = argparse.ArgumentParser(description='pymseqs CLI')
     subparsers = parser.add_subparsers(dest='command', required=True, help='Available commands')
 
     # Subparser for 'createdb' command

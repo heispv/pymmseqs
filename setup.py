@@ -20,8 +20,8 @@ def download_mmseqs2():
     # get_python_lib = sysconfig.get_path
 
     # Define the directory where mmseqs2 will be stored
-    install_dir = os.path.join(os.path.dirname(__file__), 'pymmseqs', 'bin')
-    # temp_dir = os.path.join(get_python_lib('purelib'), 'pymmseqs', 'temp')
+    install_dir = os.path.join(os.path.dirname(__file__), 'pymseqs', 'bin')
+    # temp_dir = os.path.join(get_python_lib('purelib'), 'pymseqs', 'temp')
     os.makedirs(install_dir, exist_ok=True)
     # os.makedirs(temp_dir, exist_ok=True)
     print(f"Installation directory for mmseqs2: {install_dir}")
@@ -114,25 +114,25 @@ def download_mmseqs2():
 download_mmseqs2()
 
 setup(
-    name='pymmseqs',
+    name='pymseqs',
     version='0.1.0',
     description='Python wrapper for mmseqs2',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='heispv',
     author_email='peymanvahidi1998@gmail.com',
-    url='https://github.com/heispv/pymmseqs',
+    url='https://github.com/heispv/pymseqs',
     packages=find_packages(),
     include_package_data=True,
     package_data={
-        'pymmseqs': ['bin/*'],
+        'pymseqs': ['bin/*'],
     },
     # install_requires=[
     #     Add your package dependencies here
     # ],
     entry_points={
         'console_scripts': [
-            'pymmseqs=pymmseqs:main',
+            'pymseqs=pymseqs:main',
         ],
     },
     classifiers=[
@@ -142,7 +142,7 @@ setup(
     python_requires='>=3.6',
 )
 
-artifacts = ['build', 'dist', '*.egg-info', 'pymmseqs/bin']
+artifacts = ['build', 'dist', '*.egg-info', 'pymseqs/bin']
 current_dir = os.getcwd()  # Get the current working directory
 system = platform.system()
 

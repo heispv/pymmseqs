@@ -1,1 +1,1 @@
-# pymmseqs
+# pymseqs
