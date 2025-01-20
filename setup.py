@@ -127,14 +127,6 @@ setup(
     package_data={
         'pymseqs': ['bin/*'],
     },
-    # install_requires=[
-    #     Add your package dependencies here
-    # ],
-    entry_points={
-        'console_scripts': [
-            'pymseqs=pymseqs:main',
-        ],
-    },
     classifiers=[
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
