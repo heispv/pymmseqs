@@ -1,10 +1,33 @@
 # pyproject.toml
 
 [build-system]
-# Specifies the build system requirements
-requires = [
-    "setuptools>=61.0",  # Ensures setuptools is at least version 61.0
-    "wheel"               # Required to build wheel distributions
-]
-# Specifies the build backend to use
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pymseqs"
+version = "0.1.0"
+description = "Python wrapper for mmseqs2"
+readme = "README.md"
+authors = [
+    { name = "heispv", email = "peymanvahidi1998@gmail.com" }
+]
+license = { file = "LICENSE" }
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = []  # Add runtime dependencies here if needed
+
+[project.urls]
+Homepage = "https://github.com/heispv/pymseqs"
+Documentation = "https://github.com/heispv/pymseqs/docs"
+
+[tool.setuptools]
+# Include files specified in package_data
+include-package-data = true
+
+[tool.setuptools.package-data]
+# Include all files in pymseqs/bin/
+"pymseqs" = ["bin/*"]
