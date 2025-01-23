@@ -1,6 +1,5 @@
 # pymseqs/commands/createdb.py
 
-import inspect
 from pathlib import Path
 from typing import Union
 import os
@@ -20,39 +19,82 @@ def createdb(
     write_lookup: int = 1
 ) -> None:
     """
-    Create a MMseqs2 database from a FASTA file and save it to a Path.
-    Paths are resolved relative to the calling script's directory.
-    
-    Parameters:
-        input_fasta (str): Path to the input FASTA file.
-        db_name (str): Desired name for the created database.
-        dbtype (int, optional): Database type (0: auto, 1: amino acid, 2: nucleotides), default is [0].
-        shuffle (bool, optional): Shuffle input database, (0: False, 1: True), default is [1].
-        createdb_mode (int, optional): Createdb mode (0: copy data, 1: soft link data and write new index (works only with single line fasta/q)), default is [0].
-        id_offset (int, optional): Numeric ids in index file are offset by this value, default is [0].
-        compressed (int, optional): Write compressed output (0: no, 1: yes), default is [0].
-        verbosity (int, optional): Verbosity level (0: quiet, 1: +errors, 2: +warnings, 3: +info), default is [3].
-        write_lookup (int, optional): Write .lookup file containing mapping from internal id, fasta id and file number (0: no, 1: yes), default is [0].
-    
-    Returns:
-        None
+    Create a MMseqs2 database from a FASTA file and save it to the specified path prefix.
+
+    Parameters
+    ----------
+    input_fasta : Union[str, Path]
+        Path to the input FASTA file. If the path is relative, it is resolved relative to
+        the directory of the calling script. If the path is absolute, it is used as-is.
+
+    db_name : Union[str, Path]
+        Database path prefix, including the desired directory structure (e.g., 
+        "output/dbs/mydb").
+        - If the path is relative, it is resolved relative to the directory
+        of the calling script.
+        - If the path is absolute, it is used as-is.
+        All necessary parent directories will be created automatically.
+
+    dbtype : int, optional
+        Database type. Options:
+        - 0: Auto-detect (default)
+        - 1: Amino acid sequences
+        - 2: Nucleotide sequences
+
+    shuffle : int, optional
+        Whether to shuffle the input database entries. Options:
+        - 0: Disabled
+        - 1: Enabled (default)
+
+    createdb_mode : int, optional
+        Database creation mode. Options:
+        - 0: Copy data (default)
+        - 1: Soft-link data and write a new index (only works with single-line FASTA/Q)
+
+    id_offset : int, optional
+        Numeric ID offset in the index file. Default is 0.
+
+    compressed : int, optional
+        Whether to compress the output files. Options:
+        - 0: Uncompressed (default)
+        - 1: Compressed
+
+    verbosity : int, optional
+        Verbosity level of the output. Options:
+        - 0: Quiet
+        - 1: Errors only
+        - 2: Errors and warnings
+        - 3: Errors, warnings, and info (default)
+
+    write_lookup : int, optional
+        Whether to create a `.lookup` file mapping internal IDs to FASTA IDs. Options:
+        - 0: Disabled
+        - 1: Enabled (default)
+
+    Returns
+    -------
+    None
+        This function does not return any value, but creates files in the specified output directory.
     """
+
     # Get the directory of the calling script
     caller_dir = get_caller_dir()
-    output_dir = Path(caller_dir) / 'output'
 
-    os.makedirs(output_dir, exist_ok=True)
-    
     # Convert input paths to Path objects
     input_fasta_path = Path(input_fasta)
     db_name_path = Path(db_name)
     
-
-    # If the paths are not absolute, make them relative to the caller's directory
+    # Resolve input_fasta relative to caller_dir if not absolute
     if not input_fasta_path.is_absolute():
         input_fasta_path = caller_dir / input_fasta_path
+    
+    # Resolve db_name relative to caller_dir if not absolute
     if not db_name_path.is_absolute():
-        db_name_path = output_dir / db_name_path
+        db_name_path = caller_dir / db_name_path
+    
+    # Create parent directory for db_name
+    db_parent = db_name_path.parent
+    os.makedirs(db_parent, exist_ok=True)
     
     # Ensure input file exists
     if not input_fasta_path.exists():
