@@ -35,7 +35,7 @@ def search(
     min_ungapped_score: int = 15,
     spaced_kmer_mode: int = 1,
     spaced_kmer_pattern: str = "",
-    local_tmp: Union[str, Path] = None,
+    local_tmp: Union[str, Path] = "",
     disk_space_limit: str = "0",
     
     # Alignment parameters
@@ -81,7 +81,7 @@ def search(
     lca_search: bool = False,
     
     # Misc parameters
-    taxon_list: Optional[List[str]] = None,
+    taxon_list: str = "",
     prefilter_mode: int = 0,
     rescore_mode: int = 0,
     allow_deletion: bool = False,
@@ -91,10 +91,10 @@ def search(
     contig_start_mode: int = 2,
     contig_end_mode: int = 2,
     orf_start_mode: int = 1,
-    forward_frames: str = "1,2,3",
-    reverse_frames: str = "1,2,3",
+    forward_frames: List[int] = [1, 2, 3],
+    reverse_frames: List[int] = [1, 2, 3],
     translation_table: int = 1,
-    translate: int = 0,
+    translate: bool = False,
     use_all_table_starts: bool = False,
     id_offset: int = 0,
     sequence_overlap: int = 0,
@@ -106,24 +106,24 @@ def search(
     translation_mode: int = 0,
     
     # Common parameters
-    sub_mat: Optional[Tuple[str, str]] = None,
+    sub_mat: Tuple[str, str] = None,
     max_seq_len: int = 65535,
     db_load_mode: int = 0,
     threads: int = 14,
-    compressed: int = 0,
+    compressed: bool = False,
     verbosity: int = 3,
     gpu: bool = False,
     gpu_server: bool = False,
-    mpi_runner: Optional[str] = None,
+    mpi_runner: str = "",
     force_reuse: bool = False,
     remove_tmp_files: bool = False,
     
     # Expert parameters
     filter_hits: bool = False,
     sort_results: int = 0,
-    create_lookup: int = 0,
-    chain_alignments: int = 0,
-    merge_query: int = 1,
+    create_lookup: bool = False,
+    chain_alignments: bool = False,
+    merge_query: bool = True,
     strand: int = 1,
 ) -> None:
     """
@@ -440,162 +440,265 @@ def search(
         - Higher values reduce diversity in the output MSAs by retaining only high-scoring alignments
 
     profile_cov : float, optional
-        Min query coverage [0.0]
+        Minimum fraction of query residues covered by matched sequences to filter output MSAs (range 0.0, 1.0)
+        - 0.0 (default)
 
     diff : int, optional
-        Maintain min diversity per 50aa block [1000]
+        Filters MSAs by selecting the most diverse sequences, ensuring at least this many sequences are kept in each MSA block of length 50
+        - 1000 (default)
 
     pseudo_cnt_mode : int, optional
-        Pseudocount method [0]
+        Pseudocount method
+        - 0: substitution-matrix (default)
+        - 1: context-specific pseudocounts
 
     num_iterations : int, optional
-        Iterative search count [1]
+        Number of iterative profile search iterations
+        - 1: (default)
 
     exhaustive_search : bool, optional
-        Enable exhaustive profile search [False]
+        For bigger profile DB, run iteratively the search by greedily swapping the search results
+        - True
+        - False (default)
 
     lca_search : bool, optional
-        Enable LCA candidate search [False]
+        Enable LCA candidate search
+        - True
+        - False (default)
 
     Misc Parameters
     ---------------
-    taxon_list : List[str], optional
-        Taxonomy IDs to filter [None]
+    taxon_list : str, optional
+        Taxonomy IDs to filter results by. Multiple IDs can be provided, separated by commas (no spaces)
+        - "" (default)
+        - Example: "9606,10090"
 
     prefilter_mode : int, optional
-        Prefilter method [0]
+        Prefilter method
+        - 0: kmer/ungapped (default)
+        - 1: ungapped
+        - 2: nofilter
+        - 3: ungapped+gapped
 
     rescore_mode : int, optional
-        Rescore method [0]
+        Rescore diagonals with:
+        - 0: Hamming distance (default)
+        - 1: local alignment (score only)
+        - 2: local alignment
+        - 3: global alignment
+        - 4: longest alignment fulfilling window quality criterion
 
     allow_deletion : bool, optional
-        Allow deletions in MSA [False]
+        Allow deletions in MSA
+        - True
+        - False (default)
 
     min_length : int, optional
-        Min ORF length [30]
+        Minimum codon number in open reading frames (ORFs)
+        - 30 (default)
 
     max_length : int, optional
-        Max ORF length [32734]
+        Maximum codon number in open reading frames (ORFs)
+        - 32734 (default)
 
     max_gaps : int, optional
-        Max gaps in ORF [2147483647]
+        Maximum number of codons with gaps or unknown residues before an open reading frame is rejected
+        - 2147483647 (default)
 
     contig_start_mode : int, optional
-        Contig start handling [2]
+        Contig start handling
+        - 0: incomplete
+        - 1: complete
+        - 2: both (default)
 
     contig_end_mode : int, optional
-        Contig end handling [2]
+        Contig end handling
+        - 0: incomplete
+        - 1: complete
+        - 2: both (default)
 
     orf_start_mode : int, optional
-        ORF start handling [1]
+        ORF start handling
+        - 0: from start to stop
+        - 1: from any to stop (default)
+        - 2: from last encountered start to stop (no start in the middle)
 
-    forward_frames : str, optional
-        Forward frames to use [1,2,3]
+    forward_frames : List[int], optional
+        Comma-separated list of frames on the forward strand to be extracted
+        - [1, 2, 3] (default)
 
-    reverse_frames : str, optional
-        Reverse frames to use [1,2,3]
+    reverse_frames : List[int], optional
+        Comma-separated list of frames on the reverse strand to be extracted
+        - [1, 2, 3] (default)
 
-    translation_table : int, optional
-        Genetic code table [1]
 
-    translate : int, optional
-        Translation mode [0]
+    translation_table : int, optional  
+        Specifies the genetic code table to use 
+        - 1: Canonical (default)
+        - 2: Vert Mitochondrial
+        - 3: Yeast Mitochondrial
+        - 4: Mold Mitochondrial
+        - 5: Invert Mitochondrial
+        - 6: Ciliate
+        - 9: Flatworm Mitochondrial
+        - 10: Euplotid
+        - 11: Prokaryote
+        - 12: Alt Yeast
+        - 13: Ascidian Mitochondrial
+        - 14: Alt Flatworm Mitochondrial
+        - 15: Blepharisma
+        - 16: Chlorophycean Mitochondrial
+        - 21: Trematode Mitochondrial
+        - 22: Scenedesmus Mitochondrial
+        - 23: Thraustochytrium Mitochondrial
+        - 24: Pterobranchia Mitochondrial
+        - 25: Gracilibacteria
+        - 26: Pachysolen
+        - 27: Karyorelict
+        - 28: Condylostoma
+        - 29: Mesodinium
+        - 30: Pertrich
+        - 31: Blastocrithidia
+
+
+    translate : bool, optional
+        Translate open reading frames (ORFs) to amino acid
+        - True
+        - False (default)
 
     use_all_table_starts : bool, optional
-        Use all start codons [False]
+        Use all start codons
+        - True
+        - False: only ATG (AUG) (default)
 
     id_offset : int, optional
-        ID numbering offset [0]
+        Numeric IDs in index file are offset by this value
+        - 0 (default)
 
     sequence_overlap : int, optional
-        Sequence splitting overlap [0]
+        Overlap between sequences
+        - 0 (default)
 
     sequence_split_mode : int, optional
-        Sequence split method [1]
+        Method for splitting sequences during processing
+        - 0: Copy data (creates a full copy of the sequence data).
+        - 1: Soft link data and write a new index (saves disk space by linking to the original data) (default)
 
     headers_split_mode : int, optional
-        Header split method [0]
+        Header split method
+        - 0: Split positions (Headers are split based on predefined positions) (default)
+        - 1: Original header (Headers are preserved as-is without splitting)
 
     search_type : int, optional
         Search mode:
-        - 0: auto
+        - 0: auto (default)
         - 1: amino
         - 2: translated
         - 3: nucleotide
-        - 4: translated alignment [0]
+        - 4: translated alignment
 
     start_sens : float, optional
-        Initial sensitivity [4.0]
+        Initial sensitivity
+        - 4.0 (default)
 
     sens_steps : int, optional
-        Sensitivity steps [1]
+        Number of search steps performed from `start_sens` argument to `s` argument
+        - 1 (default)
 
     translation_mode : int, optional
-        Translation method [0]
+        Translation AA seq from nucletoide method
+        - 0: Open Reading Frames (ORFs) (default)
+        - 1: Full Reading Frames
 
     Common Parameters
     ----------------
     sub_mat : Tuple[str, str], optional
-        Substitution matrix (type, path) [("aa","blosum62.out"), ("nucl","nucleotide.out")]
+        Substitution matrix (type:path, type:path)
+        type: "aa" or "nucl"
+        path: matrix file path
+        - ("aa:blosum62.out", "nucl:nucleotide.out")
+
+        Note: find available matrices in the MMseqs2 data directory: (https://github.com/soedinglab/MMseqs2/tree/master/data)
 
     max_seq_len : int, optional
-        Maximum sequence length [65535]
+        Maximum sequence length
+        - 65535 (default)
 
     db_load_mode : int, optional
-        Database loading method:
-        - 0: auto
+        Database preloading method
+        - 0: auto (default)
         - 1: fread
         - 2: mmap
-        - 3: mmap+touch [0]
+        - 3: mmap+touch
 
     threads : int, optional
-        CPU threads [14]
+        CPU threads
+        - 14 (default)
 
-    compressed : int, optional
-        Compress output [0]
+    compressed : bool, optional
+        Compress output
+        - True
+        - False (default)
 
-    verbosity : int, optional
-        Output verbosity (0-3) [3]
+    v : int, optional
+        Output verbosity
 
     gpu : bool, optional
-        Enable GPU acceleration [False]
+        Use GPU (CUDA) if possible
+        - True
+        - False (default)
 
     gpu_server : bool, optional
-        Use GPU server [False]
+        Use GPU server
+        - True
+        - False (default)
 
     mpi_runner : str, optional
-        MPI command (e.g., "mpirun -np 42") [None]
+        Use MPI on compute cluster with this MPI command (e.g., "mpirun -np 42")
+        - "" (default)
 
     force_reuse : bool, optional
-        Reuse temporary files [False]
+        Reuse tmp filse in tmp/latest folder ignoring parameters and version changes
+        - True
+        - False (default)
 
     remove_tmp_files : bool, optional
-        Clean temporary files [False]
+        Delete temporary files
+        - True
+        - False (default)
 
     Expert Parameters
     ----------------
     filter_hits : bool, optional
-        Filter hits by ID/coverage [False]
+        Filter hits by sequence ID and coverage
+        - True
+        - False (default)
 
     sort_results : int, optional
-        Result sorting:
-        - 0: none
-        - 1: E-value [0]
+        Result sorting method
+        - 0: No sorting (default)
+        - 1: E-value (Alignment) or sequence ID (Hamming) 
 
-    create_lookup : int, optional
-        Create lookup file [0]
+    create_lookup : bool, optional
+        Create lookup file
+        - True
+        - False (default)
 
-    chain_alignments : int, optional
-        Chain overlapping alignments [0]
+    chain_alignments : bool, optional
+        Chain overlapping alignments
+        - True
+        - False (default)
 
-    merge_query : int, optional
-        Merge query sequences [1]
+    merge_query : bool, optional
+        Combine ORFs/split sequences to a single entry
+        - True (default)
+        - False
 
     strand : int, optional
-        Strand selection:
+        Strand selection (only works for DNA/DNA search)
         - 0: reverse
-        - 1: forward
-        - 2: both [1]
+        - 1: forward (default)
+        - 2: both
 
     Returns
     -------
@@ -740,7 +843,7 @@ def search(
     add_arg("--min-ungapped-score", min_ungapped_score, 15)
     add_arg("--spaced-kmer-mode", spaced_kmer_mode, 1)
     add_arg("--spaced-kmer-pattern", spaced_kmer_pattern, "")
-    add_arg("--local-tmp", local_tmp, None)
+    add_arg("--local-tmp", local_tmp, "")
     add_arg("--disk-space-limit", disk_space_limit, "0")
 
     # Alignment
@@ -778,61 +881,58 @@ def search(
     add_arg("--max-seq-id", profile_max_seq_id, 0.9)
     add_arg("--qid", qid, "0.0")
     add_arg("--qsc", qsc, -20.0)
-    # add_arg("--cov", profile_cov, 0.0)
-    # add_arg("--diff", diff, 1000)
-    # add_arg("--pseudo-cnt-mode", pseudo_cnt_mode, 0)
-    # add_arg("--num-iterations", num_iterations, 1)
-    # add_arg("--exhaustive-search", exhaustive_search, False)
-    # add_arg("--lca-search", lca_search, False)
+    add_arg("--cov", profile_cov, 0.0)
+    add_arg("--diff", diff, 1000)
+    add_arg("--pseudo-cnt-mode", pseudo_cnt_mode, 0)
+    add_arg("--num-iterations", num_iterations, 1)
+    add_arg("--exhaustive-search", exhaustive_search, False)
+    add_arg("--lca-search", lca_search, False)
 
-    # # Misc
-    # if taxon_list is not None:
-    #     args.extend(["--taxon-list", ",".join(taxon_list)])
-    # add_arg("--prefilter-mode", prefilter_mode, 0)
-    # add_arg("--rescore-mode", rescore_mode, 0)
-    # add_arg("--allow-deletion", allow_deletion, False)
-    # add_arg("--min-length", min_length, 30)
-    # add_arg("--max-length", max_length, 32734)
-    # add_arg("--max-gaps", max_gaps, 2147483647)
-    # add_arg("--contig-start-mode", contig_start_mode, 2)
-    # add_arg("--contig-end-mode", contig_end_mode, 2)
-    # add_arg("--orf-start-mode", orf_start_mode, 1)
-    # add_arg("--forward-frames", forward_frames, "1,2,3")
-    # add_arg("--reverse-frames", reverse_frames, "1,2,3")
-    # add_arg("--translation-table", translation_table, 1)
-    # add_arg("--translate", translate, 0)
-    # add_arg("--use-all-table-starts", use_all_table_starts, False)
-    # add_arg("--id-offset", id_offset, 0)
-    # add_arg("--sequence-overlap", sequence_overlap, 0)
-    # add_arg("--sequence-split-mode", sequence_split_mode, 1)
-    # add_arg("--headers-split-mode", headers_split_mode, 0)
-    # add_arg("--search-type", search_type, 0)
-    # add_arg("--start-sens", start_sens, 4.0)
-    # add_arg("--sens-steps", sens_steps, 1)
-    # add_arg("--translation-mode", translation_mode, 0)
+    # Misc
+    add_arg("--taxon-list", taxon_list, "")
+    add_arg("--prefilter-mode", prefilter_mode, 0)
+    add_arg("--rescore-mode", rescore_mode, 0)
+    add_arg("--allow-deletion", allow_deletion, False)
+    add_arg("--min-length", min_length, 30)
+    add_arg("--max-length", max_length, 32734)
+    add_arg("--max-gaps", max_gaps, 2147483647)
+    add_arg("--contig-start-mode", contig_start_mode, 2)
+    add_arg("--contig-end-mode", contig_end_mode, 2)
+    add_arg("--orf-start-mode", orf_start_mode, 1)
+    add_arg("--forward-frames", ",".join(map(str, forward_frames)), "1,2,3")
+    add_arg("--reverse-frames", ",".join(map(str, reverse_frames)), "1,2,3")
+    add_arg("--translation-table", translation_table, 1)
+    add_arg("--translate", translate, False)
+    add_arg("--use-all-table-starts", use_all_table_starts, False)
+    add_arg("--id-offset", id_offset, 0)
+    add_arg("--sequence-overlap", sequence_overlap, 0)
+    add_arg("--sequence-split-mode", sequence_split_mode, 1)
+    add_arg("--headers-split-mode", headers_split_mode, 0)
+    add_arg("--search-type", search_type, 0)
+    add_arg("--start-sens", start_sens, 4.0)
+    add_arg("--sens-steps", sens_steps, 1)
+    add_arg("--translation-mode", translation_mode, 0)
 
-    # # Common
-    # if sub_mat is not None:
-    #     args.extend(["--sub-mat", f"{sub_mat[0]}:{sub_mat[1]}"])
-    # add_arg("--max-seq-len", max_seq_len, 65535)
-    # add_arg("--db-load-mode", db_load_mode, 0)
-    # add_arg("--threads", threads, 14)
-    # add_arg("--compressed", compressed, 0)
-    # add_arg("-v", verbosity, 3)
-    # add_arg("--gpu", gpu, False)
-    # add_arg("--gpu-server", gpu_server, False)
-    # if mpi_runner:
-    #     args.extend(["--mpi-runner", mpi_runner])
-    # add_arg("--force-reuse", force_reuse, False)
-    # add_arg("--remove-tmp-files", remove_tmp_files, False)
+    # Common
+    add_twin_arg("--sub-mat", sub_mat, ("aa:blosum62.out", "nucl:nucleotide.out"), ",")
+    add_arg("--max-seq-len", max_seq_len, 65535)
+    add_arg("--db-load-mode", db_load_mode, 0)
+    add_arg("--threads", threads, 14)
+    add_arg("--compressed", compressed, False)
+    add_arg("-v", verbosity, 3)
+    add_arg("--gpu", gpu, False)
+    add_arg("--gpu-server", gpu_server, False)
+    add_arg("--mpi-runner", mpi_runner, "")
+    add_arg("--force-reuse", force_reuse, False)
+    add_arg("--remove-tmp-files", remove_tmp_files, False)
 
-    # # Expert
-    # add_arg("--filter-hits", filter_hits, False)
-    # add_arg("--sort-results", sort_results, 0)
-    # add_arg("--create-lookup", create_lookup, 0)
-    # add_arg("--chain-alignments", chain_alignments, 0)
-    # add_arg("--merge-query", merge_query, 1)
-    # add_arg("--strand", strand, 1)
+    # Expert
+    add_arg("--filter-hits", filter_hits, False)
+    add_arg("--sort-results", sort_results, 0)
+    add_arg("--create-lookup", create_lookup, False)
+    add_arg("--chain-alignments", chain_alignments, False)
+    add_arg("--merge-query", merge_query, True)
+    add_arg("--strand", strand, 1)
 
     # Execute command
     mmseqs_output = run_mmseqs_command(args)
