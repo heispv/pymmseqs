@@ -40,6 +40,7 @@ def resolve_path(
     Path
         Resolved absolute path. Parent directory is created if it doesn't exist.
     """
+    path = Path(path)
     # Resolve relative path if not absolute
     if not path.is_absolute():
         path = caller_dir / path
