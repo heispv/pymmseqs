@@ -121,4 +121,7 @@ def createdb(
     add_arg(args, "--write-lookup", write_lookup, True)
     
     mmseqs_output = run_mmseqs_command(args)
-    print(mmseqs_output)
+    
+    if mmseqs_output.returncode == 0:
+        print(mmseqs_output.stdout) if mmseqs_output.stdout else None
+        print(f"Database path: {db_name_path}")
