@@ -116,7 +116,7 @@ def search(
     db_load_mode: int = 0,
     threads: int = 14,
     compressed: bool = False,
-    verbosity: int = 3,
+    v: int = 3,
     gpu: bool = False,
     gpu_server: bool = False,
     mpi_runner: str = "",
@@ -647,6 +647,10 @@ def search(
 
     v : int, optional
         Output verbosity
+        - 0: quiet
+        - 1: +errors
+        - 2: +warnings
+        - 3: +info (default)
 
     gpu : bool, optional
         Use GPU (CUDA) if possible
@@ -806,7 +810,7 @@ def search(
     add_arg(args, "-s", s, 5.7)
     add_arg(args, "-k", k, 0)
     add_arg(args, "--target-search-mode", target_search_mode, 0)
-    add_twin_arg(args, "--k-score", k_score, (2147483647, 2147483647), ",")
+    add_twin_arg(args, "--k-score", k_score, ("seq:2147483647", "prof:2147483647"), ",")
     add_twin_arg(args, "--alph-size", alph_size, ("aa:21", "nucl:5"), ",")
     add_arg(args, "--max-seqs", max_seqs, 300)
     add_arg(args, "--split", split, 0)
@@ -896,7 +900,7 @@ def search(
     add_arg(args, "--db-load-mode", db_load_mode, 0)
     add_arg(args, "--threads", threads, 14)
     add_arg(args, "--compressed", compressed, False)
-    add_arg(args, "-v", verbosity, 3)
+    add_arg(args, "-v", v, 3)
     add_arg(args, "--gpu", gpu, False)
     add_arg(args, "--gpu-server", gpu_server, False)
     add_arg(args, "--mpi-runner", mpi_runner, "")
@@ -913,6 +917,7 @@ def search(
 
     # Execute command
     mmseqs_output = run_mmseqs_command(args)
-    
-    if verbosity >= 3:
-        print(mmseqs_output)
+    print(mmseqs_output.stdout)
+    if mmseqs_output.stderr:
+        print(mmseqs_output.stderr)
+    print(f"MMseqs2 search completed. Results saved to: {result_db_path}")
