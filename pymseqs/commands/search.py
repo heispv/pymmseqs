@@ -1,10 +1,15 @@
 # pymseqs/commands/search.py
 
 from pathlib import Path
-from typing import Union, Optional, List, Tuple, Any
+from typing import Union, List, Tuple
 
 from pymseqs import run_mmseqs_command
-from pymseqs.utils import get_caller_dir
+from pymseqs.utils import (
+    get_caller_dir,
+    resolve_path,
+    add_arg,
+    add_twin_arg
+)
 
 def search(
     # Required parameters
@@ -771,19 +776,12 @@ def search(
     # Get the directory of the calling script
     caller_dir = get_caller_dir()
 
-    # Convert paths to absolute paths
-    def resolve_path(path: Union[str, Path]) -> Path:
-        path_obj = Path(path)
-        return path_obj if path_obj.is_absolute() else caller_dir / path_obj
+    query_db_path = resolve_path(query_db, caller_dir)
+    target_db_path = resolve_path(target_db, caller_dir)
+    result_db_path = resolve_path(result_db, caller_dir)
+    tmp_dir_path = resolve_path(tmp_dir, caller_dir)
 
-    query_db_path = resolve_path(query_db)
-    target_db_path = resolve_path(target_db)
-    result_db_path = resolve_path(result_db)
-    tmp_dir_path = resolve_path(tmp_dir)
-
-    # Create directories
-    result_db_path.parent.mkdir(parents=True, exist_ok=True)
-    tmp_dir_path.mkdir(parents=True, exist_ok=True)
+    local_tmp_path = resolve_path(local_tmp, caller_dir) if local_tmp else ""
 
     # Validate input databases
     for db_path, name in [(query_db_path, "Query"), (target_db_path, "Target")]:
@@ -799,149 +797,122 @@ def search(
         str(tmp_dir_path),
     ]
 
-    # Parameter handling helpers
-    def add_arg(
-        flag: str,
-        value: Any,
-        default: Any,
-    ):
-        if value != default:
-            if isinstance(value, bool):
-                args.extend([flag, "1" if value else "0"])
-            else:
-                args.extend([flag, str(value)])
-
-    def add_twin_arg(
-        flag: str,
-        value: Tuple,
-        defaults: Tuple,
-        sep: str
-    ):
-        if value is not None and value != defaults:
-            args.extend([flag, f"{value[0]}{sep}{value[1]}"])
-
     # Add parameters
     # Prefilter
-    add_arg("--comp-bias-corr", comp_bias_corr, True)
-    add_arg("--comp-bias-corr-scale", comp_bias_corr_scale, 1.0)
-    add_arg("--add-self-matches", add_self_matches, False)
-    add_twin_arg("--seed-sub-mat", seed_sub_mat, ("aa:VTML80.out", "nucl:nucleotide.out"), ",")
-    add_arg("-s", s, 5.7)
-    add_arg("-k", k, 0)
-    add_arg("--target-search-mode", target_search_mode, 0)
-    add_twin_arg("--k-score", k_score, (2147483647, 2147483647), ",")
-    add_twin_arg("--alph-size", alph_size, ("aa:21", "nucl:5"), ",")
-    add_arg("--max-seqs", max_seqs, 300)
-    add_arg("--split", split, 0)
-    add_arg("--split-mode", split_mode, 2)
-    add_arg("--split-memory-limit", split_memory_limit, "0")
-    add_arg("--diag-score", diag_score, True)
-    add_arg("--exact-kmer-matching", exact_kmer_matching, False)
-    add_arg("--mask", mask, True)
-    add_arg("--mask-prob", mask_prob, 0.9)
-    add_arg("--mask-lower-case", mask_lower_case, False)
-    add_arg("--min-ungapped-score", min_ungapped_score, 15)
-    add_arg("--spaced-kmer-mode", spaced_kmer_mode, 1)
-    add_arg("--spaced-kmer-pattern", spaced_kmer_pattern, "")
-    add_arg("--local-tmp", local_tmp, "")
-    add_arg("--disk-space-limit", disk_space_limit, "0")
+    add_arg(args, "--comp-bias-corr", comp_bias_corr, True)
+    add_arg(args, "--comp-bias-corr-scale", comp_bias_corr_scale, 1.0)
+    add_arg(args, "--add-self-matches", add_self_matches, False)
+    add_twin_arg(args, "--seed-sub-mat", seed_sub_mat, ("aa:VTML80.out", "nucl:nucleotide.out"), ",")
+    add_arg(args, "-s", s, 5.7)
+    add_arg(args, "-k", k, 0)
+    add_arg(args, "--target-search-mode", target_search_mode, 0)
+    add_twin_arg(args, "--k-score", k_score, (2147483647, 2147483647), ",")
+    add_twin_arg(args, "--alph-size", alph_size, ("aa:21", "nucl:5"), ",")
+    add_arg(args, "--max-seqs", max_seqs, 300)
+    add_arg(args, "--split", split, 0)
+    add_arg(args, "--split-mode", split_mode, 2)
+    add_arg(args, "--split-memory-limit", split_memory_limit, "0")
+    add_arg(args, "--diag-score", diag_score, True)
+    add_arg(args, "--exact-kmer-matching", exact_kmer_matching, False)
+    add_arg(args, "--mask", mask, True)
+    add_arg(args, "--mask-prob", mask_prob, 0.9)
+    add_arg(args, "--mask-lower-case", mask_lower_case, False)
+    add_arg(args, "--min-ungapped-score", min_ungapped_score, 15)
+    add_arg(args, "--spaced-kmer-mode", spaced_kmer_mode, 1)
+    add_arg(args, "--spaced-kmer-pattern", spaced_kmer_pattern, "")
+    add_arg(args, "--local-tmp", local_tmp_path, "")
+    add_arg(args, "--disk-space-limit", disk_space_limit, "0")
 
     # Alignment
-    add_arg("-a", a, False)
-    add_arg("--alignment-mode", alignment_mode, 2)
-    add_arg("--alignment-output-mode", alignment_output_mode, 0)
-    add_arg("--wrapped-scoring", wrapped_scoring, False)
-    add_arg("-e", e, 0.001)
-    add_arg("--min-seq-id", min_seq_id, 0.0)
-    add_arg("--min-aln-len", min_aln_len, 0)
-    add_arg("--seq-id-mode", seq_id_mode, 0)
-    add_arg("--alt-ali", alt_ali, 0)
-    add_arg("-c", c, 0.0)
-    add_arg("--cov-mode", cov_mode, 0)
-    add_arg("--max-rejected", max_rejected, 2147483647)
-    add_arg("--max-accept", max_accept, 2147483647)
-    add_arg("--score-bias", score_bias, 0.0)
-    add_arg("--realign", realign, False)
-    add_arg("--realign-score-bias", realign_score_bias, -0.2)
-    add_arg("--realign-max-seqs", realign_max_seqs, 2147483647)
-    add_arg("--corr-score-weight", corr_score_weight, 0.0)
-    add_twin_arg("--gap-open", gap_open, ("aa:11", "nucl:5"), ",")
-    add_twin_arg("--gap-extend", gap_extend, ("aa:1", "nucl:2"), ",")
-    add_arg("--zdrop", zdrop, 40)
-    add_arg("--exhaustive-search-filter", exhaustive_search_filter, False)
+    add_arg(args, "-a", a, False)
+    add_arg(args, "--alignment-mode", alignment_mode, 2)
+    add_arg(args, "--alignment-output-mode", alignment_output_mode, 0)
+    add_arg(args, "--wrapped-scoring", wrapped_scoring, False)
+    add_arg(args, "-e", e, 0.001)
+    add_arg(args, "--min-seq-id", min_seq_id, 0.0)
+    add_arg(args, "--min-aln-len", min_aln_len, 0)
+    add_arg(args, "--seq-id-mode", seq_id_mode, 0)
+    add_arg(args, "--alt-ali", alt_ali, 0)
+    add_arg(args, "-c", c, 0.0)
+    add_arg(args, "--cov-mode", cov_mode, 0)
+    add_arg(args, "--max-rejected", max_rejected, 2147483647)
+    add_arg(args, "--max-accept", max_accept, 2147483647)
+    add_arg(args, "--score-bias", score_bias, 0.0)
+    add_arg(args, "--realign", realign, False)
+    add_arg(args, "--realign-score-bias", realign_score_bias, -0.2)
+    add_arg(args, "--realign-max-seqs", realign_max_seqs, 2147483647)
+    add_arg(args, "--corr-score-weight", corr_score_weight, 0.0)
+    add_twin_arg(args, "--gap-open", gap_open, ("aa:11", "nucl:5"), ",")
+    add_twin_arg(args, "--gap-extend", gap_extend, ("aa:1", "nucl:2"), ",")
+    add_arg(args, "--zdrop", zdrop, 40)
+    add_arg(args, "--exhaustive-search-filter", exhaustive_search_filter, False)
 
     # Profile
-    add_arg("--pca", pca, 0.0)
-    add_arg("--pcb", pcb, 0.0)
-    add_arg("--mask-profile", mask_profile, True)
-    add_arg("--e-profile", e_profile, 0.1)
-    add_arg("--wg", wg, False)
-    add_arg("--filter-msa", filter_msa, True)
-    add_arg("--filter-min-enable", filter_min_enable, 0)
-    add_arg("--max-seq-id", profile_max_seq_id, 0.9)
-    add_arg("--qid", qid, "0.0")
-    add_arg("--qsc", qsc, -20.0)
-    add_arg("--cov", profile_cov, 0.0)
-    add_arg("--diff", diff, 1000)
-    add_arg("--pseudo-cnt-mode", pseudo_cnt_mode, 0)
-    add_arg("--num-iterations", num_iterations, 1)
-    add_arg("--exhaustive-search", exhaustive_search, False)
-    add_arg("--lca-search", lca_search, False)
+    add_arg(args, "--pca", pca, 0.0)
+    add_arg(args, "--pcb", pcb, 0.0)
+    add_arg(args, "--mask-profile", mask_profile, True)
+    add_arg(args, "--e-profile", e_profile, 0.1)
+    add_arg(args, "--wg", wg, False)
+    add_arg(args, "--filter-msa", filter_msa, True)
+    add_arg(args, "--filter-min-enable", filter_min_enable, 0)
+    add_arg(args, "--max-seq-id", profile_max_seq_id, 0.9)
+    add_arg(args, "--qid", qid, "0.0")
+    add_arg(args, "--qsc", qsc, -20.0)
+    add_arg(args, "--cov", profile_cov, 0.0)
+    add_arg(args, "--diff", diff, 1000)
+    add_arg(args, "--pseudo-cnt-mode", pseudo_cnt_mode, 0)
+    add_arg(args, "--num-iterations", num_iterations, 1)
+    add_arg(args, "--exhaustive-search", exhaustive_search, False)
+    add_arg(args, "--lca-search", lca_search, False)
 
     # Misc
-    add_arg("--taxon-list", taxon_list, "")
-    add_arg("--prefilter-mode", prefilter_mode, 0)
-    add_arg("--rescore-mode", rescore_mode, 0)
-    add_arg("--allow-deletion", allow_deletion, False)
-    add_arg("--min-length", min_length, 30)
-    add_arg("--max-length", max_length, 32734)
-    add_arg("--max-gaps", max_gaps, 2147483647)
-    add_arg("--contig-start-mode", contig_start_mode, 2)
-    add_arg("--contig-end-mode", contig_end_mode, 2)
-    add_arg("--orf-start-mode", orf_start_mode, 1)
-    add_arg("--forward-frames", ",".join(map(str, forward_frames)), "1,2,3")
-    add_arg("--reverse-frames", ",".join(map(str, reverse_frames)), "1,2,3")
-    add_arg("--translation-table", translation_table, 1)
-    add_arg("--translate", translate, False)
-    add_arg("--use-all-table-starts", use_all_table_starts, False)
-    add_arg("--id-offset", id_offset, 0)
-    add_arg("--sequence-overlap", sequence_overlap, 0)
-    add_arg("--sequence-split-mode", sequence_split_mode, 1)
-    add_arg("--headers-split-mode", headers_split_mode, 0)
-    add_arg("--search-type", search_type, 0)
-    add_arg("--start-sens", start_sens, 4.0)
-    add_arg("--sens-steps", sens_steps, 1)
-    add_arg("--translation-mode", translation_mode, 0)
+    add_arg(args, "--taxon-list", taxon_list, "")
+    add_arg(args, "--prefilter-mode", prefilter_mode, 0)
+    add_arg(args, "--rescore-mode", rescore_mode, 0)
+    add_arg(args, "--allow-deletion", allow_deletion, False)
+    add_arg(args, "--min-length", min_length, 30)
+    add_arg(args, "--max-length", max_length, 32734)
+    add_arg(args, "--max-gaps", max_gaps, 2147483647)
+    add_arg(args, "--contig-start-mode", contig_start_mode, 2)
+    add_arg(args, "--contig-end-mode", contig_end_mode, 2)
+    add_arg(args, "--orf-start-mode", orf_start_mode, 1)
+    add_arg(args, "--forward-frames", ",".join(map(str, forward_frames)), "1,2,3")
+    add_arg(args, "--reverse-frames", ",".join(map(str, reverse_frames)), "1,2,3")
+    add_arg(args, "--translation-table", translation_table, 1)
+    add_arg(args, "--translate", translate, False)
+    add_arg(args, "--use-all-table-starts", use_all_table_starts, False)
+    add_arg(args, "--id-offset", id_offset, 0)
+    add_arg(args, "--sequence-overlap", sequence_overlap, 0)
+    add_arg(args, "--sequence-split-mode", sequence_split_mode, 1)
+    add_arg(args, "--headers-split-mode", headers_split_mode, 0)
+    add_arg(args, "--search-type", search_type, 0)
+    add_arg(args, "--start-sens", start_sens, 4.0)
+    add_arg(args, "--sens-steps", sens_steps, 1)
+    add_arg(args, "--translation-mode", translation_mode, 0)
 
     # Common
-    add_twin_arg("--sub-mat", sub_mat, ("aa:blosum62.out", "nucl:nucleotide.out"), ",")
-    add_arg("--max-seq-len", max_seq_len, 65535)
-    add_arg("--db-load-mode", db_load_mode, 0)
-    add_arg("--threads", threads, 14)
-    add_arg("--compressed", compressed, False)
-    add_arg("-v", verbosity, 3)
-    add_arg("--gpu", gpu, False)
-    add_arg("--gpu-server", gpu_server, False)
-    add_arg("--mpi-runner", mpi_runner, "")
-    add_arg("--force-reuse", force_reuse, False)
-    add_arg("--remove-tmp-files", remove_tmp_files, False)
+    add_twin_arg(args, "--sub-mat", sub_mat, ("aa:blosum62.out", "nucl:nucleotide.out"), ",")
+    add_arg(args, "--max-seq-len", max_seq_len, 65535)
+    add_arg(args, "--db-load-mode", db_load_mode, 0)
+    add_arg(args, "--threads", threads, 14)
+    add_arg(args, "--compressed", compressed, False)
+    add_arg(args, "-v", verbosity, 3)
+    add_arg(args, "--gpu", gpu, False)
+    add_arg(args, "--gpu-server", gpu_server, False)
+    add_arg(args, "--mpi-runner", mpi_runner, "")
+    add_arg(args, "--force-reuse", force_reuse, False)
+    add_arg(args, "--remove-tmp-files", remove_tmp_files, False)
 
     # Expert
-    add_arg("--filter-hits", filter_hits, False)
-    add_arg("--sort-results", sort_results, 0)
-    add_arg("--create-lookup", create_lookup, False)
-    add_arg("--chain-alignments", chain_alignments, False)
-    add_arg("--merge-query", merge_query, True)
-    add_arg("--strand", strand, 1)
+    add_arg(args, "--filter-hits", filter_hits, False)
+    add_arg(args, "--sort-results", sort_results, 0)
+    add_arg(args, "--create-lookup", create_lookup, False)
+    add_arg(args, "--chain-alignments", chain_alignments, False)
+    add_arg(args, "--merge-query", merge_query, True)
+    add_arg(args, "--strand", strand, 1)
 
     # Execute command
     mmseqs_output = run_mmseqs_command(args)
     
     if verbosity >= 3:
         print(mmseqs_output)
-
-    # Clean up temporary files
-    if remove_tmp_files and tmp_dir_path.exists():
-        for file in tmp_dir_path.glob("*"):
-            file.unlink()
-        tmp_dir_path.rmdir()
