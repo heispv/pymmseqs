@@ -196,8 +196,8 @@ def search(
     alph_size : Tuple[str, str], optional
         Alphabet sizes for amino acid (protein) and nucleotide sequences (range 2-21)
         - ("aa:21", "nucl:5") (default)
-            - aa:21: 20 amino acids + X for unknown residues.
-            - nucl:5: 4 nucleotides + N for unknown bases.
+            - aa:21: 20 amino acids + X for unknown residues
+            - nucl:5: 4 nucleotides + N for unknown bases
 
     max_seqs : int, optional
         Maximum results per query passing prefilter
@@ -333,7 +333,7 @@ def search(
         - 2: query only
         - 3: Target length ≥ x% query length
         - 4: Query length ≥ x% target length
-        - 5: Reciprocal coverage (both conditions must be met)
+        - 5: Short seq length ≥ x% other seq length
 
     max_rejected : int, optional
         Maximum rejected alignments before alignment calculation for a query is stopped
