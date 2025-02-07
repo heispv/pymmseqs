@@ -136,36 +136,36 @@ def search(
 
     Parameters
     ----------
-    query_db : Union[str, Path]
+    **query_db** : Union[str, Path]
         Path to MMseqs2 query database created with createdb
 
-    target_db : Union[str, Path]
+    **target_db** : Union[str, Path]
         Path to MMseqs2 target database created with createdb
 
-    result_db : Union[str, Path]
+    **result_db** : Union[str, Path]
         Output database path prefix (will create multiple files with this prefix)
 
-    tmp_dir : Union[str, Path]
+    **tmp_dir** : Union[str, Path]
         Temporary directory for intermediate files (will be created if not exists)
 
     Prefilter Parameters
     -------------------
-    comp_bias_corr : bool, optional
+    **comp_bias_corr** : bool, optional
         Correct for locally biased amino acid composition
         - True (default)
         - False
 
-    comp_bias_corr_scale : float, optional
+    **comp_bias_corr_scale** : float, optional
         Scale factor for composition bias correction
         - Range 0, 1
         - 1.0 (default)
 
-    add_self_matches : bool, optional
+    **add_self_matches** : bool, optional
         Artificially add entries of queries with themselves (for clustering)
         - True
         - False (default)
 
-    seed_sub_mat : Tuple[str, str], optional
+    **seed_sub_mat** : Tuple[str, str], optional
         Substitution matrix for k-mer generation as (type:path, type:path)
         type: "aa" or "nucl"
         path: matrix file path
@@ -173,111 +173,111 @@ def search(
 
         Note: find available matrices in the MMseqs2 data directory: (https://github.com/soedinglab/MMseqs2/tree/master/data)
 
-    s : float, optional
+**    s** : float, optional
         Sensitivity
         - 1.0: faster
         - 4.0: fast
         - 5.7 (default)
         - 7.5: sensitive
 
-    k : int, optional
+**    k** : int, optional
         k-mer length
         - 0: auto (default)
 
-    target_search_mode : int, optional
+    **target_search_mode** : int, optional
         Target search mode
         - 0: regular k-mer (default)
         - 1: similar k-mer
 
-    k_score : Tuple[str, str], optional
+    **k_score** : Tuple[str, str], optional
         k-mer thresholds for sequence and profile searches
         - ("seq:2147483647", "prof:2147483647") (default)
 
-    alph_size : Tuple[str, str], optional
+    **alph_size** : Tuple[str, str], optional
         Alphabet sizes for amino acid (protein) and nucleotide sequences (range 2-21)
         - ("aa:21", "nucl:5") (default)
             - aa:21: 20 amino acids + X for unknown residues
             - nucl:5: 4 nucleotides + N for unknown bases
 
-    max_seqs : int, optional
+    **max_seqs** : int, optional
         Maximum results per query passing prefilter
         - 300 (default)
         - Higher values increase sensitivity but may slow down the search
 
-    split : int, optional
+    **split** : int, optional
         Split input into N chunks
         - 0: set the best split automatically (default)
 
-    split_mode : int, optional
+    **split_mode** : int, optional
         Split strategy
         - 0: split target db
         - 1: split query db
         - 2: auto, depending on main memory (default)
 
-    split_memory_limit : str, optional
+    **split_memory_limit** : str, optional
         Maximum memory allocated per split for processing
         - "0":  all available (default)
             - Use suffixes like K, M, or G (e.g., "4G" for 4 gigabytes)
 
-    diag_score : bool, optional
+    **diag_score** : bool, optional
         Use ungapped diagonal scoring during prefilter
         - True (default)
         - False
 
-    exact_kmer_matching : bool, optional
+    **exact_kmer_matching** : bool, optional
         Extract only exact k-mers for matching
         - True
         - False (default)
 
-    mask : bool, optional
+    **mask** : bool, optional
         Use low complexity masking
         - True (default)
         - False
 
-    mask_prob : float, optional
+    **mask_prob** : float, optional
         Probability threshold for masking low-complexity regions in sequences
         - 0.9 (default)
         - Sequences with low-complexity regions above this threshold are masked during k-mer matching
 
-    mask_lower_case : bool, optional
+    **mask_lower_case** : bool, optional
         Mask lowercase letters in k-mer search.
         - True
         - False (default)
 
-    min_ungapped_score : int, optional
+    **min_ungapped_score** : int, optional
         Minimum ungapped alignment score
         - 15 (default)
         - Higher values increase specificity but may reduce sensitivity
 
-    spaced_kmer_mode : int, optional
+    **spaced_kmer_mode** : int, optional
         Spaced k-mer mode
         - 0: consecutive
         - 1: spaced (default)
 
-    spaced_kmer_pattern : str, optional
+    **spaced_kmer_pattern** : str, optional
         Custom pattern for spaced k-mers used during k-mer matching.
         - Define a pattern of 1s (match positions) and 0s (ignore positions)
         - Example: "1101011" means 5 match positions and 2 ignored positions
         - Increases sensitivity by focusing on conserved regions while allowing flexibility in less conserved areas.
 
-    local_tmp : str, optional
+    **local_tmp** : str, optional
         Path to an alternative temporary directory for storing intermediate files
         - Useful for reducing I/O load on shared storage systems (e.g., NFS)
         - Default: Temporary files are stored in the main tmpDir
 
-    disk_space_limit : str, optional
+    **disk_space_limit** : str, optional
         Max disk space usage
         - "0": unlimited (default)
         - Use suffixes like K, M, or G (e.g., "100G" for 100 gigabytes)
 
     Alignment Parameters
     --------------------
-    a : bool, optional
+**    a** : bool, optional
         Add backtrace string (convert to alignments with mmseqs convertalis module)
         - True
         - False (default)
 
-    alignment_mode : int, optional
+    **alignment_mode** : int, optional
         Alignment detail level
         - 0: auto
         - 1: score + end_po
@@ -285,7 +285,7 @@ def search(
         - 3: + seq.id
         - 4: only ungapped alignment
 
-    alignment_output_mode : int, optional
+    **alignment_output_mode** : int, optional
         Output detail level
         - 0: auto (default)
         - 1: score + end_po
@@ -294,39 +294,39 @@ def search(
         - 4: only ungapped alignment
         - 5: score only (output) cluster format
 
-    wrapped_scoring : bool, optional
+    **wrapped_scoring** : bool, optional
         Enable wrapped diagonal scoring for nucleotide sequences by doubling the query sequence
         - True
         - False (default)
 
-    e : float, optional
+**    e** : float, optional
         E-value threshold (range 0.0, inf)
         - 0.001 (default)
 
-    min_seq_id : float, optional
+    **min_seq_id** : float, optional
         Minimum sequence identity (range 0.0, 1.0)
         - 0.0 (default)
 
-    min_aln_len : int, optional
+    **min_aln_len** : int, optional
         Minimum alignment length (range 0, inf)
         - 0 (default)
 
-    seq_id_mode : int, optional
+    **seq_id_mode** : int, optional
         Defines how sequence identity calculation is based on
         - 0: Alignment length (default)
         - 1: Shorter sequence
         - 2: Longer sequence
 
-    alt_ali : int, optional
+    **alt_ali** : int, optional
         Number of alternative alignments to show
         - 0 (default)
 
-    c : float, optional
+**    c** : float, optional
         Coverage threshold for alignments
         - 0.0 (default)
         - Determines the minimum fraction of aligned residues required for a match, based on the selected cov_mode
     
-    cov_mode : int, optional
+    **cov_mode** : int, optional
         Defines how alignment coverage is calculated:
         - 0: query + target (default)
         - 1: target only
@@ -335,157 +335,157 @@ def search(
         - 4: Query length ≥ x% target length
         - 5: Short seq length ≥ x% other seq length
 
-    max_rejected : int, optional
+    **max_rejected** : int, optional
         Maximum rejected alignments before alignment calculation for a query is stopped
         - 2147483647 (default)
 
-    max_accept : int, optional
+    **max_accept** : int, optional
         Maximum accepted alignments before alignment calculation for a query is stopped
         - 2147483647 (default)
 
-    score_bias : float, optional
+    **score_bias** : float, optional
         Score bias added to alignment scores (in bits)
         - 0.0: no bias (default)
         - Adjusts alignment scores to favor or penalize certain alignments
 
-    realign : bool, optional
+    **realign** : bool, optional
         Compute more conservative, shorter alignments (scores and E-values not changed)
         - True
         - False (default)
 
-    realign_score_bias : float, optional
+    **realign_score_bias** : float, optional
         Additional score bias applied during realignment to compute more conservative alignments
         - -0.2 (default)
         - A negative value encourages shorter, more precise alignments
 
-    realign_max_seqs : int, optional
+    **realign_max_seqs** : int, optional
         Maximum number of results to return in realignment
         - 2147483647 (default)
 
-    corr_score_weight : float, optional
+    **corr_score_weight** : float, optional
         Weight of backtrace correlation score that is added to the alignment score
         - 0.0 (default)
         - Higher values increase the influence of the backtrace correlation on the final alignment score
 
-    gap_open : Tuple[str, str], optional
+    **gap_open** : Tuple[str, str], optional
         Gap open costs for amino acid (protein) and nucleotide alignments
         - ("aa:11", "nucl:5") (default)
             - aa:x: Gap open cost for protein alignments
             - nucl:x: Gap open cost for nucleotide alignments
         - Higher values penalize gap openings more heavily, favoring fewer gaps in alignments
 
-    gap_extend : Tuple[str, str], optional
+    **gap_extend** : Tuple[str, str], optional
         Gap extension costs for amino acid (protein) and nucleotide alignments
         - ("aa:1", "nucl:2") (default)
             - aa:x: Cost for extending a gap in protein alignments
             - nucl:x: Cost for extending a gap in nucleotide alignments
         - Lower values allow longer gaps; higher values penalize gaps more heavily
 
-    zdrop : int, optional
+    **zdrop** : int, optional
         Maximum score drop allowed before truncating the alignment (nucleotide alignments only)
         - 40 (default)
             - Terminates alignments early in low-quality regions to improve computational efficiency
 
-    exhaustive_search_filter : bool, optional
+    **exhaustive_search_filter** : bool, optional
         Filter result during search
         - True
         - False (default)
 
     Profile Parameters
     ------------------
-    pca : float, optional
+    **pca** : float, optional
         Pseudo count admixture strength for profile construction
         - 0.0 (default)
         - Higher values increase the weight of pseudo counts, making the profile more conservative
         - Lower values reduce their influence, making the profile more specific to the input sequences
 
-    pcb : float, optional
+    **pcb** : float, optional
         Controls the threshold for pseudo-count admixture based on the effective number of sequences (Neff) (range 0.0, inf)
         - 0.0 (default)
         - Lower values apply pseudo-counts more aggressively
 
-    mask_profile : bool, optional
+    **mask_profile** : bool, optional
         Mask low-complexity regions in the query sequence of a profile using TANTAN
         - True (default)
         - False
 
-    e_profile : float, optional
+    **e_profile** : float, optional
         E-value threshold for including sequence matches in the profile
         - 0.1 (default)
 
-    wg : bool, optional
+    **wg** : bool, optional
         Use global sequence weighting for profile calculation
         - True
         - False (default)
 
-    filter_msa : bool, optional
+    **filter_msa** : bool, optional
         Filter MSA
         - True (default)
         - False
 
-    filter_min_enable : int, optional
+    **filter_min_enable** : int, optional
         Minimum number of sequences required to trigger filtering of MSAs
         - 0: Always filter (default)
         - N > 0: Filter only if the MSA contains more than N sequences
 
-    max_seq_id : float, optional
+    **max_seq_id** : float, optional
         Maximum pairwise sequence identity for redundancy reduction in the output MSA (range 0.0, 1.0)
         - 0.9 (default)
         - Filters sequences to ensure no two sequences in the output share more than the specified identity
 
-    qid : str, optional
+    **qid** : str, optional
         Filters output MSAs by minimum sequence identity with the query (range 0.0, 1.0)
         - 0.0: no filtering (default)
         - Can specify multiple thresholds as a comma-separated list (e.g., "0.15,0.30,0.50") to create filter buckets
             - Example: "0.15,0.30,0.50" creates buckets for sequences with identities in ]0.15-0.30] and ]0.30-0.50]
 
-    qsc : float, optional
+    **qsc** : float, optional
         Filters output MSAs by minimum score per aligned residue with query sequences (range -50.0, 100.0)
         - -20.0 (default)
         - Higher values reduce diversity in the output MSAs by retaining only high-scoring alignments
 
-    profile_cov : float, optional
+    **profile_cov** : float, optional
         Minimum fraction of query residues covered by matched sequences to filter output MSAs (range 0.0, 1.0)
         - 0.0 (default)
 
-    diff : int, optional
+    **diff** : int, optional
         Filters MSAs by selecting the most diverse sequences, ensuring at least this many sequences are kept in each MSA block of length 50
         - 1000 (default)
 
-    pseudo_cnt_mode : int, optional
+    **pseudo_cnt_mode** : int, optional
         Pseudocount method
         - 0: substitution-matrix (default)
         - 1: context-specific pseudocounts
 
-    num_iterations : int, optional
+    **num_iterations** : int, optional
         Number of iterative profile search iterations
         - 1: (default)
 
-    exhaustive_search : bool, optional
+    **exhaustive_search** : bool, optional
         For bigger profile DB, run iteratively the search by greedily swapping the search results
         - True
         - False (default)
 
-    lca_search : bool, optional
+    **lca_search** : bool, optional
         Enable LCA candidate search
         - True
         - False (default)
 
     Misc Parameters
     ---------------
-    taxon_list : str, optional
+    **taxon_list** : str, optional
         Taxonomy IDs to filter results by. Multiple IDs can be provided, separated by commas (no spaces)
         - "" (default)
         - Example: "9606,10090"
 
-    prefilter_mode : int, optional
+    **prefilter_mode** : int, optional
         Prefilter method
         - 0: kmer/ungapped (default)
         - 1: ungapped
         - 2: nofilter
         - 3: ungapped+gapped
 
-    rescore_mode : int, optional
+    **rescore_mode** : int, optional
         Rescore diagonals with:
         - 0: Hamming distance (default)
         - 1: local alignment (score only)
@@ -493,51 +493,51 @@ def search(
         - 3: global alignment
         - 4: longest alignment fulfilling window quality criterion
 
-    allow_deletion : bool, optional
+    **allow_deletion** : bool, optional
         Allow deletions in MSA
         - True
         - False (default)
 
-    min_length : int, optional
+    **min_length** : int, optional
         Minimum codon number in open reading frames (ORFs)
         - 30 (default)
 
-    max_length : int, optional
+    **max_length** : int, optional
         Maximum codon number in open reading frames (ORFs)
         - 32734 (default)
 
-    max_gaps : int, optional
+    **max_gaps** : int, optional
         Maximum number of codons with gaps or unknown residues before an open reading frame is rejected
         - 2147483647 (default)
 
-    contig_start_mode : int, optional
+    **contig_start_mode** : int, optional
         Contig start handling
         - 0: incomplete
         - 1: complete
         - 2: both (default)
 
-    contig_end_mode : int, optional
+    **contig_end_mode** : int, optional
         Contig end handling
         - 0: incomplete
         - 1: complete
         - 2: both (default)
 
-    orf_start_mode : int, optional
+    **orf_start_mode** : int, optional
         ORF start handling
         - 0: from start to stop
         - 1: from any to stop (default)
         - 2: from last encountered start to stop (no start in the middle)
 
-    forward_frames : List[int], optional
+    **forward_frames** : List[int], optional
         Comma-separated list of frames on the forward strand to be extracted
         - [1, 2, 3] (default)
 
-    reverse_frames : List[int], optional
+    **reverse_frames** : List[int], optional
         Comma-separated list of frames on the reverse strand to be extracted
         - [1, 2, 3] (default)
 
 
-    translation_table : int, optional  
+    **translation_table** : int, optional  
         Specifies the genetic code table to use 
         - 1: Canonical (default)
         - 2: Vert Mitochondrial
@@ -566,35 +566,35 @@ def search(
         - 31: Blastocrithidia
 
 
-    translate : bool, optional
+    **translate** : bool, optional
         Translate open reading frames (ORFs) to amino acid
         - True
         - False (default)
 
-    use_all_table_starts : bool, optional
+    **use_all_table_starts** : bool, optional
         Use all start codons
         - True
         - False: only ATG (AUG) (default)
 
-    id_offset : int, optional
+    **id_offset** : int, optional
         Numeric IDs in index file are offset by this value
         - 0 (default)
 
-    sequence_overlap : int, optional
+    **sequence_overlap** : int, optional
         Overlap between sequences
         - 0 (default)
 
-    sequence_split_mode : int, optional
+    **sequence_split_mode** : int, optional
         Method for splitting sequences during processing
         - 0: Copy data (creates a full copy of the sequence data).
         - 1: Soft link data and write a new index (saves disk space by linking to the original data) (default)
 
-    headers_split_mode : int, optional
+    **headers_split_mode** : int, optional
         Header split method
         - 0: Split positions (Headers are split based on predefined positions) (default)
         - 1: Original header (Headers are preserved as-is without splitting)
 
-    search_type : int, optional
+    **search_type** : int, optional
         Search mode:
         - 0: auto (default)
         - 1: amino
@@ -602,22 +602,22 @@ def search(
         - 3: nucleotide
         - 4: translated alignment
 
-    start_sens : float, optional
+    **start_sens** : float, optional
         Initial sensitivity
         - 4.0 (default)
 
-    sens_steps : int, optional
+    **sens_steps** : int, optional
         Number of search steps performed from `start_sens` argument to `s` argument
         - 1 (default)
 
-    translation_mode : int, optional
+    **translation_mode** : int, optional
         Translation AA seq from nucletoide method
         - 0: Open Reading Frames (ORFs) (default)
         - 1: Full Reading Frames
 
     Common Parameters
     ----------------
-    sub_mat : Tuple[str, str], optional
+    **sub_mat** : Tuple[str, str], optional
         Substitution matrix (type:path, type:path)
         type: "aa" or "nucl"
         path: matrix file path
@@ -625,85 +625,85 @@ def search(
 
         Note: find available matrices in the MMseqs2 data directory: (https://github.com/soedinglab/MMseqs2/tree/master/data)
 
-    max_seq_len : int, optional
+    **max_seq_len** : int, optional
         Maximum sequence length
         - 65535 (default)
 
-    db_load_mode : int, optional
+    **db_load_mode** : int, optional
         Database preloading method
         - 0: auto (default)
         - 1: fread
         - 2: mmap
         - 3: mmap+touch
 
-    threads : int, optional
+    **threads** : int, optional
         CPU threads
         - 14 (default)
 
-    compressed : bool, optional
+    **compressed** : bool, optional
         Compress output
         - True
         - False (default)
 
-    v : int, optional
+**    v** : int, optional
         Output verbosity
         - 0: quiet
         - 1: +errors
         - 2: +warnings
         - 3: +info (default)
 
-    gpu : bool, optional
+    **gpu** : bool, optional
         Use GPU (CUDA) if possible
         - True
         - False (default)
 
-    gpu_server : bool, optional
+    **gpu_server** : bool, optional
         Use GPU server
         - True
         - False (default)
 
-    mpi_runner : str, optional
+    **mpi_runner** : str, optional
         Use MPI on compute cluster with this MPI command (e.g., "mpirun -np 42")
         - "" (default)
 
-    force_reuse : bool, optional
+    **force_reuse** : bool, optional
         Reuse tmp filse in tmp/latest folder ignoring parameters and version changes
         - True
         - False (default)
 
-    remove_tmp_files : bool, optional
+    **remove_tmp_files** : bool, optional
         Delete temporary files
         - True
         - False (default)
 
     Expert Parameters
     ----------------
-    filter_hits : bool, optional
+    **filter_hits** : bool, optional
         Filter hits by sequence ID and coverage
         - True
         - False (default)
 
-    sort_results : int, optional
+    **sort_results** : int, optional
         Result sorting method
         - 0: No sorting (default)
         - 1: E-value (Alignment) or sequence ID (Hamming) 
 
-    create_lookup : bool, optional
+    **create_lookup** : bool, optional
         Create lookup file
         - True
         - False (default)
 
-    chain_alignments : bool, optional
+    **chain_alignments** : bool, optional
         Chain overlapping alignments
         - True
         - False (default)
 
-    merge_query : bool, optional
+    **merge_query** : bool, optional
         Combine ORFs/split sequences to a single entry
         - True (default)
         - False
 
-    strand : int, optional
+    **strand** : int, optional
         Strand selection (only works for DNA/DNA search)
         - 0: reverse
         - 1: forward (default)

@@ -109,120 +109,120 @@ def cluster(
 
     Parameters
     ----------
-    sequence_db : Union[str, Path]
+    **sequence_db** : Union[str, Path]
         Path to MMseqs2 sequence database created with createdb.
 
-    cluster_db : Union[str, Path]
+    **cluster_db** : Union[str, Path]
         Output cluster database path prefix (will create multiple files with this prefix).
 
-    tmp_dir : Union[str, Path]
+    **tmp_dir** : Union[str, Path]
         Temporary directory for intermediate files (will be created if not exists).
 
     Prefilter Parameters
     --------------------
-    seed_sub_mat : Tuple[str, str], optional
+    **seed_sub_mat** : Tuple[str, str], optional
         Substitution matrix for k-mer generation as (type:path, type:path)
         - Default: ("aa:VTML80.out", "nucl:nucleotide.out")
 
-    s : float, optional
+**    s** : float, optional
         Sensitivity.
         - Options: 1.0 (faster), 4.0 (fast), 7.5 (sensitive)
         - Default: 4.0
 
-    k : int, optional
+**    k** : int, optional
         k-mer length.
         - 0: automatically set to optimum (default)
 
-    target_search_mode : int, optional
+    **target_search_mode** : int, optional
         Target search mode.
         - 0: regular k-mer (default)
         - 1: similar k-mer
 
-    k_score : Tuple[str, str], optional
+    **k_score** : Tuple[str, str], optional
         k-mer thresholds for sequence and profile searches.
         - Default: ("seq:2147483647", "prof:2147483647")
 
-    alph_size : Tuple[str, str], optional
+    **alph_size** : Tuple[str, str], optional
         Alphabet sizes for amino acid (protein) and nucleotide sequences (range 2-21)
         - ("aa:21", "nucl:5") (default)
             - aa:21: 20 amino acids + X for unknown residues
             - nucl:5: 4 nucleotides + N for unknown bases
 
-    max_seqs : int, optional
+    **max_seqs** : int, optional
         Maximum results per query sequence passing prefilter.
         - Default: 20
 
-    split : int, optional
+    **split** : int, optional
         Split input into N chunks
         - 0: set the best split automatically (default)
 
-    split_mode : int, optional
+    **split_mode** : int, optional
         Split strategy
         - 0: split target db
         - 1: split query db
         - 2: auto, depending on main memory (default)
 
-    split_memory_limit : str, optional
+    **split_memory_limit** : str, optional
         Maximum memory allocated per split for processing
         - "0":  all available (default)
             - Use suffixes like K, M, or G (e.g., "4G" for 4 gigabytes)
 
-    comp_bias_corr : bool, optional
+    **comp_bias_corr** : bool, optional
         Correct for locally biased amino acid composition
         - True (default)
         - False
 
-    comp_bias_corr_scale : float, optional
+    **comp_bias_corr_scale** : float, optional
         Scale factor for composition bias correction
         - Range 0, 1
         - 1.0 (default)
 
-    diag_score : bool, optional
+    **diag_score** : bool, optional
         Use ungapped diagonal scoring during prefilter
         - True (default)
         - False
 
-    exact_kmer_matching : bool, optional
+    **exact_kmer_matching** : bool, optional
         Extract only exact k-mers for matching
         - True
         - False (default)
 
-    mask : bool, optional
+    **mask** : bool, optional
         Use low complexity masking
         - True (default)
         - False
 
-    mask_prob : float, optional
+    **mask_prob** : float, optional
         Probability threshold for masking low-complexity regions in sequences
         - 0.9 (default)
         - Sequences with low-complexity regions above this threshold are masked during k-mer matching
 
-    mask_lower_case : bool, optional
+    **mask_lower_case** : bool, optional
         Mask lowercase letters in k-mer search.
         - True
         - False (default)
 
-    min_ungapped_score : int, optional
+    **min_ungapped_score** : int, optional
         Minimum ungapped alignment score
         - 15 (default)
         - Higher values increase specificity but may reduce sensitivity
 
-    add_self_matches : bool, optional
+    **add_self_matches** : bool, optional
         Add entries of queries with themselves for clustering.
         - Default: False
 
-    spaced_kmer_mode : int, optional
+    **spaced_kmer_mode** : int, optional
         Spaced k-mer mode
         - 0: consecutive
         - 1: spaced (default)
 
-    spaced_kmer_pattern : str, optional
+    **spaced_kmer_pattern** : str, optional
         Custom pattern for spaced k-mers used during k-mer matching.
         - Define a pattern of 1s (match positions) and 0s (ignore positions)
         - Example: "1101011" means 5 match positions and 2 ignored positions
         - Increases sensitivity by focusing on conserved regions while allowing flexibility in less conserved areas.
 
-    local_tmp : str, optional
+    **local_tmp** : str, optional
         Path to an alternative temporary directory for storing intermediate files
         - Useful for reducing I/O load on shared storage systems (e.g., NFS)
         - Default: Temporary files are stored in the main tmpDir
@@ -230,12 +230,12 @@ def cluster(
 
     Alignment Parameters
     --------------------
-    c : float, optional
+**    c** : float, optional
         Coverage threshold for alignments
         - 0.8 (default)
         - Determines the minimum fraction of aligned residues required for a match, based on the selected cov_mode
 
-    cov_mode : int, optional
+    **cov_mode** : int, optional
         Defines how alignment coverage is calculated:
         - 0: query + target (default)
         - 1: target only
@@ -244,12 +244,12 @@ def cluster(
         - 4: Query length ≥ x% target length
         - 5: Short seq length ≥ x% other seq length
 
-    a : bool, optional
+**    a** : bool, optional
         Add backtrace string (convert to alignments with mmseqs convertalis module)
         - True
         - False (default)
 
-    alignment_mode : int, optional
+    **alignment_mode** : int, optional
         Alignment detail level
         - 0: auto
         - 1: score + end_po
@@ -257,7 +257,7 @@ def cluster(
         - 3: + seq.id (default)
         - 4: only ungapped alignment
 
-    alignment_output_mode : int, optional
+    **alignment_output_mode** : int, optional
         Output detail level
         - 0: auto (default)
         - 1: score + end_po
@@ -266,111 +266,111 @@ def cluster(
         - 4: only ungapped alignment
         - 5: score only (output) cluster format
 
-    wrapped_scoring : bool, optional
+    **wrapped_scoring** : bool, optional
         Enable wrapped diagonal scoring for nucleotide sequences by doubling the query sequence
         - True
         - False (default)
 
-    e : float, optional
+**    e** : float, optional
         E-value threshold (range 0.0, inf)
         - 0.001 (default)
 
-    min_seq_id : float, optional
+    **min_seq_id** : float, optional
         Minimum sequence identity (range 0.0, 1.0)
         - 0.0 (default)
 
-    min_aln_len : int, optional
+    **min_aln_len** : int, optional
         Minimum alignment length (range 0, inf)
         - 0 (default)
 
-    seq_id_mode : int, optional
+    **seq_id_mode** : int, optional
         Defines how sequence identity calculation is based on
         - 0: Alignment length (default)
         - 1: Shorter sequence
         - 2: Longer sequence
 
-    alt_ali : int, optional
+    **alt_ali** : int, optional
         Number of alternative alignments to show
         - 0 (default)
 
-    max_rejected : int, optional
+    **max_rejected** : int, optional
         Maximum rejected alignments before alignment calculation for a query is stopped
         - 2147483647 (default)
 
-    max_accept : int, optional
+    **max_accept** : int, optional
         Maximum accepted alignments before alignment calculation for a query is stopped
         - 2147483647 (default)
 
-    score_bias : float, optional
+    **score_bias** : float, optional
         Score bias added to alignment scores (in bits)
         - 0.0: no bias (default)
         - Adjusts alignment scores to favor or penalize certain alignments
 
-    realign : bool, optional
+    **realign** : bool, optional
         Compute more conservative, shorter alignments (scores and E-values not changed)
         - True
         - False (default)
 
-    realign_score_bias : float, optional
+    **realign_score_bias** : float, optional
         Additional score bias applied during realignment to compute more conservative alignments
         - -0.2 (default)
         - A negative value encourages shorter, more precise alignments
 
-    realign_max_seqs : int, optional
+    **realign_max_seqs** : int, optional
         Maximum number of results to return in realignment
         - 2147483647 (default)
 
-    ccorr_score_weight : float, optional
+    **ccorr_score_weight** : float, optional
         Weight of backtrace correlation score that is added to the alignment score
         - 0.0 (default)
         - Higher values increase the influence of the backtrace correlation on the final alignment score
 
-    gap_open : Tuple[str, str], optional
+    **gap_open** : Tuple[str, str], optional
         Gap open costs for amino acid (protein) and nucleotide alignments
         - ("aa:11", "nucl:5") (default)
             - aa:x: Gap open cost for protein alignments
             - nucl:x: Gap open cost for nucleotide alignments
         - Higher values penalize gap openings more heavily, favoring fewer gaps in alignments
 
-    gap_extend : Tuple[str, str], optional
+    **gap_extend** : Tuple[str, str], optional
         Gap extension costs for amino acid (protein) and nucleotide alignments
         - ("aa:1", "nucl:2") (default)
             - aa:x: Cost for extending a gap in protein alignments
             - nucl:x: Cost for extending a gap in nucleotide alignments
         - Lower values allow longer gaps; higher values penalize gaps more heavily
 
-    zdrop : int, optional
+    **zdrop** : int, optional
         Maximum score drop allowed before truncating the alignment (nucleotide alignments only)
         - 40 (default)
             - Terminates alignments early in low-quality regions to improve computational efficiency
 
     Clustering Parameters
     ----------------------
-    cluster_mode : int, optional
+    **cluster_mode** : int, optional
         Clustering method.
         - 0: Set-Cover (greedy) (default)
         - 1: Connected component (BLASTclust)
         - 2: Greedy by sequence length (CDHIT)
 
-    max_iterations : int, optional
+    **max_iterations** : int, optional
         Maximum depth of breadth first search for connected component clustering.
         - 1000 (default)
 
-    similarity_type : int, optional
+    **similarity_type** : int, optional
         Type of score used for clustering.
         - 1: Alignment score
         - 2: Sequence identity (default)
 
-    single_step_clustering : bool, optional
+    **single_step_clustering** : bool, optional
         Use simple clustering without cascading.
         - True
         - False: Uses cascading (default)
 
-    cluster_steps : int, optional
+    **cluster_steps** : int, optional
         Number of clustering steps for cascaded clustering (1 to `s` option).
         - 3 (default)
 
-    cluster_reassign : bool, optional
+    **cluster_reassign** : bool, optional
         Cascaded clustering can cluster sequence that do not fulfill the clustering criteria.
         Enable cluster reassignment to correct errors.
         - True
@@ -378,65 +378,65 @@ def cluster(
 
     K-mer Matcher Parameters
     -------------------------
-    weights : str, optional
+    **weights** : str, optional
         File containing sequence weights for cluster prioritization.
         Each line in the file corresponds to a sequence in the input
         file, with a floating-point weight determining its influence on clustering (higher values = higher priority)
         - Default: ""
         - Example: A text file like this:\n1.0\n0.5\n0.2\n
 
-    cluster_weight_threshold : float, optional
+    **cluster_weight_threshold** : float, optional
         Weight threshold for cluster prioritization.
         - 0.9 (default)
 
-    kmer_per_seq : int, optional
+    **kmer_per_seq** : int, optional
         Number of k-mers per sequence.
         - 21 (default)
 
-    kmer_per_seq_scale : Tuple[str, str], optional
+    **kmer_per_seq_scale** : Tuple[str, str], optional
         Scale k-mer per sequence based on sequence length as (kmer-pers-seq val + scale * seq-len)
         - ("aa:0.0", "nucl:0.2") (default)
 
-    adjust_kmer_len : bool, optional
+    **adjust_kmer_len** : bool, optional
         Adjust k-mer length based on specificity (only for nucleotide).
         - True
         - False (default)
 
-    hash_shift : int, optional
+    **hash_shift** : int, optional
         Shift k-mer hash initialization.
         - 67 (default)
 
-    include_only_extendable : bool, optional
+    **include_only_extendable** : bool, optional
         Include only extendable k-mers.
         - True
         - False (default)
 
-    ignore_multi_kmer : bool, optional
+    **ignore_multi_kmer** : bool, optional
         Skip k-mers occurring multiple times (>=2)
         - True
         - False (default)
 
     Profile Parameters
     -----------------
-    pca : float, optional
+    **pca** : float, optional
         Pseudo count admixture strength for profile construction
         - 0.0 (default)
         - Higher values increase the weight of pseudo counts, making the profile more conservative
         - Lower values reduce their influence, making the profile more specific to the input sequences
 
-    pcb : float, optional
+    **pcb** : float, optional
         Controls the threshold for pseudo-count admixture based on the effective number of sequences (Neff) (range 0.0, inf)
         - 0.0 (default)
         - Lower values apply pseudo-counts more aggressively
 
     Misc Parameters
     ---------------
-    taxon_list : str, optional
+    **taxon_list** : str, optional
         Taxonomy IDs to filter results by. Multiple IDs can be provided, separated by commas (no spaces)
         - "" (default)
         - Example: "9606,10090"
 
-    rescore_mode : int, optional
+    **rescore_mode** : int, optional
         Rescore diagonals with:
         - 0: Hamming distance (default)
         - 1: local alignment (score only)
@@ -446,7 +446,7 @@ def cluster(
 
     Common Parameters
     -----------------
-    sub_mat : Tuple[str, str], optional
+    **sub_mat** : Tuple[str, str], optional
         Substitution matrix (type:path, type:path)
         type: "aa" or "nucl"
         path: matrix file path
@@ -454,51 +454,51 @@ def cluster(
 
         Note: find available matrices in the MMseqs2 data directory: (https://github.com/soedinglab/MMseqs2/tree/master/data)
 
-    max_seq_len : int, optional
+    **max_seq_len** : int, optional
         Maximum sequence length
         - 65535 (default)
 
-    db_load_mode : int, optional
+    **db_load_mode** : int, optional
         Database preloading method
         - 0: auto (default)
         - 1: fread
         - 2: mmap
         - 3: mmap+touch
 
-    threads : int, optional
+    **threads** : int, optional
         CPU threads
         - 14 (default)
 
-    compressed : bool, optional
+    **compressed** : bool, optional
         Compress output
         - True
         - False (default)
 
-    v : int, optional
+**    v** : int, optional
         Output verbosity
         - 0: quiet
         - 1: +errors
         - 2: +warnings
         - 3: +info (default)
 
-    remove_tmp_files : bool, optional
+    **remove_tmp_files** : bool, optional
         Delete temporary files
         - True
         - False (default)
 
-    force_reuse : bool, optional
+    **force_reuse** : bool, optional
         Reuse tmp filse in tmp/latest folder ignoring parameters and version changes
         - True
         - False (default)
 
     Expert Parameters
     -----------------
-    filter_hits : bool, optional
+    **filter_hits** : bool, optional
         Filter hits by sequence ID and coverage
         - True
         - False (default)
 
-    sort_results : int, optional
+    **sort_results** : int, optional
         Result sorting method
         - 0: No sorting (default)
         - 1: E-value (Alignment) or sequence ID (Hamming) 
