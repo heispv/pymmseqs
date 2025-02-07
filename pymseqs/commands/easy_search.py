@@ -132,7 +132,7 @@ def easy_search(
     greedy_best_hits: bool = False,
     
     # Common parameters
-    sub_mat: Tuple[str, str] = None,
+    sub_mat: Tuple[str, str] = ("aa:blosum62.out", "nucl:nucleotide.out"),
     max_seq_len: int = 65535,
     db_load_mode: int = 0,
     threads: int = 14,
@@ -142,7 +142,7 @@ def easy_search(
     gpu_server: bool = False,
     mpi_runner: str = "",
     force_reuse: bool = False,
-    remove_tmp_files: bool = False,
+    remove_tmp_files: bool = True,
     
     # Expert parameters
     filter_hits: bool = False,
@@ -559,7 +559,6 @@ def easy_search(
         Comma-separated list of frames on the reverse strand to be extracted
         - [1, 2, 3] (default)
 
-
     **translation_table** : int, optional  
         Specifies the genetic code table to use 
         - 1: Canonical (default)
@@ -587,7 +586,6 @@ def easy_search(
         - 29: Mesodinium
         - 30: Pertrich
         - 31: Blastocrithidia
-
 
     **translate** : bool, optional
         Translate open reading frames (ORFs) to amino acid
@@ -695,7 +693,7 @@ def easy_search(
         Substitution matrix (type:path, type:path)
         type: "aa" or "nucl"
         path: matrix file path
-        - ("aa:blosum62.out", "nucl:nucleotide.out")
+        - Default: ("aa:blosum62.out", "nucl:nucleotide.out")
 
         Note: find available matrices in the MMseqs2 data directory: (https://github.com/soedinglab/MMseqs2/tree/master/data)
 
@@ -747,8 +745,8 @@ def easy_search(
 
     **remove_tmp_files** : bool, optional
         Delete temporary files
-        - True
-        - False (default)
+        - True (default)
+        - False
 
     Expert Parameters
     ----------------
@@ -763,7 +761,7 @@ def easy_search(
         - 1: E-value (Alignment) or sequence ID (Hamming) 
 
     **create_lookup** : bool, optional
-        Create lookup file
+        Create lookup file (can be very large)
         - True
         - False (default)
 
@@ -963,8 +961,7 @@ def easy_search(
     add_arg(args, "--format-mode", format_mode, 0)
     add_arg(
     args, "--format-output", ",".join(map(str, format_output)),
-    ["query", "target", "fident", "alnlen", "mismatch", "gapopen",
-     "qstart", "qend", "tstart", "tend", "evalue", "bits"]
+    "query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits"
     )
     add_arg(args, "--overlap", overlap, 0.0)
     add_arg(args, "--dbtype", dbtype, 0)
@@ -983,7 +980,7 @@ def easy_search(
     add_arg(args, "--gpu-server", gpu_server, False)
     add_arg(args, "--mpi-runner", mpi_runner, "")
     add_arg(args, "--force-reuse", force_reuse, False)
-    add_arg(args, "--remove-tmp-files", remove_tmp_files, False)
+    add_arg(args, "--remove-tmp-files", remove_tmp_files, True)
 
     # Expert
     add_arg(args, "--filter-hits", filter_hits, False)
