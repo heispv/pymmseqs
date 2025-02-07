@@ -46,7 +46,7 @@ def easy_search(
     
     # Alignment parameters
     a: bool = False,
-    alignment_mode: int = 2,
+    alignment_mode: int = 3,
     alignment_output_mode: int = 0,
     wrapped_scoring: bool = False,
     e: float = 0.001,
@@ -304,8 +304,8 @@ def easy_search(
         Alignment detail level
         - 0: auto
         - 1: score + end_po
-        - 2: + start_pos + cov (default)
-        - 3: + seq.id
+        - 2: + start_pos + cov
+        - 3: + seq.id (default)
         - 4: only ungapped alignment
 
     **alignment_output_mode** : int, optional
@@ -896,7 +896,7 @@ def easy_search(
 
     # Alignment
     add_arg(args, "-a", a, False)
-    add_arg(args, "--alignment-mode", alignment_mode, 2)
+    add_arg(args, "--alignment-mode", alignment_mode, 3)
     add_arg(args, "--alignment-output-mode", alignment_output_mode, 0)
     add_arg(args, "--wrapped-scoring", wrapped_scoring, False)
     add_arg(args, "-e", e, 0.001)
