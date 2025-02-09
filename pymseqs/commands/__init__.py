@@ -6,7 +6,7 @@ from .easy_linsearch import easy_linsearch
 from .easy_cluster import easy_cluster
 from .easy_linclust import easy_linclust
 from .easy_taxonomy import easy_taxonomy
-
+from .createtaxdb import createtaxdb
 __all__ = [
     "createdb",
     "search",
@@ -16,4 +16,5 @@ __all__ = [
     "easy_cluster",
     "easy_linclust",
     "easy_taxonomy",
+    "createtaxdb",
 ]
