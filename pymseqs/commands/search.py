@@ -173,14 +173,14 @@ def search(
 
         Note: find available matrices in the MMseqs2 data directory: (https://github.com/soedinglab/MMseqs2/tree/master/data)
 
-**    s** : float, optional
+    **s** : float, optional
         Sensitivity
         - 1.0: faster
         - 4.0: fast
         - 5.7 (default)
         - 7.5: sensitive
 
-**    k** : int, optional
+    **k** : int, optional
         k-mer length
         - 0: auto (default)
 
@@ -272,7 +272,7 @@ def search(
 
     Alignment Parameters
     --------------------
-**    a** : bool, optional
+    **a** : bool, optional
         Add backtrace string (convert to alignments with mmseqs convertalis module)
         - True
         - False (default)
@@ -299,7 +299,7 @@ def search(
         - True
         - False (default)
 
-**    e** : float, optional
+    **e** : float, optional
         E-value threshold (range 0.0, inf)
         - 0.001 (default)
 
@@ -321,7 +321,7 @@ def search(
         Number of alternative alignments to show
         - 0 (default)
 
-**    c** : float, optional
+    **c** : float, optional
         Coverage threshold for alignments
         - 0.0 (default)
         - Determines the minimum fraction of aligned residues required for a match, based on the selected cov_mode
@@ -645,7 +645,7 @@ def search(
         - True
         - False (default)
 
-**    v** : int, optional
+    **v** : int, optional
         Output verbosity
         - 0: quiet
         - 1: +errors

@@ -5,6 +5,7 @@ from .easy_search import easy_search
 from .easy_linsearch import easy_linsearch
 from .easy_cluster import easy_cluster
 from .easy_linclust import easy_linclust
+from .easy_taxonomy import easy_taxonomy
 
 __all__ = [
     "createdb",
@@ -14,4 +15,5 @@ __all__ = [
     "easy_linsearch",
     "easy_cluster",
     "easy_linclust",
+    "easy_taxonomy",
 ]
