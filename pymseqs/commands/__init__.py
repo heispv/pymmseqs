@@ -3,6 +3,7 @@ from .search import search
 from .cluster import cluster
 from .easy_search import easy_search
 from .easy_linsearch import easy_linsearch
+from .easy_cluster import easy_cluster
 
 __all__ = [
     "createdb",
@@ -10,4 +11,5 @@ __all__ = [
     "cluster",
     "easy_search",
     "easy_linsearch",
+    "easy_cluster",
 ]
