@@ -7,20 +7,30 @@ from typing import Any, Tuple, List
 
 def get_caller_dir() -> str:
     """
-    Get the directory of the calling script.
+    Get the directory of the script that's using this function.
     
     Returns:
         str: Absolute path to the directory containing the calling script
     """
     frame = inspect.currentframe()
-    # Get the frame of the calling function
-    caller_frame = frame.f_back.f_back  # Two levels up because of the additional function call
-    if caller_frame is not None:
+    try:
+        # Get the first frame (one level up)
+        caller_frame = frame.f_back
+        if caller_frame is None:
+            return os.getcwd()
+            
+        # Check if we need to go up one more level
+        caller_name = caller_frame.f_code.co_name
+        if caller_name != '<module>':  # If we're in a function, go up one more level
+            caller_frame = caller_frame.f_back
+            
+        # Get the full path of the calling script
         caller_file = caller_frame.f_code.co_filename
-        caller_dir = os.path.dirname(os.path.abspath(caller_file))
-    else:
-        caller_dir = os.getcwd()
-    return caller_dir
+        # Return the directory containing the script
+        return os.path.dirname(os.path.abspath(caller_file))
+    finally:
+        # Clean up the frame to prevent memory leaks
+        del frame
 
 def resolve_path(
     path: Path,
