@@ -3,7 +3,7 @@ from typing import Any, Dict, Union
 from pathlib import Path
 import yaml
 
-from pymseqs.utils import resolve_path, get_caller_dir
+from ..utils import resolve_path, get_caller_dir
 
 class BaseConfig(ABC):
 

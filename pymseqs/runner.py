@@ -1,7 +1,7 @@
 # pymseqs/runner.py
 
 import subprocess
-from pymseqs import get_mmseqs_binary
+from .binary import get_mmseqs_binary
 
 def run_mmseqs_command(args, capture_output=True):
     """

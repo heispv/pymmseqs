@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Union, List
-from pymseqs.config.base import BaseConfig
-from pymseqs.defaults import loader
+from ..config.base import BaseConfig
+from ..defaults import loader
 
 DEFAULTS = loader.load("createdb")
 

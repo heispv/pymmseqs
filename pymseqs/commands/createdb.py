@@ -2,9 +2,9 @@
 
 from pathlib import Path
 
-from pymseqs import run_mmseqs_command
-from pymseqs.config import CreateDBConfig
-from pymseqs.utils import (
+from ..runner import run_mmseqs_command
+from ..config import CreateDBConfig
+from ..utils import (
     get_caller_dir,
     add_arg
 )
@@ -44,7 +44,7 @@ def createdb(config: CreateDBConfig) -> None:
     for param_name, param_info in config._defaults.items():
         if not param_info['optional']:
             continue
-        
+
         cmd_param = f"--{param_name.replace('_', '-')}"
         
         current_value = getattr(config, param_name)
