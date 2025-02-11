@@ -1,0 +1,56 @@
+# pymseqs/defaults/createdb.yaml
+
+input_fasta:
+  optional: False
+  type: path
+  default: ""
+  choices: None
+  twin: False
+db_name:
+  optional: False
+  type: str
+  default: ""
+  choices: None
+  twin: False
+dbtype:
+  optional: True
+  type: int
+  default: 0
+  choices: [0, 1, 2]
+  twin: False
+shuffle:
+  optional: True
+  type: bool
+  default: True
+  choices: [True, False]
+  twin: False
+createdb_mode:
+  optional: True
+  type: int
+  default: 0
+  choices: [0, 1]
+  twin: False
+id_offset:
+  optional: True
+  type: int
+  default: 0
+  choices: None
+  twin: False
+compressed:
+  optional: True
+  type: bool
+  default: False
+  choices: [True, False]
+  twin: False
+v:
+  optional: True
+  type: int
+  default: 3
+  choices: [0, 1, 2, 3]
+  twin: False
+write_lookup:
+  optional: False
+  type: bool
+  default: True
+  choices: [True, False]
+  twin: False
