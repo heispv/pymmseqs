@@ -19,7 +19,8 @@ class CustomBuildCommand(build_py):
 
 setup(
     packages=find_packages(),
-    package_data={"pymseqs": ["bin/*"]},
+    # package_data={"pymseqs": ["bin/*"],
+    #               "pymseqs.defaults": ["*.yaml"]},
     include_package_data=True,
     cmdclass={"build_py": CustomBuildCommand},
 )
