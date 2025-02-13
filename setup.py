@@ -1,14 +1,14 @@
 # setup.py
 import os
 import sys
-
-# PEP 517 workaround: Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
 
 from setup_utils import download_mmseqs2
+
+# PEP 517 workaround: Add project root to Python path
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 
 class CustomBuildCommand(build_py):
     """Custom build command to download MMseqs2 before building."""
