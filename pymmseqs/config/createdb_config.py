@@ -7,7 +7,6 @@ from .base import BaseConfig
 from ..defaults import loader   
 from ..utils import (
     get_caller_dir,
-    add_arg,
     run_mmseqs_command
 )
 
@@ -136,34 +135,16 @@ class CreateDBConfig(BaseConfig):
 
     def run(self) -> None:
         # Get the directory of the calling script
-        caller_dir = Path(get_caller_dir())
+        caller_dir = get_caller_dir()
 
         # Use the config method to resolve all paths
         self.resolve_all_path(caller_dir)
 
-            # Validate that all required files exist
+        # Validate that all required files exist
         self.validate_required_files()
             
-        # Create the command arguments
-        args = [
-            "createdb",
-            *self.input_fasta,
-            str(self.db_name)
-        ]
-        
-        # Loop through all the optional parameters and add the arguments
-        for param_name, param_info in self._defaults.items():
-            if param_info['required']:
-                continue
-            
-            cmd_param = f"--{param_name.replace('_', '-')}"
-            
-            current_value = getattr(self, param_name)
-            default_value = param_info['default']
-            
-            add_arg(args, cmd_param, current_value, default_value)
-
-        # Run the command
+        # Get command arguments and run the command
+        args = self.get_command_args("createdb")
         mmseqs_output = run_mmseqs_command(args)
         
         if mmseqs_output.returncode == 0:

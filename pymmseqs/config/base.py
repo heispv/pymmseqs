@@ -5,7 +5,12 @@ from typing import Any, Dict, Union
 from pathlib import Path
 import yaml
 
-from ..utils import resolve_path, get_caller_dir
+from ..utils import (
+    resolve_path,
+    get_caller_dir,
+    add_arg,
+    add_twin_arg
+)
 
 class BaseConfig(ABC):
 
@@ -95,3 +100,34 @@ class BaseConfig(ABC):
             else:
                 if not Path(value).exists():
                     raise FileNotFoundError(f"Required file not found: {value}")
+
+    def get_command_args(self, command_name: str) -> list:
+        """
+        Create command arguments based on the configuration.
+        
+        Returns:
+            list: Command arguments starting with command name followed by parameters
+        """
+        # Create the command arguments starting with the command name from YAML
+        args = [command_name]
+        
+        # Loop through all parameters and add the arguments
+        for param_name, param_info in self._defaults.items():
+            if param_info['required']:
+                value = getattr(self, param_name)
+                if isinstance(value, list):
+                    args.extend(str(v) for v in value)
+                else:
+                    args.append(str(value))
+            else:
+                cmd_param = f"--{param_name.replace('_', '-')}"
+                
+                current_value = getattr(self, param_name)
+                default_value = param_info['default']
+                
+                if param_info['twin']:
+                    add_twin_arg(args, cmd_param, current_value, default_value, ',')
+                else:
+                    add_arg(args, cmd_param, current_value, default_value)
+        
+        return args
