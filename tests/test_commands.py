@@ -3,8 +3,7 @@ import subprocess
 from pathlib import Path
 import tempfile
 
-from pymseqs.config import CreateDBConfig
-from pymseqs.commands.createdb import createdb
+from pymmseqs.config import CreateDBConfig
 
 
 class TestCreateDB(unittest.TestCase):
@@ -30,7 +29,7 @@ class TestCreateDB(unittest.TestCase):
                 db_name=func_output,
                 write_lookup=1  # Match CLI default behavior
             )
-            createdb(config)
+            config.run()
             
             # 2. Run mmseqs CLI command
             # Create parent directory for CLI output

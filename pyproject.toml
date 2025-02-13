@@ -18,11 +18,15 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-dependencies = []  # Add runtime dependencies here if needed
+
+dependencies = [
+    "pyyaml>=6.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/heispv/pymmseqs"
 Documentation = "https://github.com/heispv/pymmseqs/docs"
+"Bug Tracker" = "https://github.com/heispv/pymmseqs/issues"
 
 [tool.setuptools]
 # Include files specified in package_data
