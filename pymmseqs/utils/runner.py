@@ -1,4 +1,4 @@
-# pymmseqs/runner.py
+# pymmseqs/utils/runner.py
 
 import subprocess
 from .binary import get_mmseqs_binary
