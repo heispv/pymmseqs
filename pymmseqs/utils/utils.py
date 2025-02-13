@@ -17,7 +17,7 @@ def get_caller_dir() -> str:
         # Get the first frame (one level up)
         caller_frame = frame.f_back
         if caller_frame is None:
-            return os.getcwd()
+            return Path(os.getcwd())
             
         # Check if we need to go up one more level
         caller_name = caller_frame.f_code.co_name
@@ -27,7 +27,7 @@ def get_caller_dir() -> str:
         # Get the full path of the calling script
         caller_file = caller_frame.f_code.co_filename
         # Return the directory containing the script
-        return os.path.dirname(os.path.abspath(caller_file))
+        return Path(os.path.dirname(os.path.abspath(caller_file)))
     finally:
         # Clean up the frame to prevent memory leaks
         del frame
