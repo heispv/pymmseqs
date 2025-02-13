@@ -1,10 +1,10 @@
-# pymseqs/commands/createtaxdb.py
+# pymmseqs/commands/createtaxdb.py
 
 from pathlib import Path
 from typing import Union, Optional
 
-from pymseqs import run_mmseqs_command
-from pymseqs.utils import (
+from ..utils import (
+    run_mmseqs_command,
     get_caller_dir,
     resolve_path,
     add_arg

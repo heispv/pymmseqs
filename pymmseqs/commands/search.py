@@ -1,10 +1,10 @@
-# pymseqs/commands/search.py
+# pymmseqs/commands/search.py
 
 from pathlib import Path
 from typing import Union, List, Tuple
 
-from pymseqs import run_mmseqs_command
-from pymseqs.utils import (
+from pymmseqs import run_mmseqs_command
+from pymmseqs.utils import (
     get_caller_dir,
     resolve_path,
     add_arg,

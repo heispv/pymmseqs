@@ -13,7 +13,7 @@ from setup_utils import download_mmseqs2
 class CustomBuildCommand(build_py):
     """Custom build command to download MMseqs2 before building."""
     def run(self):
-        install_dir = os.path.join(self.build_lib, "pymseqs", "bin")
+        install_dir = os.path.join(self.build_lib, "pymmseqs", "bin")
         download_mmseqs2(install_dir)
         super().run()
 

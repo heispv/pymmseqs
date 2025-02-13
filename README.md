@@ -1,20 +1,20 @@
-# pymseqs
+# pymmseqs
 
 A Python wrapper for [MMseqs2](https://github.com/soedinglab/MMseqs2), designed to streamline the integration of MMseqs2 functionality into your Python workflows.
 
 ## Installation
 
 ### Current Method (Clone and Install Locally)
-As of now, `pymseqs` is not available on PyPI. You can install it locally by following these steps:
+As of now, `pymmseqs` is not available on PyPI. You can install it locally by following these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/heispv/pymseqs.git
+    git clone https://github.com/heispv/pymmseqs.git
     ```
 
 2. Navigate to the project directory:
     ```bash
-    cd pymseqs
+    cd pymmseqs
     ```
 
 3. Create a virtual environment (recommended):

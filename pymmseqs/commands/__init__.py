@@ -1,4 +1,5 @@
-from .createdb import createdb
+# pymmseqs/commands/__init__.py
+
 from .search import search
 from .cluster import cluster
 from .easy_search import easy_search
@@ -8,7 +9,6 @@ from .easy_linclust import easy_linclust
 from .easy_taxonomy import easy_taxonomy
 from .createtaxdb import createtaxdb
 __all__ = [
-    "createdb",
     "search",
     "cluster",
     "easy_search",

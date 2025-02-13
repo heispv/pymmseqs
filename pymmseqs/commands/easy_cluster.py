@@ -1,10 +1,10 @@
-# pymseqs/commands/easy_cluster.py
+# pymmseqs/commands/easy_cluster.py
 
 from pathlib import Path
 from typing import Union, Tuple
 
-from pymseqs import run_mmseqs_command
-from pymseqs.utils import (
+from pymmseqs import run_mmseqs_command
+from pymmseqs.utils import (
     get_caller_dir,
     resolve_path,
     add_arg,
@@ -130,12 +130,12 @@ def easy_cluster(
         Substitution matrix for k-mer generation as (type:path, type:path)
         - Default: ("aa:VTML80.out", "nucl:nucleotide.out")
 
-**    s** : float, optional
+    **s** : float, optional
         Sensitivity.
         - Options: 1.0 (faster), 4.0 (fast), 7.5 (sensitive)
         - Default: 4.0
 
-**    k** : int, optional
+    **k** : int, optional
         k-mer length.
         - 0: automatically set to optimum (default)
 
@@ -277,7 +277,7 @@ def easy_cluster(
         - True
         - False (default)
 
-    e** : float, optional
+    **e** : float, optional
         E-value threshold (range 0.0, inf)
         - 0.001 (default)
 

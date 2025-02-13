@@ -1,4 +1,4 @@
-# pymseqs/utils/utils.py
+# pymmseqs/utils/utils.py
 
 import os
 import inspect

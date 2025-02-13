@@ -1,3 +1,5 @@
+# pymmseqs/config/__init__.py
+
 from .base import BaseConfig
 from .createdb_config import CreateDBConfig
 # from .search_config import SearchConfig
