@@ -3,10 +3,11 @@
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
+build-requirements = ["./setup_utils.py"]
 
 [project]
 name = "pymmseqs"
-version = "0.1.0"
+version = "0.0.1"
 description = "Python wrapper for mmseqs2"
 readme = "README.md"
 authors = [
