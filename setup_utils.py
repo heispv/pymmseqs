@@ -19,12 +19,12 @@ def get_mmseqs_download_info():
 
     if system == "Linux":
         if machine in ("x86_64", "amd64"):
-            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-amd64.tar.gz", "mmseqs"
+            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-arm64.tar.gz", "mmseqs"
         if machine in ("arm", "aarch64"):
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-arm64.tar.gz", "mmseqs"
     elif system == "Darwin":
         if machine in ("x86_64", "amd64"):
-            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-osx-amd64.tar.gz", "mmseqs"
+            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-osx-arm64.tar.gz", "mmseqs"
         if machine in ("arm64", "aarch64"):
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-osx-universal.tar.gz", "mmseqs"
     elif system == "Windows":
@@ -35,7 +35,7 @@ def get_mmseqs_download_info():
 
 def download_mmseqs_binary(url):
     """Download MMseqs2 binary from the given URL."""
-    print(f"Downloading MMseqs2 from {url}...")
+    print(f"Downloading MMseqs2 from {url}")
     try:
         with urlopen(url) as response:
             return response.read()
