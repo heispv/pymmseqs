@@ -1,7 +1,6 @@
 # examples/createdb/createdb_ex.py
 
-from pymseqs.config import CreateDBConfig
-from pymseqs.commands import createdb
+from pymmseqs.config import CreateDBConfig
 
 # Create and validate config
 config = CreateDBConfig(
@@ -10,7 +9,6 @@ config = CreateDBConfig(
 )
 
 # To use a config file, uncomment the following line
-
 # config = CreateDBConfig.from_yaml("config.yaml")
 
-createdb(config)
+config.run()
