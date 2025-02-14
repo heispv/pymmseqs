@@ -1,0 +1,73 @@
+# pymmseqs/defaults/createtaxdb.yaml
+
+sequence_db:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "The input sequence database"
+  twin: False
+  should_exist: True
+
+tmp_dir:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "The temporary directory for intermediate files"
+  twin: False
+  should_exist: False
+
+ncbi_tax_dump:
+  required: False
+  type: path
+  default: ""
+  choices: null
+  description: "NCBI tax dump directory. The tax dump can be downloaded here 'ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz'"
+  twin: False
+  should_exist: False
+
+tax_mapping_file:
+  required: False
+  type: path
+  default: ""
+  choices: null
+  description: "File to map sequence identifier to taxonomical identifier"
+  twin: False
+  should_exist: False
+
+tax_mapping_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1]
+  description: "Map taxonomy based on sequence database 0: .lookup file 1: .source file"
+  twin: False
+  should_exist: False
+
+tax_db_mode:
+  required: False
+  type: int
+  default: 1
+  choices: [0, 1]
+  description: "Create taxonomy database as: 0: .dmp flat files (human readable) 1: binary dump (faster readin)"
+  twin: False
+  should_exist: False
+
+threads:
+  required: False
+  type: int
+  default: 14
+  choices: null
+  description: "Number of CPU-cores used (all by default)"
+  twin: False
+  should_exist: False
+
+v:
+  required: False
+  type: int
+  default: 3
+  choices: [0, 1, 2, 3]
+  description: "Verbosity level: 0: quiet, 1: +errors, 2: +warnings, 3: +info"
+  twin: False
+  should_exist: False
