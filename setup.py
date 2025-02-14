@@ -29,16 +29,11 @@ def get_mmseqs_download_info():
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-sse41.tar.gz", "mmseqs"
         if machine in ("arm", "aarch64"):
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-arm64.tar.gz", "mmseqs"
-    elif system == "Darwin":
-        if machine in ("x86_64", "amd64"):
-            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-osx-arm64.tar.gz", "mmseqs"
-        if machine in ("arm64", "aarch64"):
-            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-osx-universal.tar.gz", "mmseqs"
+    elif system.lower() == "darwin":
+        return f"{base_url}/{MMSEQS_VERSION}/mmseqs-osx-universal.tar.gz", "mmseqs"
     elif system == "Windows":
         if machine in ("x86_64", "amd64"):
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-win64.zip", "mmseqs.exe"
-
-    raise RuntimeError(f"Unsupported platform: {system} {machine}")
 
 def download_mmseqs_binary(url):
     """Download MMseqs2 binary from the given URL."""
