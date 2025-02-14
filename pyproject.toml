@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "pyyaml>=6.0",
+    "pyyaml>=3.11",
 ]
 
 [project.urls]
