@@ -18,11 +18,10 @@ class BaseConfig(ABC):
         for key, value in kwargs.items():
             setattr(self, key, value)
         
-        self._path_params = []
-        self._required_files = []
+        self._defaults = {}
 
     @abstractmethod
-    def validate(self):
+    def _validate(self):
         """Validate the configuration parameters."""
         pass
 
@@ -59,49 +58,66 @@ class BaseConfig(ABC):
             
         return cls(**config_dict)
     
-    def resolve_all_path(self, base_dir: Path) -> None:
+    def _resolve_all_path(self, base_dir: Path) -> None:
         """
-        Resolve all path specified in _path_params.
+        Resolve all path specified in _defaults.
         
         Args:
             base_dir: Base directory for resolving relative path
         """
-        for param in self._path_params:
-            value = getattr(self, param, None)
-            if value is None:
-                continue
+        # Resolve all paths using _defaults
+        for param_name, param_info in self._defaults.items():
+            if param_info['type'] == 'path':
+                value = getattr(self, param_name)
+                if value:
+                    if isinstance(value, list):
+                        resolved_values = [str(resolve_path(v, base_dir)) for v in value]
+                        setattr(self, param_name, resolved_values)
+                    else:
+                        resolved = str(resolve_path(value, base_dir))
+                        setattr(self, param_name, resolved)
 
-            if isinstance(value, list):
-                resolved_values = [
-                    str(resolve_path(path, base_dir))
-                    for path in value
-                ]
-                setattr(self, param, resolved_values)
-            else:
-                resolved = str(resolve_path(value, base_dir))
-                setattr(self, param, resolved)
+    def _check_required_files(self) -> None:
+            """
+            Check that all required files exist.
+            
+            Raises:
+                FileNotFoundError: If any required file doesn't exist
+            """
+            for param_name, param_info in self._defaults.items():
+                if param_info['required'] and param_info['should_exist']:
+                    value = getattr(self, param_name)
+                    if value is None:
+                        raise ValueError(f"Required file is not set: {param_name}")
 
-    def validate_required_files(self) -> None:
+                if isinstance(value, list):
+                    for path in value:
+                        if not Path(path).exists():
+                            raise FileNotFoundError(f"Required file not found: {path}")
+                else:
+                    if not Path(value).exists():
+                        raise FileNotFoundError(f"Required file not found: {value}")
+
+    def _validate_choices(self):
         """
-        Validate that all required files exist.
-        
-        Raises:
-            FileNotFoundError: If any required file doesn't exist
+        Validate the choices.
+        Raises a ValueError if any parameter is invalid.
         """
-        for param in self._required_files:
-            value = getattr(self, param, None)
-            if value is None:
+        for param_name, param_info in self._defaults.items():
+            value = getattr(self, param_name)
+            
+            # Skip optional parameters with default values
+            if not param_info['required'] and value == param_info['default']:
                 continue
+            
+            # Validate choices if they exist
+            if param_info['choices'] is not None:
+                if value not in param_info['choices']:
+                    raise ValueError(
+                        f"{param_name} is {value} but must be one of {param_info['choices']}"
+                    )
 
-            if isinstance(value, list):
-                for path in value:
-                    if not Path(path).exists():
-                        raise FileNotFoundError(f"Required file not found: {path}")
-            else:
-                if not Path(value).exists():
-                    raise FileNotFoundError(f"Required file not found: {value}")
-
-    def get_command_args(self, command_name: str) -> list:
+    def _get_command_args(self, command_name: str) -> list:
         """
         Create command arguments based on the configuration.
         

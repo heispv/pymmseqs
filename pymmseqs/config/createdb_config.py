@@ -98,53 +98,28 @@ class CreateDBConfig(BaseConfig):
 
         self._defaults = DEFAULTS
         self._path_params = [param for param, info in DEFAULTS.items() if info['type'] == 'path']
-        self._required_files = [param for param, info in DEFAULTS.items()
-                                if info['required'] and info['should_exist']]
 
-    def validate(self) -> None:
-        """
-        Validate the configuration parameters.
-        Raises a ValueError if any parameter is invalid.
-        """
-        for param_name, param_info in self._defaults.items():
-            value = getattr(self, param_name)
+    def _validate(self) -> None:
+        self._check_required_files()
+        self._validate_choices()
             
-            # Skip optional parameters with default values
-            if not param_info['required'] and value == param_info['default']:
-                continue
-                
-            # Validate choices if they exist
-            if param_info['choices'] is not None:
-                if value not in param_info['choices']:
-                    raise ValueError(
-                        f"{param_name} is {value} but must be one of {param_info['choices']}"
-                    )
+        # Validate numeric constraints
+        if self.id_offset < 0:
+            raise ValueError(f"id_offset is {self.id_offset} but must be non-negative")
             
-            # Validate numeric constraints
-            if param_info['type'] == 'int' and param_name == 'id_offset' and value < 0:
-                raise ValueError(f"id_offset is {value} but must be non-negative")
-            
-            # Validate required files exist
-            if param_info['required'] and param_info['should_exist']:
-                if isinstance(value, list):
-                    for file_path in value:
-                        if not Path(file_path).exists():
-                            raise ValueError(f"Input file does not exist: {file_path}")
-                elif not Path(value).exists():
-                    raise ValueError(f"Input file does not exist: {value}")
 
     def run(self) -> None:
         # Get the directory of the calling script
         caller_dir = get_caller_dir()
 
         # Use the config method to resolve all paths
-        self.resolve_all_path(caller_dir)
+        self._resolve_all_path(caller_dir)
 
-        # Validate that all required files exist
-        self.validate_required_files()
+        # Validate the config
+        self._validate()
             
         # Get command arguments and run the command
-        args = self.get_command_args("createdb")
+        args = self._get_command_args("createdb")
         mmseqs_output = run_mmseqs_command(args)
         
         if mmseqs_output.returncode == 0:
