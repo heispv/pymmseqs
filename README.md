@@ -4,36 +4,14 @@ A Python wrapper for [MMseqs2](https://github.com/soedinglab/MMseqs2), designed 
 
 ## Installation
 
-### Current Method (Clone and Install Locally)
-As of now, `pymmseqs` is not available on PyPI. You can install it locally by following these steps:
+### Installing via pip
+The `pymmseqs` package is currently available on TestPyPI. You can install it using pip with the following command:
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/heispv/pymmseqs.git
-    ```
+```bash
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pymmseqs==0.0.5
+```
 
-2. Navigate to the project directory:
-    ```bash
-    cd pymmseqs
-    ```
-
-3. Create a virtual environment (recommended):
-    ```bash
-    python3 -m venv .venv
-    ```
-
-4. Activate the virtual environment:
-    ```bash
-    source .venv/bin/activate
-    ```
-
-5. Install the package:
-    ```bash
-    pip install .
-    ```
-
-### Future Availability
-Support for installation via PyPI will be added in the future.
+This command installs `pymmseqs` from TestPyPI while also using the main PyPI index to fetch any necessary dependencies.
 
 ## Usage
 
@@ -42,3 +20,5 @@ To test your installation, you can run one of the example scripts included in th
 ```bash
 python3 examples/createdb/createdb_ex.py
 ```
+
+Feel free to explore the repository for more examples and detailed usage instructions.
