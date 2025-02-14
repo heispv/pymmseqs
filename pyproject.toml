@@ -1,12 +1,12 @@
 # pyproject.toml
 
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "wheel", "build"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pymmseqs"
-version = "0.0.7"
+version = "0.0.8"
 description = "Python wrapper for mmseqs2"
 readme = "README.md"
 authors = [
@@ -16,7 +16,8 @@ license = { file = "LICENSE" }
 requires-python = ">=3.6"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
 ]
 
 dependencies = [

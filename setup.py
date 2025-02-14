@@ -11,6 +11,7 @@ from urllib.error import URLError
 from urllib.request import urlopen
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
+from setuptools.command.bdist_wheel import bdist_wheel
 
 # PEP 517 workaround: Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
@@ -90,8 +91,31 @@ class CustomBuildCommand(build_py):
         download_mmseqs2(install_dir)
         super().run()
 
+class CustomBdistWheel(bdist_wheel):
+    """Custom wheel building command."""
+    def finalize_options(self):
+        super().finalize_options()
+        # Mark this as a platform-specific wheel
+        self.root_is_pure = False
+        
+    def get_tag(self):
+        python_tag, abi_tag, platform_tag = super().get_tag()
+        
+        # Set platform-specific tag based on current OS
+        if platform.system() == "Darwin":
+            platform_tag = 'macosx_10_9_x86_64'  # Adjust version as needed
+        elif platform.system() == "Linux":
+            platform_tag = 'manylinux1_x86_64'   # Or appropriate manylinux tag
+        # Add Windows support if needed
+        
+        return python_tag, abi_tag, platform_tag
+
+
 setup(
     packages=find_packages(),
     include_package_data=True,
-    cmdclass={"build_py": CustomBuildCommand},
+    cmdclass={
+        "build_py": CustomBuildCommand,
+        "bdist_wheel": CustomBdistWheel
+    },
 )
