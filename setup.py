@@ -28,7 +28,7 @@ def get_mmseqs_download_info():
     if system == "Linux":
         if machine in ("x86_64", "amd64"):
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-sse41.tar.gz", "mmseqs"
-        if machine in ("arm", "aarch64"):
+        elif machine == "aarch64":
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-arm64.tar.gz", "mmseqs"
     elif system.lower() == "darwin":
         return f"{base_url}/{MMSEQS_VERSION}/mmseqs-osx-universal.tar.gz", "mmseqs"
@@ -99,16 +99,25 @@ class CustomBdistWheel(bdist_wheel):
         self.root_is_pure = False
         
     def get_tag(self):
-        python_tag, abi_tag, platform_tag = super().get_tag()
+        # Get default tags from parent class
+        py_tag, abi_tag, plat_tag = super().get_tag()
         
-        # Set platform-specific tag based on current OS
-        if platform.system() == "Darwin":
-            platform_tag = 'macosx_10_9_x86_64'  # Adjust version as needed
-        elif platform.system() == "Linux":
-            platform_tag = 'manylinux1_x86_64'   # Or appropriate manylinux tag
-        # Add Windows support if needed
+        # Keep Python tag (e.g., "cp313"), but force ABI tag to "none"
+        abi_tag = "none"  # Explicitly set ABI tag to "none"
         
-        return python_tag, abi_tag, platform_tag
+        # Update platform tag based on OS/architecture
+        system = platform.system()
+        machine = platform.machine().lower()
+        
+        if system == "Darwin":
+            plat_tag = "macosx_11_0_universal2"  # Universal2 for macOS
+        elif system == "Linux":
+            if machine == "x86_64":
+                plat_tag = "manylinux2014_x86_64"  # Modern x86_64 Linux
+            elif machine == "aarch64":
+                plat_tag = "manylinux2014_aarch64"  # ARM64 Linux
+        
+        return py_tag, abi_tag, plat_tag
 
 
 setup(
