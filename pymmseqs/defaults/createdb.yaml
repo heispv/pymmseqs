@@ -4,18 +4,20 @@ input_fasta:
   required: True
   type: path
   default: ""
-  choices: None
+  choices: null
   description: "The input fasta file"
   twin: False
   should_exist: True
+
 db_name:
   required: True
   type: path
   default: ""
-  choices: None
+  choices: null
   description: "The output sequence database"
   twin: False
   should_exist: False
+
 dbtype:
   required: False
   type: int
@@ -24,6 +26,7 @@ dbtype:
   description: "Database type 0: auto, 1: amino acid 2: nucleotides"
   twin: False
   should_exist: False
+
 shuffle:
   required: False
   type: bool
@@ -32,6 +35,7 @@ shuffle:
   description: "Shuffle the input sequences"
   twin: False
   should_exist: False
+
 createdb_mode:
   required: False
   type: int
@@ -40,14 +44,16 @@ createdb_mode:
   description: "Createdb mode 0: copy data, 1: soft link data and write new index (works only with single line fasta/q)"
   twin: False
   should_exist: False
+
 id_offset:
   required: False
   type: int
   default: 0
-  choices: None
+  choices: null
   description: "Numeric ids in index file are offset by this value"
   twin: False
   should_exist: False
+
 compressed:
   required: False
   type: bool
@@ -56,6 +62,7 @@ compressed:
   description: "Write compressed output"
   twin: False
   should_exist: False
+
 v:
   required: False
   type: int
@@ -64,6 +71,7 @@ v:
   description: "Verbosity level: 0: quiet, 1: +errors, 2: +warnings, 3: +info"
   twin: False
   should_exist: False
+
 write_lookup:
   required: False
   type: bool
