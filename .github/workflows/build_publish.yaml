@@ -35,10 +35,10 @@ jobs:
 
       # Install MMseqs2 (platform-specific)
       - name: Install MMseqs2 (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mmseqs2
+          if: matrix.os == 'ubuntu-latest'
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y mmseqs2
 
       - name: Install MMseqs2 (macOS)
         if: startsWith(matrix.os, 'macos')
