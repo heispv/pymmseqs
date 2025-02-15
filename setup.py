@@ -91,41 +91,10 @@ class CustomBuildCommand(build_py):
         download_mmseqs2(install_dir)
         super().run()
 
-class CustomBdistWheel(bdist_wheel):
-    """Custom wheel building command."""
-    def finalize_options(self):
-        super().finalize_options()
-        # Mark this as a platform-specific wheel
-        self.root_is_pure = False
-        
-    def get_tag(self):
-        # Get default tags from parent class
-        py_tag, abi_tag, plat_tag = super().get_tag()
-        
-        # Update platform tag based on OS/architecture
-        system = platform.system()
-        machine = platform.machine().lower()
-        
-        if system == "Darwin":
-            # Match NumPy's macOS versioning pattern
-            if machine == "arm64":
-                plat_tag = "macosx_11_0_arm64"
-            else:
-                plat_tag = "macosx_10_9_x86_64"
-        elif system == "Linux":
-            if machine == "x86_64":
-                plat_tag = "manylinux_2_17_x86_64.manylinux2014_x86_64"
-            elif machine == "aarch64":
-                plat_tag = "manylinux_2_17_aarch64.manylinux2014_aarch64"
-        
-        return py_tag, abi_tag, plat_tag
-
-
 setup(
     packages=find_packages(),
     include_package_data=True,
     cmdclass={
-        "build_py": CustomBuildCommand,
-        "bdist_wheel": CustomBdistWheel
+        "build_py": CustomBuildCommand
     },
 )
