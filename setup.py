@@ -1,21 +1,14 @@
-# setup.py
 import os
 import sys
 import io
-import os
 import platform
 import shutil
 import tarfile
 import zipfile
 from urllib.error import URLError
 from urllib.request import urlopen
-from distutils.util import get_platform
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
-from setuptools.command.bdist_wheel import bdist_wheel
-
-# PEP 517 workaround: Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 MMSEQS_VERSION = "16-747c6"
 
@@ -28,15 +21,13 @@ def get_mmseqs_download_info():
 
     if system == "Linux":
         if machine in ("x86_64", "amd64"):
-            # Use AVX2 binary for modern x86_64 systems
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-avx2.tar.gz", "mmseqs"
         elif machine == "aarch64":
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-arm64.tar.gz", "mmseqs"
-    elif system.lower() == "darwin":
+    elif system == "Darwin":
         return f"{base_url}/{MMSEQS_VERSION}/mmseqs-osx-universal.tar.gz", "mmseqs"
     elif system == "Windows":
-        if machine in ("x86_64", "amd64"):
-            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-win64.zip", "mmseqs.exe"
+        return f"{base_url}/{MMSEQS_VERSION}/mmseqs-win64.zip", "mmseqs.exe"
 
 def download_mmseqs_binary(url):
     """Download MMseqs2 binary from the given URL."""
@@ -52,11 +43,10 @@ def extract_mmseqs_binary(data, url, install_dir, binary_name):
     try:
         if url.endswith(".tar.gz"):
             with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as tar:
-                member_path = "mmseqs/bin/mmseqs.exe" if platform.system() == "Windows" else "mmseqs/bin/mmseqs"
+                member_path = "mmseqs/bin/mmseqs"  # Adjusted path for Linux/macOS
                 member = tar.getmember(member_path)
-                member.name = os.path.basename(member.name)  # Flatten directory structure
+                member.name = os.path.basename(member.name)
                 tar.extract(member, path=install_dir)
-                print(f"Extracted {member.name} to {install_dir}")
         elif url.endswith(".zip"):
             with zipfile.ZipFile(io.BytesIO(data)) as zip_ref:
                 member = "mmseqs/bin/mmseqs.exe"
@@ -64,53 +54,30 @@ def extract_mmseqs_binary(data, url, install_dir, binary_name):
                 extracted_path = os.path.join(install_dir, member)
                 dest_path = os.path.join(install_dir, binary_name)
                 shutil.move(extracted_path, dest_path)
-                print(f"Moved {member} to {dest_path}")
     except (KeyError, tarfile.TarError, zipfile.BadZipFile) as e:
         raise RuntimeError(f"Failed to extract MMseqs2 archive: {e}") from e
-
-def download_mmseqs2(install_dir):
-    """Download and install MMseqs2 binary to the specified directory."""
-    print("Starting MMseqs2 installation process...")
-    os.makedirs(install_dir, exist_ok=True)
-    print(f"Installation directory: {install_dir}")
-
-    binary_name = "mmseqs.exe" if platform.system() == "Windows" else "mmseqs"
-    binary_path = os.path.join(install_dir, binary_name)
-    
-    if os.path.exists(binary_path):
-        print(f"MMseqs2 already exists at {binary_path}")
-        return
-
-    url, _ = get_mmseqs_download_info()
-    data = download_mmseqs_binary(url)
-    extract_mmseqs_binary(data, url, install_dir, binary_name)
-
 
 class CustomBuildCommand(build_py):
     """Custom build command to download MMseqs2 before building."""
     def run(self):
         install_dir = os.path.join(self.build_lib, "pymmseqs", "bin")
-        download_mmseqs2(install_dir)
+        os.makedirs(install_dir, exist_ok=True)
+        
+        url, binary_name = get_mmseqs_download_info()
+        data = download_mmseqs_binary(url)
+        extract_mmseqs_binary(data, url, install_dir, binary_name)
+        
         super().run()
 
-class CustomBdistWheel(bdist_wheel):
-    def finalize_options(self):
-        super().finalize_options()
-        # Force platform-specific wheel
-        self.root_is_pure = False
-        
-    def get_tag(self):
-        python, abi, plat = super().get_tag()
-        # Return platform-specific tag
-        if plat == 'any':
-            plat = self.plat_name or get_platform()
-        return python, abi, plat
-
 setup(
+    name="pymmseqs",
+    version="0.1.0",
     packages=find_packages(),
+    package_data={
+        "pymmseqs": ["bin/*"]
+    },
     include_package_data=True,
     cmdclass={
-        "build_py": CustomBuildCommand,
-        "bdist_wheel": CustomBdistWheel
-    },
+        "build_py": CustomBuildCommand
+    }
 )
