@@ -9,6 +9,7 @@ import tarfile
 import zipfile
 from urllib.error import URLError
 from urllib.request import urlopen
+from distutils.util import get_platform
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
 from setuptools.command.bdist_wheel import bdist_wheel
@@ -91,10 +92,24 @@ class CustomBuildCommand(build_py):
         download_mmseqs2(install_dir)
         super().run()
 
+class CustomBdistWheel(bdist_wheel):
+    def finalize_options(self):
+        super().finalize_options()
+        # Force platform-specific wheel
+        self.root_is_pure = False
+        
+    def get_tag(self):
+        python, abi, plat = super().get_tag()
+        # Return platform-specific tag
+        if plat == 'any':
+            plat = self.plat_name or get_platform()
+        return python, abi, plat
+
 setup(
     packages=find_packages(),
     include_package_data=True,
     cmdclass={
-        "build_py": CustomBuildCommand
+        "build_py": CustomBuildCommand,
+        "bdist_wheel": CustomBdistWheel
     },
 )
