@@ -28,7 +28,8 @@ def get_mmseqs_download_info():
 
     if system == "Linux":
         if machine in ("x86_64", "amd64"):
-            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-sse41.tar.gz", "mmseqs"
+            # Use AVX2 binary for modern x86_64 systems
+            return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-avx2.tar.gz", "mmseqs"
         elif machine == "aarch64":
             return f"{base_url}/{MMSEQS_VERSION}/mmseqs-linux-arm64.tar.gz", "mmseqs"
     elif system.lower() == "darwin":
