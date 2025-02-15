@@ -46,7 +46,7 @@ jobs:
   build_wheels:
     name: Build wheel  ${{ matrix.python }}-${{ matrix.buildplat[1] }}-${{ matrix.buildplat[2] }}
     needs: test
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.buildplat[0] }}
     strategy:
       matrix:
         buildplat:
