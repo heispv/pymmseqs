@@ -102,20 +102,21 @@ class CustomBdistWheel(bdist_wheel):
         # Get default tags from parent class
         py_tag, abi_tag, plat_tag = super().get_tag()
         
-        # Keep Python tag (e.g., "cp313"), but force ABI tag to "none"
-        abi_tag = "none"  # Explicitly set ABI tag to "none"
-        
         # Update platform tag based on OS/architecture
         system = platform.system()
         machine = platform.machine().lower()
         
         if system == "Darwin":
-            plat_tag = "macosx_11_0_universal2"  # Universal2 for macOS
+            # Match NumPy's macOS versioning pattern
+            if machine == "arm64":
+                plat_tag = "macosx_11_0_arm64"
+            else:
+                plat_tag = "macosx_10_9_x86_64"
         elif system == "Linux":
             if machine == "x86_64":
-                plat_tag = "manylinux2014_x86_64"  # Modern x86_64 Linux
+                plat_tag = "manylinux_2_17_x86_64.manylinux2014_x86_64"
             elif machine == "aarch64":
-                plat_tag = "manylinux2014_aarch64"  # ARM64 Linux
+                plat_tag = "manylinux_2_17_aarch64.manylinux2014_aarch64"
         
         return py_tag, abi_tag, plat_tag
 
