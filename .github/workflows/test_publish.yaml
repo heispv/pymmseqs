@@ -122,8 +122,7 @@ jobs:
 
       - name: Build sdist
         run: |
-          python -m pip install build
-          python -m build --sdist
+          pipx run build --sdist
 
       - name: Upload sdist
         uses: actions/upload-artifact@v4
