@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pymmseqs"
-version = "0.0.1"
+version = "0.0.17"
 description = "Python wrapper for mmseqs2"
 readme = "README.md"
 authors = [
@@ -41,6 +41,6 @@ include-package-data = true
 [tool.bdist_wheel]
 # Platform tags for the wheels
 platforms = [
-    "manylinux_2_17_x86_64",  # For Linux x86_64
-    "macosx_11_0_arm64",      # For macOS ARM64
+    "manylinux_2_17_x86_64",
+    "macosx_11_0_arm64",
 ]
