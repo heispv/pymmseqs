@@ -125,7 +125,7 @@ class BaseConfig(ABC):
             list: Command arguments starting with command name followed by parameters
         """
         # Create the command arguments starting with the command name from YAML
-        args = [command_name]
+        args = [command_name.replace('_', '-')]
         
         # Loop through all parameters and add the arguments
         for param_name, param_info in self._defaults.items():
