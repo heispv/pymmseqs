@@ -8,8 +8,7 @@ import yaml
 from ..utils import (
     resolve_path,
     get_caller_dir,
-    add_arg,
-    add_twin_arg
+    add_arg
 )
 
 class BaseConfig(ABC):
@@ -132,18 +131,39 @@ class BaseConfig(ABC):
             if param_info['required']:
                 value = getattr(self, param_name)
                 if isinstance(value, list):
-                    args.extend(str(v) for v in value)
+                    args.append(','.join(map(str, value)))
                 else:
                     args.append(str(value))
             else:
-                cmd_param = f"--{param_name.replace('_', '-')}"
-                
+                # Get current and default values
                 current_value = getattr(self, param_name)
                 default_value = param_info['default']
                 
+                # Create parameter flag (handle single character parameters differently)
+                cmd_param = f"-{param_name}" if len(param_name) == 1 else f"--{param_name.replace('_', '-')}"
+                
+                # Handle different parameter types
                 if param_info['twin']:
-                    add_twin_arg(args, cmd_param, current_value, default_value, ',')
+                    # For twin parameters, compare as strings
+                    if str(current_value) != str(default_value):
+                        add_arg(args, cmd_param, current_value, default_value)
+                        
+                elif param_info['type'] == "comma_separated_str":
+                    # For comma-separated strings, compare as lists
+                    current_list = [item.strip() for item in str(current_value).split(",")]
+                    default_list = [item.strip() for item in str(default_value).split(",")]
+                    if current_list != default_list:
+                        cleaned_value = ",".join(current_list)
+                        args.extend([cmd_param, cleaned_value])
+                            
+                elif isinstance(current_value, bool):
+                    # For boolean values, only add if different from default
+                    if current_value != default_value:
+                        args.extend([cmd_param, "1" if current_value else "0"])
+                        
                 else:
-                    add_arg(args, cmd_param, current_value, default_value)
+                    # For all other types, compare directly
+                    if current_value != default_value:
+                        args.extend([cmd_param, str(current_value)])
         
         return args
