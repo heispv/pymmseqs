@@ -1,10 +1,19 @@
 # examples/createtaxdb/createtaxdb_ex.py
 
-from pymseqs.commands import createdb, createtaxdb
+from pymmseqs.config import (
+    CreateDBConfig,
+    CreateTaxDBConfig
+)
 
-createdb("input.fasta", "output/db", tmp_dir="output/tmp")
+create_db = CreateDBConfig(
+    sequence_db="input.fasta",
+    db_name="output/db",
+    tmp_dir="output/tmp"
+)
+create_db.run()
 
-createtaxdb(
+create_tax_db = CreateTaxDBConfig(
     sequence_db="output/db",
     tmp_dir="output/tmp"
 )
+create_tax_db.run()
