@@ -2,6 +2,7 @@
 
 from .base import BaseConfig
 from .createdb_config import CreateDBConfig
+from .createtaxdb_config import CreateTaxDBConfig
 from .easy_search_config import EasySearchConfig
 # from .search_config import SearchConfig
 # from .cluster_config import ClusterConfig
@@ -17,6 +18,7 @@ from .easy_search_config import EasySearchConfig
 __all__ = [
     'BaseConfig',
     'CreateDBConfig',
+    'CreateTaxDBConfig',
     'EasySearchConfig',
     # 'SearchConfig',
     # 'ClusterConfig',
