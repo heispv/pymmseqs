@@ -1,6 +1,6 @@
-# pymmseqs/defaults/easy-cluster.yaml
+# mmseqs/defaults/easy_cluster.yaml
 
-input_fasta:
+fasta_files:
   required: True
   type: path
   default: ""
@@ -14,7 +14,7 @@ cluster_prefix:
   type: path
   default: ""
   choices: null
-  description: "Prefix for the output cluster files"
+  description: "Prefix for cluster output files"
   twin: False
   should_exist: False
 
@@ -29,8 +29,8 @@ tmp_dir:
 
 seed_sub_mat:
   required: False
-  type: tuple
-  default: ("aa:VTML80.out", "nucl:nucleotide.out")
+  type: comma_separated_str
+  default: "aa:VTML80.out,nucl:nucleotide.out"
   choices: null
   description: "Substitution matrix file for k-mer generation"
   twin: True
@@ -65,8 +65,8 @@ target_search_mode:
 
 k_score:
   required: False
-  type: tuple
-  default: ("seq:2147483647", "prof:2147483647")
+  type: comma_separated_str
+  default: "seq:2147483647,prof:2147483647"
   choices: null
   description: "k-mer threshold for generating similar k-mer lists"
   twin: True
@@ -74,8 +74,8 @@ k_score:
 
 alph_size:
   required: False
-  type: tuple
-  default: ("aa:21", "nucl:5")
+  type: comma_separated_str
+  default: "aa:21,nucl:5"
   choices: null
   description: "Alphabet size range, different settings for amino acids and nucleotides"
   twin: True
@@ -290,8 +290,8 @@ wrapped_scoring:
 
 e:
   required: False
-  type: double
-  default: 1.000E-03
+  type: float
+  default: 0.001
   choices: null
   description: "List matches below this E-value, range 0.0-inf"
   twin: False
@@ -398,8 +398,8 @@ corr_score_weight:
 
 gap_open:
   required: False
-  type: tuple
-  default: ("aa:11", "nucl:5")
+  type: comma_separated_str
+  default: "aa:11,nucl:5"
   choices: null
   description: "Gap open cost, different settings for amino acids and nucleotides"
   twin: True
@@ -407,8 +407,8 @@ gap_open:
 
 gap_extend:
   required: False
-  type: tuple
-  default: ("aa:1", "nucl:2")
+  type: comma_separated_str
+  default: "aa:1,nucl:2"
   choices: null
   description: "Gap extension cost, different settings for amino acids and nucleotides"
   twin: True
@@ -428,7 +428,7 @@ cluster_mode:
   type: int
   default: 0
   choices: [0, 1, 2, 3]
-  description: "Clustering mode, 0: Set-Cover (greedy), 1: Connected component (BLASTclust), 2,3: Greedy clustering by sequence length (CDHIT)"
+  description: "Clustering mode: 0 Set-Cover (greedy), 1 Connected component (BLASTclust), 2,3 Greedy clustering by sequence length (CDHIT)"
   twin: False
   should_exist: False
 
@@ -446,7 +446,7 @@ similarity_type:
   type: int
   default: 2
   choices: [1, 2]
-  description: "Type of score used for clustering. 1: alignment score, 2: sequence identity"
+  description: "Type of score used for clustering: 1 alignment score, 2 sequence identity"
   twin: False
   should_exist: False
 
@@ -473,7 +473,7 @@ cluster_reassign:
   type: bool
   default: False
   choices: [True, False]
-  description: "Cascaded clustering can cluster sequences that do not fulfill the clustering criteria. Cluster reassignment corrects these errors"
+  description: "Cascaded clustering can cluster sequence that do not fulfill the clustering criteria. Cluster reassignment corrects these errors"
   twin: False
   should_exist: False
 
@@ -506,8 +506,8 @@ kmer_per_seq:
 
 kmer_per_seq_scale:
   required: False
-  type: tuple
-  default: ("aa:0.000", "nucl:0.200")
+  type: comma_separated_str
+  default: "aa:0.0,nucl:0.2"
   choices: null
   description: "Scale k-mer per sequence based on sequence length as kmer-per-seq val + scale x seqlen"
   twin: True
@@ -552,7 +552,7 @@ ignore_multi_kmer:
 pca:
   required: False
   type: float
-  default: 0.000
+  default: null
   choices: null
   description: "Pseudo count admixture strength"
   twin: False
@@ -561,7 +561,7 @@ pca:
 pcb:
   required: False
   type: float
-  default: 0.000
+  default: null
   choices: null
   description: "Pseudo counts: Neff at half of maximum admixture (range 0.0-inf)"
   twin: False
@@ -590,7 +590,7 @@ dbtype:
   type: int
   default: 0
   choices: [0, 1, 2]
-  description: "Database type, 0: auto, 1: amino acid, 2: nucleotides"
+  description: "Database type 0: auto, 1: amino acid, 2: nucleotides"
   twin: False
   should_exist: False
 
@@ -608,7 +608,7 @@ createdb_mode:
   type: int
   default: 1
   choices: [0, 1]
-  description: "Createdb mode, 0: copy data, 1: soft link data and write new index (works only with single line fasta/q)"
+  description: "Createdb mode 0: copy data, 1: soft link data and write new index (works only with single line fasta/q)"
   twin: False
   should_exist: False
 
@@ -623,8 +623,8 @@ id_offset:
 
 sub_mat:
   required: False
-  type: tuple
-  default: ("aa:blosum62.out", "nucl:nucleotide.out")
+  type: comma_separated_str
+  default: "aa:blosum62.out,nucl:nucleotide.out"
   choices: null
   description: "Substitution matrix file"
   twin: True
@@ -644,7 +644,7 @@ db_load_mode:
   type: int
   default: 0
   choices: [0, 1, 2, 3]
-  description: "Database preload mode, 0: auto, 1: fread, 2: mmap, 3: mmap+touch"
+  description: "Database preload mode 0: auto, 1: fread, 2: mmap, 3: mmap+touch"
   twin: False
   should_exist: False
 
@@ -653,15 +653,15 @@ threads:
   type: int
   default: 14
   choices: null
-  description: "Number of CPU-cores used, all by default"
+  description: "Number of CPU-cores used (all by default)"
   twin: False
   should_exist: False
 
 compressed:
   required: False
-  type: bool
-  default: False
-  choices: [True, False]
+  type: int
+  default: 0
+  choices: null
   description: "Write compressed output"
   twin: False
   should_exist: False
@@ -671,7 +671,7 @@ v:
   type: int
   default: 3
   choices: [0, 1, 2, 3]
-  description: "Verbosity level, 0: quiet, 1: +errors, 2: +warnings, 3: +info"
+  description: "Verbosity level: 0: quiet, 1: +errors, 2: +warnings, 3: +info"
   twin: False
   should_exist: False
 
@@ -707,7 +707,7 @@ filter_hits:
   type: bool
   default: False
   choices: [True, False]
-  description: "Filter hits by sequence identity and coverage"
+  description: "Filter hits by seq.id. and coverage"
   twin: False
   should_exist: False
 
@@ -716,7 +716,7 @@ sort_results:
   type: int
   default: 0
   choices: [0, 1]
-  description: "Sort results, 0: no sorting, 1: sort by E-value (Alignment) or sequence identity (Hamming)"
+  description: "Sort results: 0: no sorting, 1: sort by E-value (Alignment) or seq.id. (Hamming)"
   twin: False
   should_exist: False
 
