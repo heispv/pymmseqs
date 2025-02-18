@@ -71,13 +71,3 @@ def add_arg(
             args.extend([flag, "1" if value else "0"])
         else:
             args.extend([flag, str(value)])
-
-def add_twin_arg(
-    args: List,
-    flag: str,
-    value: Tuple,
-    defaults: Tuple,
-    sep: str
-):
-    if value is not None and value != defaults:
-        args.extend([flag, f"{value[0]}{sep}{value[1]}"])
