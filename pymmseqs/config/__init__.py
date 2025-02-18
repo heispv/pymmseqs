@@ -2,8 +2,8 @@
 
 from .base import BaseConfig
 from .createdb_config import CreateDBConfig
+from .easy_search_config import EasySearchConfig
 # from .search_config import SearchConfig
-# from .easy_search_config import EasySearchConfig
 # from .cluster_config import ClusterConfig
 # from .easy_cluster_config import EasyClusterConfig
 # from .linclust_config import LinClustConfig
@@ -17,8 +17,8 @@ from .createdb_config import CreateDBConfig
 __all__ = [
     'BaseConfig',
     'CreateDBConfig',
+    'EasySearchConfig',
     # 'SearchConfig',
-    # 'EasySearchConfig',
     # 'ClusterConfig',
     # 'EasyClusterConfig',
     # 'LinClustConfig',
