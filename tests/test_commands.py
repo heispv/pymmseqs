@@ -16,8 +16,8 @@ class TestCreateDB(unittest.TestCase):
             
             # Create test FASTA file
             fasta_content = ">seq1\nAAAA\n>seq2\nCCCC\n"
-            input_fasta = tmp_path / "input_test.fasta"
-            input_fasta.write_text(fasta_content)
+            fasta_file = tmp_path / "input_test.fasta"
+            fasta_file.write_text(fasta_content)
             
             # Define output paths
             func_output = tmp_path / "func_output" / "mydb"
@@ -25,8 +25,8 @@ class TestCreateDB(unittest.TestCase):
             
             # 1. Run our Python function implementation
             config = CreateDBConfig(
-                input_fasta=input_fasta,
-                db_name=func_output,
+                fasta_file=fasta_file,
+                sequence_db=func_output,
                 write_lookup=1  # Match CLI default behavior
             )
             config.run()
@@ -39,7 +39,7 @@ class TestCreateDB(unittest.TestCase):
                 [
                     "mmseqs",
                     "createdb",
-                    str(input_fasta),
+                    str(fasta_file),
                     str(cli_output),
                     "--write-lookup", "1"  # Match our function's default
                 ],
