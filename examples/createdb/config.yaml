@@ -1,2 +1,2 @@
-input_fasta: input.fasta
-db_name: output/db
+fasta_file: input.fasta
+sequence_db: output/db
