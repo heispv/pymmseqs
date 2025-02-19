@@ -8,7 +8,7 @@ A Python wrapper for [MMseqs2](https://github.com/soedinglab/MMseqs2), designed 
 The `pymmseqs` package is currently available on TestPyPI. You can install it using pip with the following command:
 
 ```bash
-pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pymmseqs==0.0.5
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pymmseqs
 ```
 
 This command installs `pymmseqs` from TestPyPI while also using the main PyPI index to fetch any necessary dependencies.
