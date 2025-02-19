@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pymmseqs"
-version = "0.0.17"
+version = "0.0.18"
 description = "Python wrapper for mmseqs2"
 readme = "README.md"
 authors = [
