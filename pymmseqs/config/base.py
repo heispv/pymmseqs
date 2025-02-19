@@ -21,14 +21,27 @@ class BaseConfig(ABC):
 
     @abstractmethod
     def _validate(self):
-        """Validate the configuration parameters."""
+        """
+        Validate the configuration parameters.
+        
+        This method must be implemented by subclasses to define their specific
+        validation rules.
+        
+        Raises:
+            ValueError: If any parameter fails validation
+        """
         pass
 
     def to_dict(self, exclude_private: bool = True) -> Dict[str, Any]:
-        """Convert config to dictionary, excluding None values.
+        """
+        Convert configuration to a dictionary, excluding None values.
         
         Args:
-            exclude_private: If True, excludes attributes starting with '_' (like _defaults)
+            exclude_private (bool): If True, excludes attributes starting with '_'
+                                  like _defaults and other internal attributes
+        
+        Returns:
+            Dict[str, Any]: Dictionary containing the configuration parameters
         """
         base_dict = {k: v for k, v in self.__dict__.items() 
                     if v is not None and (not exclude_private or not k.startswith('_'))}
@@ -37,17 +50,17 @@ class BaseConfig(ABC):
     @classmethod
     def from_yaml(cls, yaml_path: Union[str, Path]) -> 'BaseConfig':
         """
-        Create a config instance from a YAML file.
+        Create a configuration instance from a YAML file.
         
         Args:
-            yaml_path: Path to the YAML configuration file
+            yaml_path (Union[str, Path]): Path to the YAML configuration file
             
         Returns:
-            Config instance
+            BaseConfig: New instance of the configuration class
             
         Raises:
             ValueError: If required fields are missing
-            FileNotFoundError: If any input file doesn't exist
+            FileNotFoundError: If the YAML file or any required input files don't exist
         """
         caller_dir = Path(get_caller_dir())
         yaml_path = resolve_path(yaml_path, caller_dir)
@@ -59,10 +72,13 @@ class BaseConfig(ABC):
     
     def _resolve_all_path(self, base_dir: Path) -> None:
         """
-        Resolve all path specified in _defaults.
+        Resolve all paths specified in _defaults relative to a base directory.
+        
+        This method handles both single paths and lists of paths, converting them
+        to absolute paths based on the provided base directory.
         
         Args:
-            base_dir: Base directory for resolving relative path
+            base_dir (Path): Base directory for resolving relative paths
         """
         # Resolve all paths using _defaults
         for param_name, param_info in self._defaults.items():
@@ -77,30 +93,39 @@ class BaseConfig(ABC):
                         setattr(self, param_name, resolved)
 
     def _check_required_files(self) -> None:
-            """
-            Check that all required files exist.
-            
-            Raises:
-                FileNotFoundError: If any required file doesn't exist
-            """
-            for param_name, param_info in self._defaults.items():
-                if param_info['required'] and param_info['should_exist']:
-                    value = getattr(self, param_name)
-                    if value is None:
-                        raise ValueError(f"Required file is not set: {param_name}")
+        """
+        Verify that all required files exist.
+        
+        Checks both single files and lists of files marked as required in _defaults.
+        
+        Raises:
+            ValueError: If a required file parameter is not set
+            FileNotFoundError: If any required file doesn't exist
+        """
+        for param_name, param_info in self._defaults.items():
+            if param_info['required'] and param_info['should_exist']:
+                value = getattr(self, param_name)
+                if value is None:
+                    raise ValueError(f"Required file is not set: {param_name}")
 
-                if isinstance(value, list):
-                    for path in value:
-                        if not Path(path).exists():
-                            raise FileNotFoundError(f"Required file not found: {path}")
-                else:
-                    if not Path(value).exists():
-                        raise FileNotFoundError(f"Required file not found: {value}")
+            if isinstance(value, list):
+                for path in value:
+                    if not Path(path).exists():
+                        raise FileNotFoundError(f"Required file not found: {path}")
+            else:
+                if not Path(value).exists():
+                    raise FileNotFoundError(f"Required file not found: {value}")
 
     def _validate_choices(self):
         """
-        Validate the choices.
-        Raises a ValueError if any parameter is invalid.
+        Validate parameters against their allowed choices.
+        
+        Checks all parameters that have defined choices in _defaults to ensure
+        they contain valid values. Skips optional parameters that are set to
+        their default values.
+        
+        Raises:
+            ValueError: If any parameter has an invalid value
         """
         for param_name, param_info in self._defaults.items():
             value = getattr(self, param_name)
@@ -118,8 +143,17 @@ class BaseConfig(ABC):
 
     def _get_command_args(self, command_name: str) -> list:
         """
-        Create command arguments based on the configuration.
+        Generate command-line arguments for MMseqs2 execution.
         
+        Creates a list of command-line arguments based on the configuration,
+        handling different parameter types (boolean, twin, comma-separated strings)
+        appropriately.
+
+        - Check the related .yaml file for more information about the _defaults parameter for each command.
+        
+        Args:
+            command_name (str): Name of the MMseqs2 command to execute
+            
         Returns:
             list: Command arguments starting with command name followed by parameters
         """
