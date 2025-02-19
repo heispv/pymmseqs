@@ -18,7 +18,7 @@ class CreateDBConfig(BaseConfig):
 
     Parameters
     ----------
-    `input_fasta` : Union[List[Union[str, Path]], Union[str, Path]]
+    `fasta_file` : Union[List[Union[str, Path]], Union[str, Path]]
     Path(s) to the input FASTA file(s). This can be:
         - A single string or Path object (e.g., `"input.fasta"` or `Path("input.fasta")`)
         - A list of strings or Path objects (e.g., `["input1.fasta", "input2.fasta"]` or 
@@ -28,7 +28,7 @@ class CreateDBConfig(BaseConfig):
         If the paths are relative, they are resolved relative to the directory of the calling script
         If the paths are absolute, they are used as-is.
 
-    `db_name` : Union[str, Path]
+    `sequence_db` : Union[str, Path]
         Database path prefix, including the desired directory structure (e.g., `"output/dbs/mydb"`)
         - If the path is relative, it is resolved relative to the directory
         of the calling script
@@ -75,8 +75,8 @@ class CreateDBConfig(BaseConfig):
 
     def __init__(
         self,
-        input_fasta: Union[List[Union[str, Path]], Union[str, Path]],
-        db_name: Union[str, Path],
+        fasta_file: Union[List[Union[str, Path]], Union[str, Path]],
+        sequence_db: Union[str, Path],
         dbtype: int = 0,
         shuffle: bool = True,
         createdb_mode: int = 0,
@@ -85,9 +85,9 @@ class CreateDBConfig(BaseConfig):
         v: int = 3,
         write_lookup: bool = True
     ):
-        self.input_fasta = input_fasta if isinstance(input_fasta, list) else [input_fasta]
-        self.input_fasta = [Path(f) for f in self.input_fasta]
-        self.db_name = Path(db_name)
+        self.fasta_file = fasta_file if isinstance(fasta_file, list) else [fasta_file]
+        self.fasta_file = [Path(f) for f in self.fasta_file]
+        self.sequence_db = Path(sequence_db)
         self.dbtype = dbtype
         self.shuffle = shuffle
         self.createdb_mode = createdb_mode
@@ -125,4 +125,4 @@ class CreateDBConfig(BaseConfig):
         if mmseqs_output.returncode == 0:
             if mmseqs_output.stdout:
                 print(mmseqs_output.stdout)
-            print(f"Database path: {self.db_name}")
+            print(f"Database path: {self.sequence_db}")

@@ -1,6 +1,6 @@
 # pymmseqs/defaults/createdb.yaml
 
-input_fasta:
+fasta_file:
   required: True
   type: path
   default: ""
@@ -9,7 +9,7 @@ input_fasta:
   twin: False
   should_exist: True
 
-db_name:
+sequence_db:
   required: True
   type: path
   default: ""
