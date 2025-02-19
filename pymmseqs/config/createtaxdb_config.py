@@ -83,8 +83,6 @@ class CreateTaxDBConfig(BaseConfig):
 
         self._defaults = DEFAULTS
         self._path_params = [param for param, info in DEFAULTS.items() if info['type'] == 'path']
-        self._required_files = [param for param, info in DEFAULTS.items()
-                              if info['required'] and info['should_exist']]
 
     def validate(self) -> None:
         self._check_required_files()
