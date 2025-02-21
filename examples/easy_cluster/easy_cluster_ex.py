@@ -3,9 +3,9 @@
 from pymmseqs.config import EasyClusterConfig
 
 easy_cluster = EasyClusterConfig(
-    fasta_files="uniprot.fasta",
-    cluster_prefix="new_output/clusters",
-    tmp_dir="new_output/tmp",
+    fasta_files="input.fasta",
+    cluster_prefix="output/clusters",
+    tmp_dir="output/tmp",
     v=2
 )
 
