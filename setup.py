@@ -22,7 +22,7 @@ class build_py(_build_py):
     def download_mmseqs(self, target_dir):
         # Call the shell script with the target directory
         try:
-            subprocess.check_call(['bash', 'scripts/download_mmseqs.sh', target_dir])
+            subprocess.check_call(['sh', 'scripts/download_mmseqs.sh', target_dir])
         except subprocess.CalledProcessError as e:
             raise RuntimeError("Failed to download MMseqs binary") from e
 

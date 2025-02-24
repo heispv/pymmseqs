@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # scripts/download_mmseqs.sh
 
 # Exit on error and show commands
