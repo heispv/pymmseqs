@@ -29,3 +29,6 @@ htmlcov/
 
 # macOS specific
 .DS_Store
+
+# Output directories in all examples
+examples/**/output/
