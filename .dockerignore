@@ -1,0 +1,21 @@
+# Python cache and temporary files
+**/__pycache__/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Git and IDE files
+.git/
+.github/
+.gitignore
+.vscode/
+.idea/
+
+# Logs directories
+**/*.log
+
+# Output directories in all examples
+examples/**/output/
