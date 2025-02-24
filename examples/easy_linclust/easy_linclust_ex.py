@@ -1,10 +1,11 @@
 # examples/easy_linclust/easy_linclust_ex.py
 
-from pymseqs.commands import easy_linclust
+from pymmseqs.config import EasyLinClustConfig
 
-easy_linclust(
-    "input.fasta",
-    "output/clusters",
-    "output/tmp",
+config = EasyLinClustConfig(
+    fasta_files="input.fasta",
+    cluster_prefix="output/clusters",
+    tmp_dir="output/tmp",
     v=3,
 )
+config.run()

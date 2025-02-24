@@ -7,6 +7,7 @@ from .search_config import SearchConfig
 from .easy_search_config import EasySearchConfig
 from .easy_linsearch_config import EasyLinSearchConfig
 from .easy_cluster_config import EasyClusterConfig
+from .easy_linclust_config import EasyLinClustConfig
 __all__ = [
     'BaseConfig',
     'CreateDBConfig',
@@ -15,4 +16,5 @@ __all__ = [
     'EasySearchConfig',
     'EasyLinSearchConfig',
     'EasyClusterConfig',
+    'EasyLinClustConfig',
 ]

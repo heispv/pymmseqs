@@ -1,0 +1,568 @@
+# mmseqs/defaults/easy_linclust.yaml
+
+fasta_files:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "The input fasta files, potentially compressed as .gz or .bz2"
+  twin: False
+  should_exist: True
+
+cluster_prefix:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "Prefix for cluster output files"
+  twin: False
+  should_exist: False
+
+tmp_dir:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "Temporary directory where temporary files are saved"
+  twin: False
+  should_exist: False
+
+comp_bias_corr:
+  required: False
+  type: int
+  default: 1
+  choices: [0, 1]
+  description: "Correct for locally biased amino acid composition, with range 0-1"
+  twin: False
+  should_exist: False
+
+comp_bias_corr_scale:
+  required: False
+  type: float
+  default: 1.000
+  choices: null
+  description: "Scale for correcting locally biased amino acid composition, range 0-1"
+  twin: False
+  should_exist: False
+
+add_self_matches:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Artificially add entries of queries with themselves for clustering"
+  twin: False
+  should_exist: False
+
+alph_size:
+  required: False
+  type: comma_separated_str
+  default: "aa:21,nucl:5"
+  choices: null
+  description: "Alphabet size range, different settings for amino acids and nucleotides"
+  twin: True
+  should_exist: False
+
+spaced_kmer_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1]
+  description: "0 for consecutive positions in k-mers, 1 for spaced k-mers"
+  twin: False
+  should_exist: False
+
+spaced_kmer_pattern:
+  required: False
+  type: str
+  default: ""
+  choices: null
+  description: "User-specified spaced k-mer pattern"
+  twin: False
+  should_exist: False
+
+mask:
+  required: False
+  type: int
+  default: 1
+  choices: [0, 1]
+  description: "Mask sequences in prefilter stage with tantan, 0 without, 1 with low complexity masking"
+  twin: False
+  should_exist: False
+
+mask_prob:
+  required: False
+  type: float
+  default: 0.900
+  choices: null
+  description: "Mask sequences if probability is above threshold"
+  twin: False
+  should_exist: False
+
+mask_lower_case:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1]
+  description: "Exclude lowercase letters from k-mer search, 0 to include, 1 to exclude"
+  twin: False
+  should_exist: False
+
+mask_n_repeat:
+  required: False
+  type: int
+  default: 0
+  choices: null
+  description: "Repeat letters that occur above threshold in a row"
+  twin: False
+  should_exist: False
+
+k:
+  required: False
+  type: int
+  default: 0
+  choices: null
+  description: "k-mer length, automatically set to optimum if set to 0"
+  twin: False
+  should_exist: False
+
+split_memory_limit:
+  required: False
+  type: str
+  default: "0"
+  choices: null
+  description: "Max memory per split, with units like B, K, M, G; defaults to all available system memory if set to 0"
+  twin: False
+  should_exist: False
+
+a:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Add backtrace string, convert to alignments with mmseqs convertalis module"
+  twin: False
+  should_exist: False
+
+alignment_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2, 3, 4]
+  description: "How to compute the alignment: 0 automatic, 1 only score and end_pos, 2 also start_pos and cov, 3 also seq.id, 4 only ungapped alignment"
+  twin: False
+  should_exist: False
+
+alignment_output_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2, 3, 4, 5]
+  description: "Output mode for the alignment"
+  twin: False
+  should_exist: False
+
+wrapped_scoring:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Double the (nucleotide) query sequence during the scoring process to allow wrapped diagonal scoring around end and start"
+  twin: False
+  should_exist: False
+
+e:
+  required: False
+  type: float
+  default: 0.001
+  choices: null
+  description: "List matches below this E-value, range 0.0-inf"
+  twin: False
+  should_exist: False
+
+min_seq_id:
+  required: False
+  type: float
+  default: 0.000
+  choices: null
+  description: "List matches above this sequence identity for clustering, range 0.0-1.0"
+  twin: False
+  should_exist: False
+
+min_aln_len:
+  required: False
+  type: int
+  default: 0
+  choices: null
+  description: "Minimum alignment length, range 0-INT_MAX"
+  twin: False
+  should_exist: False
+
+seq_id_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2]
+  description: "Sequence identity mode for alignment length, 0 alignment length, 1 shorter, 2 longer sequence"
+  twin: False
+  should_exist: False
+
+alt_ali:
+  required: False
+  type: int
+  default: 0
+  choices: null
+  description: "Show up to this many alternative alignments"
+  twin: False
+  should_exist: False
+
+c:
+  required: False
+  type: float
+  default: 0.800
+  choices: null
+  description: "List matches above this fraction of aligned (covered) residues"
+  twin: False
+  should_exist: False
+
+cov_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2, 3, 4, 5]
+  description: "Coverage mode for alignment"
+  twin: False
+  should_exist: False
+
+max_rejected:
+  required: False
+  type: int
+  default: 2147483647
+  choices: null
+  description: "Maximum rejected alignments before alignment calculation for a query is stopped"
+  twin: False
+  should_exist: False
+
+max_accept:
+  required: False
+  type: int
+  default: 2147483647
+  choices: null
+  description: "Maximum accepted alignments before alignment calculation for a query is stopped"
+  twin: False
+  should_exist: False
+
+score_bias:
+  required: False
+  type: float
+  default: 0.000
+  choices: null
+  description: "Score bias when computing SW alignment (in bits)"
+  twin: False
+  should_exist: False
+
+realign:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Compute more conservative, shorter alignments (scores and E-values not changed)"
+  twin: False
+  should_exist: False
+
+realign_score_bias:
+  required: False
+  type: float
+  default: -0.200
+  choices: null
+  description: "Additional bias when computing realignment"
+  twin: False
+  should_exist: False
+
+realign_max_seqs:
+  required: False
+  type: int
+  default: 2147483647
+  choices: null
+  description: "Maximum number of results to return in realignment"
+  twin: False
+  should_exist: False
+
+corr_score_weight:
+  required: False
+  type: float
+  default: 0.000
+  choices: null
+  description: "Weight of backtrace correlation score that is added to the alignment score"
+  twin: False
+  should_exist: False
+
+gap_open:
+  required: False
+  type: comma_separated_str
+  default: "aa:11,nucl:5"
+  choices: null
+  description: "Gap open cost, different settings for amino acids and nucleotides"
+  twin: True
+  should_exist: False
+
+gap_extend:
+  required: False
+  type: comma_separated_str
+  default: "aa:1,nucl:2"
+  choices: null
+  description: "Gap extension cost, different settings for amino acids and nucleotides"
+  twin: True
+  should_exist: False
+
+zdrop:
+  required: False
+  type: int
+  default: 40
+  choices: null
+  description: "Maximal allowed difference between score values before alignment is truncated (nucleotide alignment only)"
+  twin: False
+  should_exist: False
+
+cluster_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2, 3]
+  description: "Clustering mode: 0 Set-Cover (greedy), 1 Connected component (BLASTclust), 2,3 Greedy clustering by sequence length (CDHIT)"
+  twin: False
+  should_exist: False
+
+max_iterations:
+  required: False
+  type: int
+  default: 1000
+  choices: null
+  description: "Maximum depth of breadth first search in connected component clustering"
+  twin: False
+  should_exist: False
+
+similarity_type:
+  required: False
+  type: int
+  default: 2
+  choices: [1, 2]
+  description: "Type of score used for clustering: 1 alignment score, 2 sequence identity"
+  twin: False
+  should_exist: False
+
+weights:
+  required: False
+  type: str
+  default: ""
+  choices: null
+  description: "Weights used for cluster prioritization"
+  twin: False
+  should_exist: False
+
+cluster_weight_threshold:
+  required: False
+  type: float
+  default: 0.900
+  choices: null
+  description: "Weight threshold used for cluster prioritization"
+  twin: False
+  should_exist: False
+
+kmer_per_seq:
+  required: False
+  type: int
+  default: 21
+  choices: null
+  description: "k-mers per sequence"
+  twin: False
+  should_exist: False
+
+kmer_per_seq_scale:
+  required: False
+  type: comma_separated_str
+  default: "aa:0.000,nucl:0.200"
+  choices: null
+  description: "Scale k-mer per sequence based on sequence length as kmer-per-seq val + scale x seqlen"
+  twin: True
+  should_exist: False
+
+adjust_kmer_len:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Adjust k-mer length based on specificity (only for nucleotides)"
+  twin: False
+  should_exist: False
+
+hash_shift:
+  required: False
+  type: int
+  default: 67
+  choices: null
+  description: "Shift k-mer hash initialization"
+  twin: False
+  should_exist: False
+
+include_only_extendable:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Include only extendable"
+  twin: False
+  should_exist: False
+
+ignore_multi_kmer:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Skip k-mers occurring multiple times (>=2)"
+  twin: False
+  should_exist: False
+
+pca:
+  required: False
+  type: float
+  default: null
+  choices: null
+  description: "Pseudo count admixture strength"
+  twin: False
+  should_exist: False
+
+pcb:
+  required: False
+  type: float
+  default: null
+  choices: null
+  description: "Pseudo counts: Neff at half of maximum admixture (range 0.0-inf)"
+  twin: False
+  should_exist: False
+
+rescore_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2, 3, 4]
+  description: "Rescore diagonals with different methods"
+  twin: False
+  should_exist: False
+
+dbtype:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2]
+  description: "Database type 0: auto, 1: amino acid, 2: nucleotides"
+  twin: False
+  should_exist: False
+
+shuffle:
+  required: False
+  type: bool
+  default: True
+  choices: [True, False]
+  description: "Shuffle the input database"
+  twin: False
+  should_exist: False
+
+createdb_mode:
+  required: False
+  type: int
+  default: 1
+  choices: [0, 1]
+  description: "Createdb mode 0: copy data, 1: soft link data and write new index (works only with single line fasta/q)"
+  twin: False
+  should_exist: False
+
+id_offset:
+  required: False
+  type: int
+  default: 0
+  choices: null
+  description: "Numeric ids in index file are offset by this value"
+  twin: False
+  should_exist: False
+
+threads:
+  required: False
+  type: int
+  default: 14
+  choices: null
+  description: "Number of CPU-cores used (all by default)"
+  twin: False
+  should_exist: False
+
+compressed:
+  required: False
+  type: int
+  default: 0
+  choices: null
+  description: "Write compressed output"
+  twin: False
+  should_exist: False
+
+v:
+  required: False
+  type: int
+  default: 3
+  choices: [0, 1, 2, 3]
+  description: "Verbosity level: 0: quiet, 1: +errors, 2: +warnings, 3: +info"
+  twin: False
+  should_exist: False
+
+remove_tmp_files:
+  required: False
+  type: bool
+  default: True
+  choices: [True, False]
+  description: "Delete temporary files"
+  twin: False
+  should_exist: False
+
+force_reuse:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Reuse tmp files in tmp/latest folder ignoring parameters and version changes"
+  twin: False
+  should_exist: False
+
+mpi_runner:
+  required: False
+  type: str
+  default: ""
+  choices: null
+  description: "Use MPI on compute cluster with this MPI command (e.g. 'mpirun -np 42')"
+  twin: False
+  should_exist: False
+
+filter_hits:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Filter hits by seq.id. and coverage"
+  twin: False
+  should_exist: False
+
+sort_results:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1]
+  description: "Sort results: 0: no sorting, 1: sort by E-value (Alignment) or seq.id. (Hamming)"
+  twin: False
+  should_exist: False
+
+write_lookup:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Write .lookup file containing mapping from internal id, fasta id, and file number"
+  twin: False
+  should_exist: False
