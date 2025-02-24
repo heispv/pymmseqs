@@ -686,7 +686,6 @@ class EasyClusterConfig(BaseConfig):
 
         # Get command arguments and run the command
         args = self._get_command_args("easy-cluster")
-        print(args)
         mmseqs_output = run_mmseqs_command(args)
 
         if mmseqs_output.returncode == 0:

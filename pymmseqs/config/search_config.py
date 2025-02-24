@@ -944,7 +944,6 @@ class SearchConfig(BaseConfig):
 
         # Get command arguments and run the command
         args = self._get_command_args("search")
-        print(args)
         mmseqs_output = run_mmseqs_command(args)
 
         if mmseqs_output.returncode == 0:

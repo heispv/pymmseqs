@@ -641,7 +641,6 @@ class EasyLinSearchConfig(BaseConfig):
             
         # Get command arguments and run the command
         args = self._get_command_args("easy_linsearch")
-        print(args)
         mmseqs_output = run_mmseqs_command(args)
         
         if mmseqs_output.returncode == 0:
