@@ -557,10 +557,12 @@ class EasyClusterConfig(BaseConfig):
         ValueError
             For invalid parameter combinations or values.
         """
+        super().__init__()
+        
         # Required parameters
         self.fasta_files = fasta_files if isinstance(fasta_files, list) else [fasta_files]
-        self.cluster_prefix = cluster_prefix
-        self.tmp_dir = tmp_dir
+        self.cluster_prefix = Path(cluster_prefix)
+        self.tmp_dir = Path(tmp_dir)
 
         # Prefilter parameters
         self.seed_sub_mat = seed_sub_mat
@@ -674,25 +676,16 @@ class EasyClusterConfig(BaseConfig):
             raise ValueError("mask_prob must be between 0.0 and 1.0")
 
     def run(self) -> None:
-        """Execute the MMseqs2 easy-cluster command with the current configuration."""
-        # Get the directory of the calling script
         caller_dir = get_caller_dir()
-
-        # Resolve all paths
         self._resolve_all_path(caller_dir)
 
-        # Validate the configuration
         self._validate()
 
-        # Get command arguments and run the command
         args = self._get_command_args("easy-cluster")
         mmseqs_output = run_mmseqs_command(args)
 
-        if mmseqs_output.returncode == 0:
-            if mmseqs_output.stdout:
-                print(mmseqs_output.stdout)
-            if mmseqs_output.stderr:
-                print(mmseqs_output.stderr)
-            print(f"Clustering results saved to: {self.cluster_prefix}")
-        else:
-            raise RuntimeError(f"MMseqs2 clustering failed: {mmseqs_output.stderr}")
+        self._handle_command_output(
+            mmseqs_output=mmseqs_output,
+            output_identifier="Easy Cluster",
+            output_path=str(self.cluster_prefix)
+        )

@@ -468,10 +468,12 @@ class EasyLinClustConfig(BaseConfig):
         )
         >>> config.run()
         """
+        super().__init__()
+        
         # Initialize required parameters
-        self.fasta_files = fasta_files
-        self.cluster_prefix = cluster_prefix
-        self.tmp_dir = tmp_dir
+        self.fasta_files = fasta_files if isinstance(fasta_files, list) else [fasta_files]
+        self.cluster_prefix = Path(cluster_prefix)
+        self.tmp_dir = Path(tmp_dir)
 
         # Initialize prefilter parameters
         self.comp_bias_corr = comp_bias_corr
@@ -562,76 +564,47 @@ class EasyLinClustConfig(BaseConfig):
         # Validate numerical ranges
         if not (0.0 <= self.comp_bias_corr_scale <= 1.0):
             raise ValueError("comp_bias_corr_scale must be between 0.0 and 1.0")
-            
         if not (0.0 <= self.mask_prob <= 1.0):
             raise ValueError("mask_prob must be between 0.0 and 1.0")
-            
         if not (0.0 <= self.e):
             raise ValueError("e-value threshold must be >= 0.0")
-            
         if not (0.0 <= self.min_seq_id <= 1.0):
             raise ValueError("min_seq_id must be between 0.0 and 1.0")
-            
         if not (0.0 <= self.c <= 1.0):
             raise ValueError("coverage threshold (c) must be between 0.0 and 1.0")
-            
         if not (0 <= self.min_aln_len):
             raise ValueError("min_aln_len must be >= 0")
-            
         if not (0 <= self.max_rejected):
             raise ValueError("max_rejected must be >= 0")
-            
         if not (0 <= self.max_accept):
             raise ValueError("max_accept must be >= 0")
-            
         if not (0.0 <= self.cluster_weight_threshold <= 1.0):
             raise ValueError("cluster_weight_threshold must be between 0.0 and 1.0")
-            
         if not (0 <= self.kmer_per_seq):
             raise ValueError("kmer_per_seq must be >= 0")
-            
         if not (0 <= self.hash_shift):
             raise ValueError("hash_shift must be >= 0")
-            
         if not (0 <= self.max_iterations):
             raise ValueError("max_iterations must be >= 0")
-            
         if not (0 <= self.id_offset):
             raise ValueError("id_offset must be >= 0")
-            
         if not (0 <= self.threads):
             raise ValueError("threads must be >= 0")
-            
-        if not (0 <= self.v <= 3):
-            raise ValueError("verbosity level (v) must be between 0 and 3")
-            
         if not (0 <= self.max_seq_len):
             raise ValueError("max_seq_len must be >= 0")
-            
-        if not (0 <= self.db_load_mode <= 3):
-            raise ValueError("db_load_mode must be between 0 and 3")
         
 
     def run(self) -> None:
-        """Execute the MMseqs2 easy-cluster command with the current configuration."""
-        # Get the directory of the calling script
         caller_dir = get_caller_dir()
-
-        # Resolve all paths
         self._resolve_all_path(caller_dir)
 
-        # Validate the configuration
         self._validate()
 
-        # Get command arguments and run the command
         args = self._get_command_args("easy-linclust")
         mmseqs_output = run_mmseqs_command(args)
 
-        if mmseqs_output.returncode == 0:
-            if mmseqs_output.stdout:
-                print(mmseqs_output.stdout)
-            if mmseqs_output.stderr:
-                print(mmseqs_output.stderr)
-            print(f"EasyLinClust results saved to: {self.cluster_prefix}")
-        else:
-            raise RuntimeError(f"MMseqs2 easy-linclust failed: {mmseqs_output.stderr}")
+        self._handle_command_output(
+            mmseqs_output=mmseqs_output,
+            output_identifier="Easy Linclust",
+            output_path=str(self.cluster_prefix)
+        )

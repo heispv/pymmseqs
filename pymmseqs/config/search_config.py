@@ -780,11 +780,13 @@ class SearchConfig(BaseConfig):
             split_memory_limit="32G"
         )
         """
+        super().__init__()
+        
         # Required parameters
-        self.query_db = query_db
-        self.target_db = target_db
-        self.alignment_db = alignment_db
-        self.tmp_dir = tmp_dir
+        self.query_db = Path(query_db)
+        self.target_db = Path(target_db)
+        self.alignment_db = Path(alignment_db)
+        self.tmp_dir = Path(tmp_dir)
 
         # Prefilter parameters
         self.comp_bias_corr = comp_bias_corr
@@ -912,45 +914,28 @@ class SearchConfig(BaseConfig):
         # Additional validations
         if self.id_offset < 0:
             raise ValueError("id_offset must be non-negative")
-            
         if not (0.0 <= self.max_seq_id <= 1.0):
             raise ValueError("max_seq_id must be between 0.0 and 1.0")
-            
         if not (0.0 <= self.cov <= 1.0):
             raise ValueError("cov must be between 0.0 and 1.0")
-            
         if not (0.0 <= self.c <= 1.0):
             raise ValueError("c (coverage threshold) must be between 0.0 and 1.0")
-            
         if not (-50.0 <= self.qsc <= 100.0):
             raise ValueError("qsc must be between -50.0 and 100.0")
-            
         if self.threads < 1:
             raise ValueError("threads must be at least 1")
-            
-        if not (0 <= self.v <= 3):
-            raise ValueError("verbosity level must be between 0 and 3")
 
     def run(self) -> None:
-        """Execute the MMseqs2 easy-cluster command with the current configuration."""
-        # Get the directory of the calling script
         caller_dir = get_caller_dir()
-
-        # Resolve all paths
         self._resolve_all_path(caller_dir)
 
-        # Validate the configuration
         self._validate()
 
-        # Get command arguments and run the command
         args = self._get_command_args("search")
         mmseqs_output = run_mmseqs_command(args)
 
-        if mmseqs_output.returncode == 0:
-            if mmseqs_output.stdout:
-                print(mmseqs_output.stdout)
-            if mmseqs_output.stderr:
-                print(mmseqs_output.stderr)
-            print(f"Search results saved to: {self.alignment_db}")
-        else:
-            raise RuntimeError(f"MMseqs2 search failed: {mmseqs_output.stderr}")
+        self._handle_command_output(
+            mmseqs_output=mmseqs_output,
+            output_identifier="Search",
+            output_path=str(self.alignment_db)
+        )

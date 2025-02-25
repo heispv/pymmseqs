@@ -72,6 +72,8 @@ class CreateTaxDBConfig(BaseConfig):
         threads: int = 14,
         v: int = 3
     ):
+        super().__init__()
+        
         self.sequence_db = Path(sequence_db)
         self.tmp_dir = Path(tmp_dir)
         self.ncbi_tax_dump = Path(ncbi_tax_dump) if ncbi_tax_dump else ""
@@ -91,22 +93,27 @@ class CreateTaxDBConfig(BaseConfig):
         # Validate numeric constraints
         if self.threads < 1:
             raise ValueError(f"threads must be positive, got {self.threads}")
+        
+        if not (0 <= self.tax_mapping_mode <= 1):
+            raise ValueError(f"tax_mapping_mode must be either 0 or 1, got {self.tax_mapping_mode}")
+        
+        if not (0 <= self.tax_db_mode <= 1):
+            raise ValueError(f"tax_db_mode must be either 0 or 1, got {self.tax_db_mode}")
+        
+        if not (0 <= self.v <= 3):
+            raise ValueError(f"verbosity level (v) must be between 0 and 3, got {self.v}")
 
     def run(self) -> None:
-        # Get the directory of the calling script
         caller_dir = get_caller_dir()
-
-        # Use the config method to resolve all paths
         self._resolve_all_path(caller_dir)
 
-        # Check that all required files exist
-        self._check_required_files()
-            
-        # Get command arguments and run the command
+        self.validate()
+        
         args = self._get_command_args("createtaxdb")
         mmseqs_output = run_mmseqs_command(args)
         
-        if mmseqs_output.returncode == 0:
-            if mmseqs_output.stdout:
-                print(mmseqs_output.stdout)
-            print(f"Taxonomy database created for: {self.sequence_db}")
+        self._handle_command_output(
+            mmseqs_output=mmseqs_output,
+            output_identifier="Create Taxonomy Database",
+            output_path=str(self.sequence_db)
+        )

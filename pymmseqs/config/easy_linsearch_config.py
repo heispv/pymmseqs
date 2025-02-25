@@ -510,11 +510,13 @@ class EasyLinSearchConfig(BaseConfig):
         )
         >>> config.run()
         """
+        super().__init__()
+        
         # Required parameters
-        self.query_fasta = query_fasta
-        self.target_fasta_or_db = target_fasta_or_db
-        self.alignment_file = alignment_file
-        self.tmp_dir = tmp_dir
+        self.query_fasta = Path(query_fasta)
+        self.target_fasta_or_db = Path(target_fasta_or_db)
+        self.alignment_file = Path(alignment_file)
+        self.tmp_dir = Path(tmp_dir)
 
         # Prefilter parameters
         self.comp_bias_corr = comp_bias_corr
@@ -604,46 +606,34 @@ class EasyLinSearchConfig(BaseConfig):
         # Validate numeric constraints
         if not (0.0 <= self.comp_bias_corr_scale <= 1.0):
             raise ValueError("comp_bias_corr_scale must be between 0.0 and 1.0")
-            
         if not (0.0 <= self.mask_prob <= 1.0):
             raise ValueError("mask_prob must be between 0.0 and 1.0")
-            
         if not (0.0 <= self.e):
             raise ValueError("e-value threshold must be >= 0.0")
-            
         if not (0.0 <= self.min_seq_id <= 1.0):
             raise ValueError("min_seq_id must be between 0.0 and 1.0")
-            
         if not (0.0 <= self.c <= 1.0):
             raise ValueError("coverage threshold (c) must be between 0.0 and 1.0")
-            
         if not (0 <= self.min_aln_len):
             raise ValueError("min_aln_len must be >= 0")
-            
         if not (0 <= self.min_length <= self.max_length):
             raise ValueError("min_length must be >= 0 and <= max_length")
-            
         if not (0 <= self.max_gaps):
             raise ValueError("max_gaps must be >= 0")
-            
         if not (0 <= self.threads):
             raise ValueError("threads must be >= 0")
 
     def run(self) -> None:
-        # Get the directory of the calling script
         caller_dir = get_caller_dir()
-
-        # Use the config method to resolve all paths
         self._resolve_all_path(caller_dir)
 
-        # Validate the config
         self._validate()
-            
-        # Get command arguments and run the command
+        
         args = self._get_command_args("easy_linsearch")
         mmseqs_output = run_mmseqs_command(args)
         
-        if mmseqs_output.returncode == 0:
-            if mmseqs_output.stdout:
-                print(mmseqs_output.stdout)
-            print(f"EasyLinSearch results saved to: {self.alignment_file}")
+        self._handle_command_output(
+            mmseqs_output=mmseqs_output,
+            output_identifier="Linear search",
+            output_path=str(self.alignment_file)
+        )

@@ -85,6 +85,8 @@ class CreateDBConfig(BaseConfig):
         v: int = 3,
         write_lookup: bool = True
     ):
+        super().__init__()
+        
         self.fasta_file = fasta_file if isinstance(fasta_file, list) else [fasta_file]
         self.fasta_file = [Path(f) for f in self.fasta_file]
         self.sequence_db = Path(sequence_db)
@@ -103,26 +105,20 @@ class CreateDBConfig(BaseConfig):
         self._check_required_files()
         self._validate_choices()
             
-        # Validate numeric constraints
         if self.id_offset < 0:
             raise ValueError(f"id_offset is {self.id_offset} but must be non-negative")
-            
 
     def run(self) -> None:
-        # Get the directory of the calling script
         caller_dir = get_caller_dir()
-
-        # Use the config method to resolve all paths
         self._resolve_all_path(caller_dir)
 
-        # Validate the config
         self._validate()
-            
-        # Get command arguments and run the command
+        
         args = self._get_command_args("createdb")
         mmseqs_output = run_mmseqs_command(args)
         
-        if mmseqs_output.returncode == 0:
-            if mmseqs_output.stdout:
-                print(mmseqs_output.stdout)
-            print(f"Database path: {self.sequence_db}")
+        self._handle_command_output(
+            mmseqs_output=mmseqs_output,
+            output_identifier="Database creation",
+            output_path=str(self.sequence_db)
+        )
