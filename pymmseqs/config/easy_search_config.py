@@ -974,6 +974,7 @@ class EasySearchConfig(BaseConfig):
 
         self._defaults = DEFAULTS
         self._path_params = [param for param, info in DEFAULTS.items() if info['type'] == 'path']
+        self._caller_dir = get_caller_dir()
 
     def _validate(self) -> None:
         self._check_required_files()
@@ -1002,8 +1003,6 @@ class EasySearchConfig(BaseConfig):
             raise ValueError("threads must be >= 0")
         if not (0.0 <= self.max_seq_id <= 1.0):
             raise ValueError("max_seq_id must be between 0.0 and 1.0")
-        if not (0.0 <= self.qid <= 1.0):
-            raise ValueError("qid must be between 0.0 and 1.0")
         if not (-50.0 <= self.qsc <= 100.0):
             raise ValueError("qsc must be between -50.0 and 100.0")
         if not (0.0 <= self.cov <= 1.0):
@@ -1016,8 +1015,7 @@ class EasySearchConfig(BaseConfig):
             raise ValueError("num_iterations must be >= 0")
 
     def run(self) -> None:
-        caller_dir = get_caller_dir()
-        self._resolve_all_path(caller_dir)
+        self._resolve_all_path(self._caller_dir)
 
         self._validate()
         

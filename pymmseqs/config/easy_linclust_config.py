@@ -556,6 +556,7 @@ class EasyLinClustConfig(BaseConfig):
 
         self._defaults = DEFAULTS
         self._path_params = [param for param, info in DEFAULTS.items() if info['type'] == 'path']
+        self._caller_dir = get_caller_dir()
 
     def _validate(self) -> None:
         self._check_required_files()
@@ -595,8 +596,7 @@ class EasyLinClustConfig(BaseConfig):
         
 
     def run(self) -> None:
-        caller_dir = get_caller_dir()
-        self._resolve_all_path(caller_dir)
+        self._resolve_all_path(self._caller_dir)
 
         self._validate()
 

@@ -85,6 +85,7 @@ class CreateTaxDBConfig(BaseConfig):
 
         self._defaults = DEFAULTS
         self._path_params = [param for param, info in DEFAULTS.items() if info['type'] == 'path']
+        self._caller_dir = get_caller_dir()
 
     def validate(self) -> None:
         self._check_required_files()
@@ -104,8 +105,7 @@ class CreateTaxDBConfig(BaseConfig):
             raise ValueError(f"verbosity level (v) must be between 0 and 3, got {self.v}")
 
     def run(self) -> None:
-        caller_dir = get_caller_dir()
-        self._resolve_all_path(caller_dir)
+        self._resolve_all_path(self._caller_dir)
 
         self.validate()
         

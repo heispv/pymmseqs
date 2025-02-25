@@ -660,6 +660,7 @@ class EasyClusterConfig(BaseConfig):
 
         self._defaults = DEFAULTS
         self._path_params = [param for param, info in DEFAULTS.items() if info['type'] == 'path']
+        self._caller_dir = get_caller_dir()
 
     def _validate(self) -> None:
         self._check_required_files()
@@ -676,8 +677,7 @@ class EasyClusterConfig(BaseConfig):
             raise ValueError("mask_prob must be between 0.0 and 1.0")
 
     def run(self) -> None:
-        caller_dir = get_caller_dir()
-        self._resolve_all_path(caller_dir)
+        self._resolve_all_path(self._caller_dir)
 
         self._validate()
 
