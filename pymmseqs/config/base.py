@@ -2,8 +2,10 @@
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Union
+from datetime import datetime
 from pathlib import Path
 import yaml
+import os
 
 from ..utils import (
     resolve_path,
@@ -14,10 +16,16 @@ from ..utils import (
 class BaseConfig(ABC):
 
     def __init__(self, **kwargs):
+        self._has_log = True
+        self._write_on_terminal = False
+        self._defaults = {}
+
         for key, value in kwargs.items():
             setattr(self, key, value)
-        
-        self._defaults = {}
+
+    def _set_config_options(self, has_log, write_on_terminal):
+        self._has_log = has_log
+        self._write_on_terminal = write_on_terminal
 
     @abstractmethod
     def _validate(self):
@@ -201,3 +209,85 @@ class BaseConfig(ABC):
                         args.extend([cmd_param, str(current_value)])
         
         return args
+
+    def _handle_command_output(
+            self,
+            mmseqs_output,
+            output_identifier,
+            output_path,
+        ):
+        """
+        Handle command output by logging details to a file and showing a summary on the terminal.
+        
+        Args:
+            mmseqs_output: Subprocess result from run_mmseqs_command
+            output_identifier (str): String identifying what was created (e.g., "Database", "Clustering results")
+            output_path (str, optional): Path to the created output.
+        Raises:
+            RuntimeError: If the command failed
+        """
+        # Determine success
+        success = mmseqs_output.returncode == 0
+        
+        # Display stdout/stderr directly to terminal if requested
+        if self._write_on_terminal:
+            if mmseqs_output.stdout:
+                print("\n--- STDOUT ---")
+                print(mmseqs_output.stdout)
+            if mmseqs_output.stderr:
+                print("\n--- STDERR ---")
+                print(mmseqs_output.stderr)
+        
+        if self._has_log:
+            log_dir = os.path.join(os.path.dirname(output_path), "logs")
+            log_basename = os.path.basename(output_path)
+            os.makedirs(log_dir, exist_ok=True)
+            
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            log_file = os.path.join(log_dir, f"{log_basename}_{timestamp}.log")
+            
+            # Log output to file
+            with open(log_file, 'w') as f:
+                f.write(f"--- MMseqs2 Command Execution Log ({timestamp}) ---\n\n")
+                
+                cmd_name = mmseqs_output.args[0] if isinstance(mmseqs_output.args, list) else "Unknown"
+                f.write(f"Command: {cmd_name}\n")
+                f.write(f"Full command: {' '.join(mmseqs_output.args)}\n\n")
+                
+                if mmseqs_output.stdout:
+                    f.write("STDOUT:\n")
+                    f.write(mmseqs_output.stdout)
+                    f.write("\n\n")
+                
+                if mmseqs_output.stderr:
+                    f.write("STDERR:\n")
+                    f.write(mmseqs_output.stderr)
+                    f.write("\n\n")
+                
+                f.write(f"Return code: {mmseqs_output.returncode}\n")
+                f.write(f"Status: {'Success' if success else 'Failed'}\n")
+                
+                if output_path:
+                    f.write(f"Output path: {output_path}\n")
+            
+            print(f"✓ Detailed execution log has been saved")
+        
+        # Handle success or failure 
+        if success:
+            print(f"✓ {output_identifier} completed successfully")
+            if output_path:
+                print(f"  Results saved to: {output_path}")
+        else:
+            error_message = f"MMseqs2 {output_identifier.lower()} failed."
+            if mmseqs_output.stderr:
+                # Extract key error information
+                error_lines = mmseqs_output.stderr.strip().split('\n')
+                if len(error_lines) > 2:
+                    # Show first and last error lines which often contain the most useful info
+                    error_summary = f"{error_lines[0]} [...] {error_lines[-1]}"
+                else:
+                    error_summary = mmseqs_output.stderr.strip()
+                
+                error_message += f" Error: {error_summary}"
+            
+            raise RuntimeError(error_message)
