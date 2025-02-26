@@ -5,29 +5,44 @@ import inspect
 from pathlib import Path
 from typing import Any, Tuple, List
 
-def get_caller_dir() -> str:
+def get_caller_dir() -> Path:
     """
     Get the directory of the script that's using this function.
     
+    Traverses the call stack until it finds the first frame outside
+    the pymmseqs package, which is presumed to be the user's code.
+    
     Returns:
-        str: Absolute path to the directory containing the calling script
+        Path: Absolute path to the directory containing the calling script
     """
+    import sys
+    
+    # Get the full call stack
     frame = inspect.currentframe()
     try:
-        # Get the first frame (one level up)
+        # Get package path to identify frames within pymmseqs
+        pymmseqs_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        
+        # Start from the immediate caller
         caller_frame = frame.f_back
-        if caller_frame is None:
-            return Path(os.getcwd())
+        
+        # Traverse up the stack until we find a frame outside pymmseqs
+        while caller_frame:
+            caller_file = caller_frame.f_code.co_filename
             
-        # Check if we need to go up one more level
-        caller_name = caller_frame.f_code.co_name
-        if caller_name != '<module>':  # If we're in a function, go up one more level
+            # If the frame is not from within pymmseqs package or standard library
+            if (not caller_file.startswith(pymmseqs_path) and 
+                not caller_file.startswith(sys.prefix) and
+                not caller_file == '<string>'):  # Ignore REPL or eval frames
+                
+                # We found a frame outside pymmseqs - this is likely the user's code
+                return Path(os.path.dirname(os.path.abspath(caller_file)))
+            
+            # Move up to the next frame
             caller_frame = caller_frame.f_back
-            
-        # Get the full path of the calling script
-        caller_file = caller_frame.f_code.co_filename
-        # Return the directory containing the script
-        return Path(os.path.dirname(os.path.abspath(caller_file)))
+        
+        # If we couldn't find a suitable frame, return current working directory
+        return Path(os.getcwd())
     finally:
         # Clean up the frame to prevent memory leaks
         del frame
