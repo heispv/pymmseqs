@@ -1,0 +1,145 @@
+# mmseqs/defaults/convertalis.yaml
+
+query_db:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "The input query database"
+  twin: False
+  should_exist: True
+
+target_db:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "The target database"
+  twin: False
+  should_exist: True
+
+alignment_db:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "Database where alignments are stored"
+  twin: False
+  should_exist: True
+
+alignment_file:
+  required: True
+  type: path
+  default: ""
+  choices: null
+  description: "Output file for alignments"
+  twin: False
+  should_exist: False
+
+gap_open:
+  required: False
+  type: comma_separated_str
+  default: "aa:11,nucl:5"
+  choices: null
+  description: "Gap open cost, different settings for amino acids and nucleotides"
+  twin: True
+  should_exist: False
+
+gap_extend:
+  required: False
+  type: comma_separated_str
+  default: "aa:1,nucl:2"
+  choices: null
+  description: "Gap extension cost, different settings for amino acids and nucleotides"
+  twin: True
+  should_exist: False
+
+format_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2, 3, 4]
+  description: "Output format options, from BLAST-TAB to Pretty HTML"
+  twin: False
+  should_exist: False
+
+format_output:
+  required: False
+  type: comma_separated_str
+  default: "query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits"
+  choices: null
+  description: "Choose comma separated list of output columns"
+  twin: False
+  should_exist: False
+
+translation_table:
+  required: False
+  type: int
+  default: 1
+  choices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+  description: "Select genetic code for translation: 1) CANONICAL, 2) VERT_MITOCHONDRIAL, etc."
+  twin: False
+  should_exist: False
+
+search_type:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2, 3, 4]
+  description: "Search type from auto to translated nucleotide alignment"
+  twin: False
+  should_exist: False
+
+sub_mat:
+  required: False
+  type: comma_separated_str
+  default: "aa:blosum62.out,nucl:nucleotide.out"
+  choices: null
+  description: "Substitution matrix file"
+  twin: True
+  should_exist: False
+
+db_load_mode:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1, 2, 3]
+  description: "Database preload mode 0: auto, 1: fread, 2: mmap, 3: mmap+touch"
+  twin: False
+  should_exist: False
+
+threads:
+  required: False
+  type: int
+  default: 14
+  choices: null
+  description: "Number of CPU-cores used (all by default)"
+  twin: False
+  should_exist: False
+
+compressed:
+  required: False
+  type: int
+  default: 0
+  choices: [0, 1]
+  description: "Write compressed output"
+  twin: False
+  should_exist: False
+
+v:
+  required: False
+  type: int
+  default: 3
+  choices: [0, 1, 2, 3]
+  description: "Verbosity level: 0: quiet, 1: +errors, 2: +warnings, 3: +info"
+  twin: False
+  should_exist: False
+
+db_output:
+  required: False
+  type: bool
+  default: False
+  choices: [True, False]
+  description: "Return a result DB instead of a text file"
+  twin: False
+  should_exist: False
