@@ -5,17 +5,33 @@ import inspect
 from pathlib import Path
 from typing import Any, Tuple, List
 
+import os
+import sys
+import inspect
+from pathlib import Path
+from IPython import get_ipython
+
 def get_caller_dir() -> Path:
     """
     Get the directory of the script that's using this function.
     
-    Traverses the call stack until it finds the first frame outside
-    the pymmseqs package, which is presumed to be the user's code.
+    For .py files, traverses the call stack to find the first frame outside
+    the pymmseqs package, presumed to be the user's code. For .ipynb files
+    (Jupyter notebooks), returns the current working directory, which is
+    typically the directory containing the notebook unless changed.
     
     Returns:
         Path: Absolute path to the directory containing the calling script
     """
-    import sys
+    # Check if running in a Jupyter notebook
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == 'ZMQInteractiveShell':
+            # Jupyter notebook detected; return current working directory
+            return Path(os.getcwd())
+    except NameError:
+        # Not in an IPython environment; proceed with stack traversal
+        pass
     
     # Get the full call stack
     frame = inspect.currentframe()
@@ -34,14 +50,13 @@ def get_caller_dir() -> Path:
             if (not caller_file.startswith(pymmseqs_path) and 
                 not caller_file.startswith(sys.prefix) and
                 not caller_file == '<string>'):  # Ignore REPL or eval frames
-                
-                # We found a frame outside pymmseqs - this is likely the user's code
+                # Found a frame outside pymmseqs - likely the user's code
                 return Path(os.path.dirname(os.path.abspath(caller_file)))
             
             # Move up to the next frame
             caller_frame = caller_frame.f_back
         
-        # If we couldn't find a suitable frame, return current working directory
+        # If no suitable frame is found, return current working directory
         return Path(os.getcwd())
     finally:
         # Clean up the frame to prevent memory leaks
