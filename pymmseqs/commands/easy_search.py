@@ -21,7 +21,7 @@ def easy_search(
     # Output parameters
     output_mode: str = None
 
-) -> Union[pd.DataFrame, List[dict], Path, None]:
+) -> Union[pd.DataFrame, List[dict], str, None]:
     """
     Required parameters
     ----------
@@ -101,6 +101,6 @@ def easy_search(
     elif output_mode == "to_rel_path":
         return str(alignment_file)
     elif output_mode == "to_abs_path":
-        return config.alignment_file
+        return str(config.alignment_file)
     else:
         return None
