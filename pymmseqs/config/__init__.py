@@ -1,6 +1,7 @@
 # pymmseqs/config/__init__.py
 
 from .base import BaseConfig
+from .align_config import AlignConfig
 from .createdb_config import CreateDBConfig
 from .createtaxdb_config import CreateTaxDBConfig
 from .search_config import SearchConfig
@@ -8,8 +9,11 @@ from .easy_search_config import EasySearchConfig
 from .easy_linsearch_config import EasyLinSearchConfig
 from .easy_cluster_config import EasyClusterConfig
 from .easy_linclust_config import EasyLinClustConfig
+from .convertalis_config import ConvertAlisConfig
+
 __all__ = [
     'BaseConfig',
+    'AlignConfig',
     'CreateDBConfig',
     'CreateTaxDBConfig',
     'SearchConfig',
@@ -17,4 +21,5 @@ __all__ = [
     'EasyLinSearchConfig',
     'EasyClusterConfig',
     'EasyLinClustConfig',
+    'ConvertAlisConfig',
 ]
