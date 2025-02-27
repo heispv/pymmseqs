@@ -105,6 +105,7 @@ class BaseConfig(ABC):
         Verify that all required files exist.
         
         Checks both single files and lists of files marked as required in _defaults.
+        For MMseqs2 databases, checks if any files with the given prefix exist.
         
         Raises:
             ValueError: If a required file parameter is not set
@@ -116,13 +117,40 @@ class BaseConfig(ABC):
                 if value is None:
                     raise ValueError(f"Required file is not set: {param_name}")
 
-            if isinstance(value, list):
-                for path in value:
-                    if not Path(path).exists():
-                        raise FileNotFoundError(f"Required file not found: {path}")
-            else:
-                if not Path(value).exists():
-                    raise FileNotFoundError(f"Required file not found: {value}")
+                if isinstance(value, list):
+                    for path in value:
+                        self._check_file_exists(path)
+                else:
+                    self._check_file_exists(value)
+
+    def _check_file_exists(self, path: str) -> None:
+        """
+        Check if a file exists, handling MMseqs2 database prefixes.
+        
+        For MMseqs2 databases, checks if any files with the given prefix exist.
+        
+        Args:
+            path (str): Path to check
+            
+        Raises:
+            FileNotFoundError: If the file or any files with the prefix don't exist
+        """
+        path_obj = Path(path)
+        
+        # If the exact file exists, we're good
+        if path_obj.exists():
+            return
+        
+        # Check if this might be an MMseqs2 database prefix
+        # Look for files with extensions like .0, .1, .2, etc.
+        parent_dir = path_obj.parent
+        prefix = path_obj.name
+        
+        # Check if any files with this prefix exist in the directory
+        matching_files = list(parent_dir.glob(f"{prefix}.*"))
+        
+        if not matching_files:
+            raise FileNotFoundError(f"Required file not found: {path}")
 
     def _validate_choices(self):
         """
