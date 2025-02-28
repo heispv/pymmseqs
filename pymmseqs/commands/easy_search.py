@@ -2,8 +2,9 @@
 
 from pathlib import Path
 from typing import Union, List
-import pandas as pd
+
 from ..config import EasySearchConfig
+from ..parsers import EasySearchParser
 
 def easy_search(
     query_fasta: Union[str, Path, List[Union[str, Path]]],
@@ -18,10 +19,7 @@ def easy_search(
     c: float = 0.0,
     max_seqs: int = 300,
 
-    # Output parameters
-    output_mode: str = None
-
-) -> Union[pd.DataFrame, List[dict], str, None]:
+) -> EasySearchParser:
     """
     Required parameters
     ----------
@@ -64,19 +62,10 @@ def easy_search(
         - 300 (default)
         - Higher values increase sensitivity but may slow down the search
     
-    Output parameters
-    ------------------
-    `output_mode` : str, optional
-        Output mode
-        - "to_pandas": return a pandas DataFrame
-        - "to_dict": return a list of dictionaries
-        - "to_rel_path": return a relative path to the alignment file
-        - "to_abs_path": return an absolute path to the alignment file
-    
     Returns
     -------
-    pd.DataFrame, List[dict], Path, or None
-        - Based on the `output_mode` parameter
+    EasySearchParser object
+        - An EasySearchParser instance that provides methods to access and parse the alignment data.
     """
 
     config = EasySearchConfig(
@@ -94,13 +83,4 @@ def easy_search(
 
     config.run()
 
-    if output_mode == "to_pandas":
-        return pd.read_csv(alignment_file, sep="\t")
-    elif output_mode == "to_dict":
-        return pd.read_csv(alignment_file, sep="\t").to_dict(orient="records")
-    elif output_mode == "to_rel_path":
-        return str(alignment_file)
-    elif output_mode == "to_abs_path":
-        return str(config.alignment_file)
-    else:
-        return None
+    return EasySearchParser(config.alignment_file)
