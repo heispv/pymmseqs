@@ -1,8 +1,7 @@
 # pymmseqs/commands/easy_cluster.py
 
-import os
 from pathlib import Path
-from typing import Union, List, Generator
+from typing import Union, List
 
 from ..config import EasyClusterConfig
 from ..parsers import EasyClusterParser
@@ -21,7 +20,7 @@ def easy_cluster(
     e: float = 0.001,
     cluster_mode: int = 0,
 
-) -> 'EasyClusterParser':
+) -> EasyClusterParser:
     """
     Perform sequence clustering using MMseqs2.
 
@@ -70,21 +69,12 @@ def easy_cluster(
         - 0: Set-Cover (greedy) (default)
         - 1: Connected component (BLASTclust)
         - 2: Greedy by sequence length (CDHIT)
-
-    Output parameters
-    ------------------
-    `output_mode` : str, optional
-        Output mode
-        - "to_dict": return a dictionary of clusters
-        - "to_list": return a list of clusters
-        - "to_gen": return a generator of clusters
-        - "to_rel_path": return a list of relative paths to the output files
-        - "to_abs_path": return a list of absolute paths to the output files
     
     Returns
     -------
-    dict, list, generator, list[str], or None
-        - Based on the `output_mode` parameter
+    EasyClusterParser object
+        An EasyClusterParser instance that provides methods to access and parse the clustering results.
+
     """
 
     config = EasyClusterConfig(
