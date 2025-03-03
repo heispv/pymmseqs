@@ -69,4 +69,4 @@ def createdb(
 
     config.run()
 
-    return CreateDBParser(sequence_db)
+    return CreateDBParser(config)

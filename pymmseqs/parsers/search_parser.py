@@ -4,27 +4,27 @@ import pandas as pd
 import csv
 from typing import Generator
 
-from ..config import ConvertAlisConfig
-
+from ..config import (
+    SearchConfig,
+    ConvertAlisConfig
+)
 class SearchParser:
     """
     A class for parsing the output of the SearchConfig.
     """
-    def __init__(
-            self,
-            query_db: str,
-            target_db: str,
-            alignment_db: str
-        ):
-        self.query_db = query_db
-        self.target_db = target_db
-        self.alignment_db = alignment_db
+    def __init__(self, config: SearchConfig):
+        self.query_db = config.query_db
+        self.target_db = config.target_db
+        self.alignment_db = config.alignment_db
+
         self._readable = False
     
     def _run_convertalis(self) -> None:
         """
         Runs the convertalis command to convert the alignment database to a readable format.
         """
+        print("Output is not readable. Executing convertalis command to convert the alignment database to a readable format.")
+        
         config = ConvertAlisConfig(
             query_db=self.query_db,
             target_db=self.target_db,

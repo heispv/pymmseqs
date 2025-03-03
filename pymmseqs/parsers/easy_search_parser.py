@@ -4,12 +4,14 @@ import pandas as pd
 import csv
 from typing import Generator
 
+from ..config import EasySearchConfig
+
 class EasySearchParser:
     """
     A class for parsing the output of the EasySearchConfig.
     """
-    def __init__(self, alignment_file: str):
-        self.alignment_file = alignment_file
+    def __init__(self, config: EasySearchConfig):
+        self.alignment_file = config.alignment_file
     
     def to_pandas(self) -> pd.DataFrame:
         """

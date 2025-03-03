@@ -83,4 +83,4 @@ def easy_search(
 
     config.run()
 
-    return EasySearchParser(config.alignment_file)
+    return EasySearchParser(config)

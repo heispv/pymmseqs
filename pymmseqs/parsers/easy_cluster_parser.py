@@ -5,14 +5,14 @@ from typing import Generator
 from ..tools.easy_cluster_tools import (
     parse_fasta_clusters
 )
-
+from ..config import EasyClusterConfig
 
 class EasyClusterParser:
     """
     A class for parsing the output of the EasyClusterConfig.
     """
-    def __init__(self, cluster_prefix: str):
-        self.cluster_prefix = cluster_prefix
+    def __init__(self, config: EasyClusterConfig):
+        self.cluster_prefix = config.cluster_prefix
     
     def to_list(self) -> list:
         """

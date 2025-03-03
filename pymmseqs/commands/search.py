@@ -83,8 +83,4 @@ def search(
 
     config.run()
 
-    return SearchParser(
-        query_db=config.query_db,
-        target_db=config.target_db,
-        alignment_db=config.alignment_db
-    )
+    return SearchParser(config)

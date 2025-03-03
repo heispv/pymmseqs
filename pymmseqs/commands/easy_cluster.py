@@ -91,4 +91,4 @@ def easy_cluster(
 
     config.run()
 
-    return EasyClusterParser(config.cluster_prefix)
+    return EasyClusterParser(config)
