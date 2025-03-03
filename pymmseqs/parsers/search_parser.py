@@ -24,7 +24,7 @@ class SearchParser:
         Runs the convertalis command to convert the alignment database to a readable format.
         """
         print("Output is not readable. Executing convertalis command to convert the alignment database to a readable format.")
-        
+
         config = ConvertAlisConfig(
             query_db=self.query_db,
             target_db=self.target_db,
@@ -75,7 +75,5 @@ class SearchParser:
         --------
         list of str
         """
-        if not self._readable:
-            self._run_convertalis()
         
-        return f"{self.alignment_db}.m8"
+        return f"{self.alignment_db}"
