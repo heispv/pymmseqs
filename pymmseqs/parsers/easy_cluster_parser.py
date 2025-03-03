@@ -1,6 +1,7 @@
 # pymmseqs/parsers/easy_cluster_parser.py
 
 from typing import Generator
+import pandas as pd
 
 from ..tools.easy_cluster_tools import (
     parse_fasta_clusters
@@ -41,6 +42,20 @@ class EasyClusterParser:
             }
             for rep, members in parse_fasta_clusters(f"{self.cluster_prefix}_all_seqs.fasta")
         ]
+    
+    def to_pandas(self) -> pd.DataFrame:
+        clusters = self.to_list()
+        rows = []
+        for cluster in clusters:
+            rep = cluster["rep"]
+            for member in cluster["members"]:
+                rows.append({
+                    "rep": rep,
+                    "seq_id": member["seq_id"],
+                    "header": member["header"],
+                    "sequence": member["sequence"]
+                })
+        return pd.DataFrame(rows).set_index('rep')
     
     def to_gen(self) -> Generator:
         """
