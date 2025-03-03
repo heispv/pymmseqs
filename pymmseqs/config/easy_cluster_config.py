@@ -1,3 +1,5 @@
+# pymmseqs/config/easy_cluster_config.py
+
 from pathlib import Path
 from typing import Union, List
 
