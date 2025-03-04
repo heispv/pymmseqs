@@ -18,7 +18,11 @@ def search(
     e: float = 0.001,
     min_seq_id: float = 0.0,
     c: float = 0.0,
+    cov_mode: int = 0,
+    a: bool = False,
     max_seqs: int = 300,
+    threads: int = 14,
+    compressed: bool = False,
 
 ) -> SearchParser:
     """
@@ -58,10 +62,33 @@ def search(
         - 0.0 (default)
         - Determines the minimum fraction of aligned residues required for a match, based on the selected cov_mode
     
+    `cov_mode` : int, optional
+            Defines how alignment coverage is calculated:
+            - 0: query + target (default)
+            - 1: target only
+            - 2: query only
+            - 3: Target length ≥ x% query length
+            - 4: Query length ≥ x% target length
+            - 5: Short seq length ≥ x% other seq length
+    
+    `a` : bool, optional
+            Add backtrace string (convert to alignments with mmseqs convertalis module)
+            - True
+            - False (default)
+    
     `max_seqs` : int, optional
         Maximum results per query passing prefilter
         - 300 (default)
         - Higher values increase sensitivity but may slow down the search
+    
+    `threads` : int, optional
+        CPU threads
+        - 14 (default)
+    
+    `compressed` : bool, optional
+            Compress output
+            - True
+            - False (default)
     
     Returns
     -------
@@ -78,7 +105,11 @@ def search(
         e=e,
         min_seq_id=min_seq_id,
         c=c,
-        max_seqs=max_seqs
+        cov_mode=cov_mode,
+        a=a,
+        max_seqs=max_seqs,
+        threads=threads,
+        compressed=compressed,
     )
 
     config.run()

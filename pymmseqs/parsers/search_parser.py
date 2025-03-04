@@ -29,7 +29,7 @@ class SearchParser:
             query_db=self.query_db,
             target_db=self.target_db,
             alignment_db=self.alignment_db,
-            alignment_file=f"{self.alignment_db}.m8",
+            alignment_file=f"{self.alignment_db}.tsv",
             format_mode=4
         )
         config.run()
@@ -42,7 +42,7 @@ class SearchParser:
         if not self._readable:
             self._run_convertalis()
         
-        return pd.read_csv(f"{self.alignment_db}.m8", sep="\t")
+        return pd.read_csv(f"{self.alignment_db}.tsv", sep="\t")
     
     def to_list(self) -> list[dict]:
         """
@@ -63,7 +63,7 @@ class SearchParser:
         if not self._readable:
             self._run_convertalis()
         
-        with open(f"{self.alignment_db}.m8", 'r') as file:
+        with open(f"{self.alignment_db}.tsv", 'r') as file:
             reader = csv.DictReader(file, delimiter='\t')
             yield from reader
     
