@@ -13,9 +13,9 @@ authors = [
     { name = "heispv", email = "peyman.vahidi@tum.de" }
 ]
 license = {text = "MIT License"}
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 classifiers = [
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.10",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
 ]
