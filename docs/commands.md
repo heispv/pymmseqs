@@ -2,13 +2,14 @@
 This module provides a Python wrapper around the MMseqs2 command-line tools with only the most commonly used parameters.
 
 
-# Table of Contents
+## Table of Contents
 - [Important Things to Know](#important-things-to-know)
 - [createdb](#createdb)
 - [easy_cluster](#easy_cluster)
 - [search](#search)
 - [easy_search](#easy_search)
 
+---
 
 ## Important Things to Know
 - The paths are relative to the parent directory of the python script it is called from.
@@ -22,6 +23,7 @@ This module provides a Python wrapper around the MMseqs2 command-line tools with
 ```
 - Detailed MMseqs2 execution logs are stored in the `logs` directory located in the parent directory of your output file path.
 
+---
 
 ## createdb
 Wrapper around the `mmseqs createdb` command.
@@ -48,6 +50,7 @@ Methods:
 
 [See an example](../examples/commands_module/createdb_ex.py)
 
+---
 
 ## easy_cluster
 Wrapper around the mmseqs easy-cluster command.
@@ -80,6 +83,7 @@ Methods:
 
 [See an example](../examples/commands_module/easy_cluster_ex.py)
 
+---
 
 ## search
 Wrapper around the mmseqs search command.
@@ -118,6 +122,7 @@ Methods:
 
 [See an example](../examples/commands_module/search_ex.py)
 
+---
 
 ## easy_search
 Wrapper around the mmseqs easy-search command.
