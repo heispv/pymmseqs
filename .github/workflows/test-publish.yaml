@@ -91,6 +91,7 @@ jobs:
     name: Build source distribution
     runs-on: ubuntu-latest
     needs: [build]
+    if: ${{ success() }}
     steps:
       - uses: actions/checkout@v4
       
@@ -114,6 +115,7 @@ jobs:
   publish_pypi:
     runs-on: ubuntu-latest
     needs: [build, build_sdist]
+    if: ${{ success() }}
     environment: pymmseqs-testpypi
     permissions:
       id-token: write
