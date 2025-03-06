@@ -1,1 +1,2 @@
 include scripts/download_mmseqs.sh
+include pymmseqs/bin/mmseqs*

@@ -32,3 +32,6 @@ htmlcov/
 
 # Output directories in all examples
 examples/**/output/
+
+# poetry lock file
+poetry.lock

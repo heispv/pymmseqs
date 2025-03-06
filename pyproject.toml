@@ -1,39 +1,38 @@
-# pyproject.toml
-
 [build-system]
-requires = ["setuptools", "wheel", "build"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
+[tool.poetry]
 name = "pymmseqs"
-version = "0.0.23"
+version = "0.0.24"
 description = "Python wrapper for mmseqs2"
+authors = ["heispv <peyman.vahidi@tum.de>"]
+license = "MIT"
 readme = "README.md"
-authors = [
-    { name = "heispv", email = "peyman.vahidi@tum.de" }
-]
-license = {text = "MIT License"}
-requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3.10",
     "Operating System :: POSIX :: Linux",
-    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: MacOS :: MacOS X"
 ]
-dependencies = [
-    "pyyaml>=6.0",
+include = [
+    "pymmseqs/bin/*",
+    "pymmseqs/defaults/*.yaml"
 ]
+build = "build.py"
 
-[project.urls]
-Homepage = "https://github.com/heispv/pymmseqs"
-Documentation = "https://github.com/heispv/pymmseqs/docs"
+[tool.poetry.dependencies]
+python = "^3.10"
+pyyaml = "^6.0"
+pytest = "^8.3.5"
+pandas = "^2.2.3"
+numpy = "^2.2.3"
+matplotlib = "^3.10.1"
+ipykernel = "^6.29.5"
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/heispv/pymmseqs"
+"Documentation" = "https://github.com/heispv/pymmseqs/wiki"
 "Bug Tracker" = "https://github.com/heispv/pymmseqs/issues"
-
-[tool.setuptools]
-include-package-data = true
-
-[tool.setuptools.package-data]
-"pymmseqs" = ["bin/*"]
-"pymmseqs.defaults" = ["*.yaml"]
 
 [tool.cibuildwheel]
 skip = "cp27-* pp27-* pp3*-*"
