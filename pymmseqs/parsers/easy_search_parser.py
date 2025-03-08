@@ -11,6 +11,9 @@ class EasySearchParser:
     A class for parsing the output of the EasySearchConfig.
     """
     def __init__(self, config: EasySearchConfig):
+        if not config.format_mode == 4:
+            raise ValueError(f"Using EasySearchParser with format_mode={config.format_mode} is not supported. Please use format_mode=4.")
+        
         self.alignment_file = config.alignment_file
     
     def to_pandas(self) -> pd.DataFrame:
