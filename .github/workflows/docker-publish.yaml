@@ -3,12 +3,12 @@ name: Build and Publish Docker Images to GHCR
 on:
   workflow_dispatch:
 
-env:
-  DOCKER_REPOSITORY: pymmseqs
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
           target: debian-build
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ env.DOCKER_REPOSITORY }}:debian
+          tags: ghcr.io/${{ github.repository_owner }}/pymmseqs:debian
 
       - name: Build and push Alpine image
         uses: docker/build-push-action@v4
@@ -42,4 +42,4 @@ jobs:
           target: alpine-build
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ env.DOCKER_REPOSITORY }}:alpine
+          tags: ghcr.io/${{ github.repository_owner }}/pymmseqs:alpine
