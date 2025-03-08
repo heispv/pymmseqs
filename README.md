@@ -27,13 +27,11 @@ PyMMseqs is a powerful Python wrapper for [MMseqs2](https://github.com/soedingla
 PyMMseqs can be installed in two ways: via pip (recommended for most users) or using a Docker image (ideal for reproducible environments).
 
 ### Installing via pip
-The `pymmseqs` package is currently available on TestPyPI. To install it, use the following command:
+The `pymmseqs` package is currently available on PyPI. To install it, use the following command:
 
 ```bash
-pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pymmseqs
+pip install pymmseqs
 ```
-
-> **Note**: This command uses TestPyPI as the primary source for `pymmseqs` while fetching dependencies from the main PyPI index. Once the package is available on PyPI, this command will be simplified to `pip install pymmseqs`.
 
 > **Important**: All dependencies, including MMseqs2, are automatically installed and configured when you install `pymmseqs` via pip. No additional setup is required.
 
