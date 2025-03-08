@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "pymmseqs"
-version = "0.0.24"
+version = "0.0.25"
 description = "Python wrapper for mmseqs2"
 authors = ["heispv <peyman.vahidi@tum.de>"]
 license = "MIT"
@@ -22,7 +22,7 @@ include = [
 build = "build.py"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10"
 pyyaml = "^6.0"
 pytest = "^8.3.5"
 pandas = "^2.2.3"

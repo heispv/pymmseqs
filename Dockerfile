@@ -25,7 +25,7 @@ COPY . .
 COPY examples/ ../examples/
 COPY docs/ ../docs/
 
-RUN apk add --no-cache curl \
+RUN apk add --no-cache curl gcc python3-dev musl-dev linux-headers \
     && pip install --upgrade pip \
     && pip install . \
     && pip cache purge \
