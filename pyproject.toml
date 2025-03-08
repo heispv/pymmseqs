@@ -16,7 +16,8 @@ classifiers = [
 ]
 include = [
     "pymmseqs/bin/*",
-    "pymmseqs/defaults/*.yaml"
+    "pymmseqs/defaults/*.yaml",
+    "scripts/*"
 ]
 build = "build.py"
 
