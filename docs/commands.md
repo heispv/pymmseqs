@@ -2,15 +2,6 @@
 This module provides a Python wrapper around the MMseqs2 command-line tools with only the most commonly used parameters.
 
 
-## Table of Contents
-- [Important Things to Know](#important-things-to-know)
-- [createdb](#createdb)
-- [easy_cluster](#easy_cluster)
-- [search](#search)
-- [easy_search](#easy_search)
-
----
-
 ## Important Things to Know
 - The paths are relative to the parent directory of the python script it is called from.
 - You have the ability to adjust commonly used parameters for each command, while others default to their corresponding MMseqs2 command settings. For more extensive customization, refer to the [pymmseqs.config](./config.md) module to access and modify the full range of parameters available.
@@ -25,7 +16,7 @@ This module provides a Python wrapper around the MMseqs2 command-line tools with
 
 ---
 
-## createdb
+## [createdb](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/commands/createdb.py)
 Wrapper around the `mmseqs createdb` command.
 
 ```python
@@ -52,7 +43,7 @@ Methods:
 
 ---
 
-## easy_cluster
+## [easy_cluster](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/commands/easy_cluster.py)
 Wrapper around the mmseqs easy-cluster command.
 
 ```python
@@ -85,7 +76,7 @@ Methods:
 
 ---
 
-## search
+## [search](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/commands/search.py)
 Wrapper around the mmseqs search command.
 
 ```python
@@ -124,7 +115,7 @@ Methods:
 
 ---
 
-## easy_search
+## [easy_search](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/commands/easy_search.py)
 Wrapper around the mmseqs easy-search command.
 
 ```python
@@ -154,4 +145,3 @@ Methods:
 - `to_path()`: Get the paths to the search output files.
 
 [See an example](../examples/commands_module/easy_search_ex.py)
-

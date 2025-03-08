@@ -13,13 +13,21 @@ pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/
 
 This command installs `pymmseqs` from TestPyPI while also using the main PyPI index to fetch any necessary dependencies.
 
+### Using Docker Hub Image
+If you want to use the `pymmseqs` package without installing it, you can use the Docker Hub image.
+
+#### Debian
+```bash
+docker pull ghcr.io/heispv/pymmseqs:debian
+```
+
 ## Simple Example
 
 ```python
 from pymmseqs.commands import easy_cluster
 
 # Perform clustering
-cluster = easy_cluster(
+human_cluster = easy_cluster(
     fasta_files = "human.fasta"
     cluster_prefix = "output/human_clust",
     tmp_dir = "output/tmp",
@@ -28,9 +36,9 @@ cluster = easy_cluster(
 )
 
 # Parse output to python generator
-cluster_gen = cluster.to_gen()
+cluster_gen = human_cluster.to_gen()
 
-# Print a cluster representative of a cluster which has more than 100 members
+# Find and print the representative sequence of a large cluster (>100 members)
 for cluster in cluster_gen:
     if len(cluster["members"]) > 100:
         print(cluster["rep"])

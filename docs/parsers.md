@@ -1,28 +1,21 @@
 # pymmseqs.parsers
 This module is for parsing the output of MMseqs2 commands as Python objects, making it easier to work with the results in your Python scripts.
 
-## Table of Contents
-- [Important Things to Know](#important-things-to-know)
-- [CreateDBParser](#createdbparser)
-    - [For Normal Users](#for-normal-users)
-    - [For Pro Users](#for-pro-users)
-- [EasyClusterParser](#easyclusterparser)
-- [SearchParser](#searchparser)
-- [EasySearchParser](#easysearchparser)
-
 ## Important Things to Know
 
 - You obtain a parser object when using the `pymmseqs.commands` module to execute a command.
-- Pro users can pass the [`pymmseqs.config`](./config.md) object to the parser after execution to leverage additional features of `pymmseqs.parsers`.
+- Pro users can pass the `pymmseqs.config` object to the parser after execution to leverage additional features of `pymmseqs.parsers`.
 - Refer to the sections below for detailed instructions on how to use parser objects effectively.
 
-## CreateDBParser
+---
+
+## [CreateDBParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/createdb_parser.py)
 This parser processes the output of the MMseqs2 `createdb` command.
 
 ### For Normal Users
-When using the `pymmseqs.commands.createdb` command, you receive a `CreateDBParser` object.
+When using the `createdb` from `pymmseqs.commands`, you receive a `CreateDBParser` object.
 
-#### Example:
+Example:
 ```python
 from pymmseqs.commands import createdb
 
@@ -38,7 +31,7 @@ print(query_database.get_path())
 ### For Pro Users
 Pro users can utilize the `pymmseqs.config.CreateDBConfig` object for additional flexibility.
 
-#### Example:
+Example:
 ```python
 from pymmseqs.config import CreateDBConfig
 from pymmseqs.parsers import CreateDBParser
@@ -60,9 +53,13 @@ createdb_parser = CreateDBParser(createdb_config)
 print(createdb_parser.get_path())
 ```
 
-**Want to know what happens when you run `config.run()`?** Check out the [`pymmseqs.config`](./config.md) module for details.
+**Want to know what happens when you run `config.run()`?**
 
-## EasyClusterParser
+Check out the [`pymmseqs.config`](../pymmseqs.config) module for details.
+
+---
+
+## [EasyClusterParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/easy_cluster_parser.py)
 The `EasyClusterParser` provides several methods for handling clustering results:
 
 ### Methods:
@@ -117,7 +114,7 @@ The `EasyClusterParser` provides several methods for handling clustering results
 ### For Normal Users
 Using the `pymmseqs.commands.easy_cluster` command provides an `EasyClusterParser` object.
 
-#### Example:
+Example:
 ```python
 from pymmseqs.commands import easy_cluster
 
@@ -136,7 +133,7 @@ print(cluster_list[:2])
 ### For Pro Users
 Pro users can utilize the `pymmseqs.config.EasyClusterConfig` object for additional control.
 
-#### Example:
+Example:
 ```python
 from pymmseqs.config import EasyClusterConfig
 from pymmseqs.parsers import EasyClusterParser
@@ -165,7 +162,9 @@ for cluster in cluster_gen:
         break
 ```
 
-## SearchParser
+---
+
+## [SearchParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/search_parser.py)
 The `SearchParser` processes the output of the MMseqs2 `search` command, which performs sequence similarity searches between a query database and a target database.
 
 ### Methods:
@@ -202,7 +201,7 @@ The `SearchParser` processes the output of the MMseqs2 `search` command, which p
 ### For Normal Users
 When using the `pymmseqs.commands.search` command, you receive a `SearchParser` object.
 
-#### Example:
+Example:
 ```python
 from pymmseqs.commands import search
 search_result = search(
@@ -225,7 +224,7 @@ print(f"Found {len(filtered_alignments)} alignments with >50% identity")
 ### For Pro Users
 Pro users can utilize the `pymmseqs.config.SearchConfig` object for additional control.
 
-#### Example:
+Example:
 ```python
 from pymmseqs.config import SearchConfig
 from pymmseqs.parsers import SearchParser
@@ -259,7 +258,9 @@ high_quality_hits = results_df[(results_df['fident'] > 0.7) & (results_df['evalu
 print(f"Found {len(high_quality_hits)} high-quality alignments")
 ```
 
-## EasySearchParser
+---
+
+## [EasySearchParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/easy_search_parser.py)
 One of the main differences between the `EasySearchParser` and the `SearchParser` is that the `EasySearchParser` also accepts the inputs as a fasta files, but in the case of the `SearchParser` you need to pass the database paths.
 
 * When we are running the `easy_search` command it will run a `EasySearchConfig` under the hood, with the `format_mode` set to 4. So, we get a .tsv file as output with headers which can be later parsed by the `EasySearchParser`.
@@ -334,7 +335,7 @@ Then just use the generator to get the filtered alignments, and you don't need t
 ### Pro Users
 Pro users can utilize the `pymmseqs.config.EasySearchConfig` object for additional control.
 
-#### Example:
+Example:
 ```python
 from pymmseqs.config import EasySearchConfig
 from pymmseqs.parsers import EasySearchParser
