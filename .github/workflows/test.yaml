@@ -1,8 +1,6 @@
 name: Test
 on:
   push:
-    tags:
-      - v*
   pull_request:
   workflow_dispatch:
 
@@ -10,7 +8,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
         python-version: ["3.10"]
     runs-on: ${{ matrix.os }}
 
@@ -27,11 +25,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y mmseqs2
-      
-      - name: Install MMseqs2 (macOS)
-        if: startsWith(matrix.os, 'macos')
-        run: |
-          brew install mmseqs2
       
       - name: Install dependencies
         run: |

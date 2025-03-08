@@ -68,7 +68,7 @@ jobs:
   publish_pypi:
     runs-on: ubuntu-latest
     needs: [build, build_sdist]
-    environment: pymmseqs-testpypi
+    environment: pypi-publish
     permissions:
       id-token: write
     steps:
@@ -79,8 +79,8 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Publish to Test PyPI
+      - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository-url: https://test.pypi.org/legacy/
+          repository-url: https://pypi.org/legacy/
           verbose: true
