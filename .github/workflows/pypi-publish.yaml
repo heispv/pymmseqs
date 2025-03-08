@@ -1,9 +1,5 @@
 name: Publish to PyPI
 on:
-  push:
-    tags:
-      - v*
-  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -82,5 +78,4 @@ jobs:
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository-url: https://pypi.org/legacy/
           verbose: true
