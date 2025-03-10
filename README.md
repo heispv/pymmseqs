@@ -44,8 +44,9 @@ For users who prefer not to install PyMMseqs locally or want a pre-configured en
 To pull the Debian-based Docker image, run:
 
 ```bash
-docker pull ghcr.io/heispv/pymmseqs:debian
+docker pull ghcr.io/heispv/pymmseqs:latest-debian
 ```
+> **Note**: If you want to use a specific version of PyMMseqs, you can replace `latest` with the desired version.
 
 > **Tip**: Using Docker ensures that all dependencies, including MMseqs2, are pre-installed and configured, making it ideal for reproducible workflows.
 
