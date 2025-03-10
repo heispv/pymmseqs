@@ -20,7 +20,9 @@ PyMMseqs is a powerful Python wrapper for [MMseqs2](https://github.com/soedingla
 - **Seamless Integration**: Execute MMseqs2 commands directly within your Python code, eliminating the need for shell scripting or external command-line tools.
 - **Output Parsing**: Convert MMseqs2 outputs into Python objects (e.g., Pandas DataFrame, generators, dictionaries) for easy manipulation and analysis.
 - **High Performance**: Leverage the speed and efficiency of MMseqs2 while enjoying the flexibility of Python.
-- **Cross-Platform**: Use PyMMseqs via pip or Docker, ensuring compatibility across different environments.
+- **Cross-Platform**: Use PyMMseqs via pip or Docker, ensuring compatibility across different environments. PyMMseqs works seamlessly on Linux and macOS.
+
+> **Note**: Windows users should either use Windows Subsystem for Linux (WSL) or Docker to run PyMMseqs.
 
 ---
 
