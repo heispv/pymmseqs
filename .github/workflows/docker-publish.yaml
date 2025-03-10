@@ -2,6 +2,11 @@ name: Build and Publish Docker Images to GHCR
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+        default: 'latest'
 
 jobs:
   build-and-push:
@@ -33,13 +38,6 @@ jobs:
           target: debian-build
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/pymmseqs:debian
-
-      - name: Build and push Alpine image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          target: alpine-build
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/pymmseqs:alpine
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/pymmseqs:${{ github.event.inputs.version }}-debian
+            ghcr.io/${{ github.repository_owner }}/pymmseqs:latest-debian
