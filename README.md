@@ -1,7 +1,9 @@
 <div align="center">
-<h1>
-    PyMMseqs 🚀
-</h1>
+    <a name="readme-top"></a>
+    <h1>
+        PyMMseqs 🚀
+    </h1>
+
 
 ![GitHub Actions](https://img.shields.io/github/actions/workflow/status/heispv/pymmseqs/pypi-publish.yaml?style=plastic&logo=github-actions&label=CI)
 [![License](https://img.shields.io/github/license/heispv/pymmseqs?style=plastic&color=orange&logo=github&label=License)](./LICENSE)
@@ -16,7 +18,7 @@ PyMMseqs is a powerful Python wrapper for [MMseqs2](https://github.com/soedingla
 ## 🗝️ Features
 
 - **Seamless Integration**: Execute MMseqs2 commands directly within your Python code, eliminating the need for shell scripting or external command-line tools.
-- **Output Parsing**: Convert MMseqs2 outputs into Python objects (e.g., generators, dictionaries) for easy manipulation and analysis.
+- **Output Parsing**: Convert MMseqs2 outputs into Python objects (e.g., Pandas DataFrame, generators, dictionaries) for easy manipulation and analysis.
 - **High Performance**: Leverage the speed and efficiency of MMseqs2 while enjoying the flexibility of Python.
 - **Cross-Platform**: Use PyMMseqs via pip or Docker, ensuring compatibility across different environments.
 
@@ -32,8 +34,6 @@ The `pymmseqs` package is currently available on PyPI. To install it, use the fo
 ```bash
 pip install pymmseqs
 ```
-
-> **Important**: All dependencies, including MMseqs2, are automatically installed and configured when you install `pymmseqs` via pip. No additional setup is required.
 
 ### Using Docker Image
 For users who prefer not to install PyMMseqs locally or want a pre-configured environment, a Docker image is available on GitHub Container Registry (GHCR).
@@ -67,10 +67,10 @@ from pymmseqs.commands import easy_cluster
 # Perform clustering on a FASTA file (equivalent to the terminal command above)
 human_cluster = easy_cluster("human.fasta", "human_clust", "tmp", min_seq_id=0.9)
 
-# Convert the clustering output to a Python generator for efficient iteration
+# Get results as a Python generator for easy processing
 cluster_gen = human_cluster.to_gen()
 
-# Analyze the results: Find and print the representative sequence of a large cluster (>100 members)
+# Let's get the representative sequence of a cluster with more than 100 members
 for cluster in cluster_gen:
     if len(cluster["members"]) > 100:
         print(f"Representative sequence of a large cluster: {cluster['rep']}")
@@ -95,12 +95,7 @@ To use PyMMseqs, you only need:
 
 ## 🤝 Contributing
 
-We welcome contributions to PyMMseqs! If you’d like to contribute, please:
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/YourFeature`).
-3. Commit your changes (`git commit -m "Add YourFeature"`).
-4. Push to the branch (`git push origin feature/YourFeature`).
-5. Open a Pull Request.
+We'd love your contributions to PyMMseqs! Simply fork, branch, commit, push, and open a PR.
 
 For bug reports, feature requests, or questions, please open an issue on the [GitHub Issues page](https://github.com/heispv/pymmseqs/issues).
 
@@ -114,6 +109,14 @@ PyMMseqs is licensed under the [MIT License](LICENSE). See the [LICENSE](LICENSE
 
 ## 🌟 Support
 
-If you find PyMMseqs useful, please consider giving the repository a star on GitHub! ⭐ It helps others discover the project and motivates further development.
+If you find PyMMseqs useful, please consider giving the repository a star on GitHub! ⭐
+
+It helps others discover the project and motivates further development.
 
 For questions, feedback, or support, feel free to open an issue or contact the maintainers.
+
+<p align="right" style="font-size: 14px; color: #555; margin-top: 20px;">
+    <a href="#readme-top" style="text-decoration: none; color: #007bff; font-weight: bold;">
+        ↑ Back to Top
+    </a>
+</p>
