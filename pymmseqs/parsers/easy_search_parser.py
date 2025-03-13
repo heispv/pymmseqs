@@ -3,6 +3,7 @@
 import pandas as pd
 import csv
 from typing import Generator
+import numpy as np
 
 from ..config import EasySearchConfig
 
@@ -35,9 +36,23 @@ class EasySearchParser:
         Each dictionary represents a row in the TSV file, with keys corresponding to 
         the column names in the header.
         """
+        # Note that here the alignment_file is not a prefix, but a tsv file
+        df_sample = pd.read_csv(self.alignment_file, sep="\t", nrows=1)
+        column_types = df_sample.dtypes.to_dict()
+        
         with open(self.alignment_file, 'r') as file:
             reader = csv.DictReader(file, delimiter='\t')
-            yield from reader
+            for row in reader:
+                for field, dtype in column_types.items():
+                    if field in row:
+                        try:
+                            if dtype in (np.float64, float):
+                                row[field] = float(row[field].replace('E', 'e'))
+                            elif dtype in (np.int64, int):
+                                row[field] = int(row[field])
+                        except ValueError:
+                            pass
+                yield row
     
     def to_path(self) -> str:
         """

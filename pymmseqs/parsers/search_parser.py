@@ -2,6 +2,7 @@
 
 import pandas as pd
 import csv
+import numpy as np
 from typing import Generator
 
 from ..config import (
@@ -58,14 +59,27 @@ class SearchParser:
         Returns a generator that yields dictionaries for each row in the alignment file.
 
         Each dictionary represents a row in the TSV file, with keys corresponding to 
-        the column names in the header.
+        the column names in the header, with automatic type conversion based on pandas inference.
         """
         if not self._readable:
             self._run_convertalis()
         
+        df_sample = pd.read_csv(f"{self.alignment_db}.tsv", sep="\t", nrows=1)
+        column_types = df_sample.dtypes.to_dict()
+        
         with open(f"{self.alignment_db}.tsv", 'r') as file:
             reader = csv.DictReader(file, delimiter='\t')
-            yield from reader
+            for row in reader:
+                for field, dtype in column_types.items():
+                    if field in row:
+                        try:
+                            if dtype in (np.float64, float):
+                                row[field] = float(row[field].replace('E', 'e'))
+                            elif dtype in (np.int64, int):
+                                row[field] = int(row[field])
+                        except ValueError:
+                            pass
+                yield row
     
     def to_path(self) -> str:
         """
