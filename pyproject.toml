@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "pymmseqs"
 version = "1.0.0"
-description = "Python wrapper for mmseqs2"
+description = "Python wrapper for MMseqs2"
 authors = ["heispv <peyman.vahidi@tum.de>"]
 license = "MIT"
 readme = "README.md"
@@ -23,12 +23,10 @@ build = "build.py"
 
 [tool.poetry.dependencies]
 python = ">=3.10"
-pyyaml = "^6.0"
-pytest = "^8.3.5"
-pandas = "^2.2.3"
-numpy = "^2.2.3"
-matplotlib = "^3.10.1"
-ipykernel = "^6.29.5"
+pyyaml = "^6.0.1"
+pandas = "^2.2.2"
+numpy = "^2.0.0"
+matplotlib = "^3.8.4"
 
 [tool.poetry.urls]
 "Homepage" = "https://github.com/heispv/pymmseqs"
