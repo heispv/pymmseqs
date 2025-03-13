@@ -11,7 +11,20 @@
 [![Docker](https://img.shields.io/badge/Docker-GHCR-0db7ed?style=plastic&logo=docker&label=Docker)](https://github.com/heispv/pymmseqs/pkgs/container/pymmseqs)
 
 PyMMseqs is a powerful Python wrapper for [MMseqs2](https://github.com/soedinglab/MMseqs2). It seamlessly integrates MMseqs2’s advanced functionality into your Python workflows, allowing you to effortlessly execute MMseqs2 commands and parse their outputs into convenient Python objects for further analysis. Whether you're clustering sequences, searching databases, or analyzing large-scale biological data, PyMMseqs simplifies the process while maintaining the performance and flexibility of MMseqs2.
+
 </div>
+
+---
+
+## 🎯 5-Minute Tour of PyMMseqs
+
+Want to see the power of PyMMseqs in action?
+
+Try our quick tour on Google Colab and experience the full power of PyMMseqs, all in just 5 minutes! 
+
+**Ready to dive in?**
+
+[![PyMMseqs Quick Tour](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xR78P1OZqBDKTM5feTzJG_MHn-TlOdNj?usp=sharing)
 
 ---
 
@@ -52,9 +65,9 @@ docker pull ghcr.io/heispv/pymmseqs:latest-debian
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Example Usage
 
-Here’s a simple example to get you started with PyMMseqs. This example demonstrates how to perform sequence clustering and parse the results.
+Here's a simple example to get you started with PyMMseqs. This example demonstrates how to perform sequence clustering and parse the results.
 
 If you were using MMseqs2 directly in the terminal, you would run the following command to cluster sequences:
 
@@ -79,6 +92,7 @@ for cluster in cluster_gen:
         print(f"Representative sequence of a large cluster: {cluster['rep']}")
         break
 ```
+
 ---
 
 ## 📖 Documentation
@@ -106,7 +120,7 @@ For bug reports, feature requests, or questions, please open an issue on the [Gi
 
 ## 📜 License
 
-PyMMseqs is licensed under the [MIT License](LICENSE). See the [LICENSE](LICENSE) file for more details.
+PyMMseqs is licensed under the [MIT License](LICENSE).
 
 ---
 
