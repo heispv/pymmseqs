@@ -20,7 +20,7 @@ class SearchParser:
 
         self._readable = False
     
-    def _run_convertalis(self) -> None:
+    def to_tsv(self) -> None:
         """
         Runs the convertalis command to convert the alignment database to a readable format.
         """
@@ -41,7 +41,7 @@ class SearchParser:
         Returns a pandas DataFrame containing the alignment data.
         """
         if not self._readable:
-            self._run_convertalis()
+            self.to_tsv()
         
         return pd.read_csv(f"{self.alignment_db}.tsv", sep="\t")
     
@@ -50,7 +50,7 @@ class SearchParser:
         Returns a list of dictionaries containing the alignment data.
         """
         if not self._readable:
-            self._run_convertalis()
+            self.to_tsv()
         
         return self.to_pandas().to_dict(orient="records")
     
@@ -62,7 +62,7 @@ class SearchParser:
         the column names in the header, with automatic type conversion based on pandas inference.
         """
         if not self._readable:
-            self._run_convertalis()
+            self.to_tsv()
         
         df_sample = pd.read_csv(f"{self.alignment_db}.tsv", sep="\t", nrows=1)
         column_types = df_sample.dtypes.to_dict()
