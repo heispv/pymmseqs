@@ -1,7 +1,7 @@
 # pymmseqs.parsers
 This module is for parsing the output of MMseqs2 commands as Python objects, making it easier to work with the results in your Python scripts.
 
-## Important Things to Know
+# Important Things to Know
 
 - You obtain a parser object when using the `pymmseqs.commands` module to execute a command.
 - Pro users can pass the `pymmseqs.config` object to the parser after execution to leverage additional features of `pymmseqs.parsers`.
@@ -9,10 +9,10 @@ This module is for parsing the output of MMseqs2 commands as Python objects, mak
 
 ---
 
-## [CreateDBParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/createdb_parser.py)
+# [CreateDBParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/createdb_parser.py)
 This parser processes the output of the MMseqs2 `createdb` command.
 
-### For Normal Users
+## For Normal Users
 When using the `createdb` from `pymmseqs.commands`, you receive a `CreateDBParser` object.
 
 Example:
@@ -28,7 +28,7 @@ query_database = createdb(
 print(query_database.get_path())
 ```
 
-### For Pro Users
+## For Pro Users
 Pro users can utilize the `pymmseqs.config.CreateDBConfig` object for additional flexibility.
 
 Example:
@@ -59,12 +59,12 @@ Check out the [`pymmseqs.config`](../pymmseqs.config) module for details.
 
 ---
 
-## [EasyClusterParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/easy_cluster_parser.py)
+# [EasyClusterParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/easy_cluster_parser.py)
 The `EasyClusterParser` provides several methods for handling clustering results:
 
-### Methods:
+## Methods:
 
-#### `to_list()`
+### `to_list()`
 - Returns a list of dictionaries, each representing a cluster.
 - Each dictionary contains:
     - **`rep`**: The representative sequence ID.
@@ -92,7 +92,7 @@ The `EasyClusterParser` provides several methods for handling clustering results
 ]
 ```
 
-#### `to_pandas()`
+### `to_pandas()`
 - Converts cluster data into a **pandas DataFrame** for easier analysis.
 - Columns include:
     - `rep`: Representative sequence ID (index)
@@ -100,10 +100,10 @@ The `EasyClusterParser` provides several methods for handling clustering results
     - `header`: FASTA header
     - `sequence`: Sequence data
 
-#### `to_gen()`
+### `to_gen()`
 - Returns a **generator** of clusters, allowing memory-efficient iteration.
 
-#### `to_path()`
+### `to_path()`
 - Returns a list of relevant output file paths:
     - `cluster_prefix_all_seqs.fasta`: All sequences in clusters
     - `cluster_prefix_cluster.tsv`: Cluster information
@@ -111,7 +111,7 @@ The `EasyClusterParser` provides several methods for handling clustering results
 
 **Note:** `to_list()`, `to_pandas()`, and `to_gen()` rely on `cluster_prefix_all_seqs.fasta`.
 
-### For Normal Users
+## For Normal Users
 Using the `pymmseqs.commands.easy_cluster` command provides an `EasyClusterParser` object.
 
 Example:
@@ -130,7 +130,7 @@ cluster_list = my_cluster.get_list()
 print(cluster_list[:2])
 ```
 
-### For Pro Users
+## For Pro Users
 Pro users can utilize the `pymmseqs.config.EasyClusterConfig` object for additional control.
 
 Example:
@@ -164,12 +164,12 @@ for cluster in cluster_gen:
 
 ---
 
-## [SearchParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/search_parser.py)
+# [SearchParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/search_parser.py)
 The `SearchParser` processes the output of the MMseqs2 `search` command, which performs sequence similarity searches between a query database and a target database.
 
-### Methods:
+## Methods:
 
-#### `to_list()`
+### `to_list()`
 - Returns a list of dictionaries, each representing a row in the alignment file.
 - Each dictionary contains keys corresponding to the alignment data, such as:
   - `query`
@@ -185,20 +185,24 @@ The `SearchParser` processes the output of the MMseqs2 `search` command, which p
   - `evalue`
   - `bits`
 
-#### `to_pandas()`
+### `to_tsv()`
+- Returns nothing, just creates a new .tsv file.
+- This is like running a `mmseqs convertalis` function with `format_mode=4` under the hood.
+
+### `to_pandas()`
 - Returns a pandas DataFrame containing the alignment data.
 - The columns are the same as the keys in the dictionaries returned by `to_list()`.
 
-#### `to_gen()`
+### `to_gen()`
 - Returns a generator of dictionaries, each representing a row in the alignment file.
 - The keys are the same as the ones in the dictionaries returned by `to_list()`.
 
-#### `to_path()`
+### `to_path()`
 - Returns the path to the alignment database.
 
-**Note:** When using `to_list()`, `to_pandas()`, or `to_gen()` methods, the `SearchParser` automatically runs the `mmseqs convertalis` command to convert the binary alignment database to a readable TSV format if needed.
+**Note:** When using `to_list()`, `to_pandas()`, or `to_gen()` methods, the `SearchParser` automatically runs the `to_tsv` command which is equal to `mmseqs convertalis` command to convert the binary alignment database to a readable TSV format if needed.
 
-### For Normal Users
+## For Normal Users
 When using the `pymmseqs.commands.search` command, you receive a `SearchParser` object.
 
 Example:
@@ -221,7 +225,7 @@ for alignment in search_result.to_gen():
 print(f"Found {len(filtered_alignments)} alignments with >50% identity")
 ```
 
-### For Pro Users
+## For Pro Users
 Pro users can utilize the `pymmseqs.config.SearchConfig` object for additional control.
 
 Example:
@@ -260,14 +264,14 @@ print(f"Found {len(high_quality_hits)} high-quality alignments")
 
 ---
 
-## [EasySearchParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/easy_search_parser.py)
+# [EasySearchParser](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/parsers/easy_search_parser.py)
 One of the main differences between the `EasySearchParser` and the `SearchParser` is that the `EasySearchParser` also accepts the inputs as a fasta files, but in the case of the `SearchParser` you need to pass the database paths.
 
 * When we are running the `easy_search` command it will run a `EasySearchConfig` under the hood, with the `format_mode` set to 4. So, we get a .tsv file as output with headers which can be later parsed by the `EasySearchParser`.
 
-### Methods:
+## Methods:
 
-#### `to_list()`
+### `to_list()`
 - Returns a list of dictionaries, each representing a row in the alignment file.
 - Each dictionary contains the following keys (these are the defined in the `format_output` parameter of the `EasySearchConfig` object):
     - `query`
@@ -284,18 +288,18 @@ One of the main differences between the `EasySearchParser` and the `SearchParser
     - `bits`
 
 
-#### `to_pandas()`
+### `to_pandas()`
 - Returns a pandas DataFrame containing the alignment data.
 - The columns are the same as the keys in the dictionaries returned by `to_list()`.
 
-#### `to_gen()`
+### `to_gen()`
 - Returns a generator of dictionaries, each representing a row in the alignment file.
 - The keys are the same as the ones in the dictionaries returned by `to_list()`.
 
-#### `to_path()`
+### `to_path()`
 - Returns a list of file paths for the output files.
 
-### Normal Users
+## Normal Users
 When using the `pymmseqs.commands.easy_search` command, you get a `EasySearchParser` object.
 ```python
 from pymmseqs.commands import easy_search
@@ -332,7 +336,7 @@ def get_filtered_alignments(parser, threshold=0.5):
 
 Then just use the generator to get the filtered alignments, and you don't need to worry about memory issues.
 
-### Pro Users
+## Pro Users
 Pro users can utilize the `pymmseqs.config.EasySearchConfig` object for additional control.
 
 Example:
