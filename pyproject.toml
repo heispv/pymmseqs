@@ -34,4 +34,4 @@ matplotlib = "^3.8.4"
 "Bug Tracker" = "https://github.com/heispv/pymmseqs/issues"
 
 [tool.cibuildwheel]
-skip = "cp27-* pp27-* pp3*-*"
+skip = "cp27-* pp27-* pp3*-* *-manylinux_i686 *-musllinux_i686"
