@@ -1,6 +1,6 @@
 # pymmseqs/tools/easy_cluster_tools.py
 
-def parse_fasta_clusters(file_path):
+def parse_fasta_clusters(file_path, seq_id_separator="|", seq_id_index=1):
     """
     Generator that parses a FASTA file and yields clusters one at a time as (rep, members) tuples.
 
@@ -65,11 +65,18 @@ def parse_fasta_clusters(file_path):
                         else:
                             seq_lines.append(peek_line)
                     sequence = "".join(seq_lines)
-                    member = {
-                        "seq_id": member_header.split()[0].split('|')[1],
-                        "header": member_header,
-                        "sequence": sequence
-                    }
+                    try:
+                        seq_id = member_header.split()[0].split(seq_id_separator)[seq_id_index]
+                        member = {
+                            "seq_id": seq_id,
+                            "header": member_header,
+                            "sequence": sequence
+                        }
+                    except:
+                        member = {
+                            "header": member_header,
+                            "sequence": sequence
+                        }
                     if current_rep is not None:
                         current_members.append(member)
                     else:
