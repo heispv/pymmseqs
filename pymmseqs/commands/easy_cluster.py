@@ -27,7 +27,7 @@ def easy_cluster(
     Parameters
     ----------
     `fasta_files` : Union[str, Path, List[Union[str, Path]]]
-        Path to MMseqs2 sequence database created with createdb.
+        Path to a FASTA file (optionally compressed with .gz or .bz2).
 
     `cluster_prefix` : Union[str, Path]
         Output cluster database path prefix (will create multiple files with this prefix).
