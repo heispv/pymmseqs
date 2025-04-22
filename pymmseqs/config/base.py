@@ -201,7 +201,8 @@ class BaseConfig(ABC):
             if param_info['required']:
                 value = getattr(self, param_name)
                 if isinstance(value, list):
-                    args.append(','.join(map(str, value)))
+                    for file_path in value:
+                        args.append(str(file_path))
                 else:
                     args.append(str(value))
             else:
