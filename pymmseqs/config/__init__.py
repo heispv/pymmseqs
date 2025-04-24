@@ -10,6 +10,7 @@ from .easy_linsearch_config import EasyLinSearchConfig
 from .easy_cluster_config import EasyClusterConfig
 from .easy_linclust_config import EasyLinClustConfig
 from .convertalis_config import ConvertAlisConfig
+from .createindex_config import CreateIndexConfig
 
 __all__ = [
     'BaseConfig',
@@ -22,4 +23,5 @@ __all__ = [
     'EasyClusterConfig',
     'EasyLinClustConfig',
     'ConvertAlisConfig',
+    'CreateIndexConfig',
 ]
