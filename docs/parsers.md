@@ -103,13 +103,94 @@ The `EasyClusterParser` provides several methods for handling clustering results
 ### `to_gen()`
 - Returns a **generator** of clusters, allowing memory-efficient iteration.
 
+### `to_rep_list()`
+- Returns a list of representative sequences from all clusters.
+- **Parameters:**
+    - `with_seq` (bool): If True, returns tuples of (header, sequence). If False, returns only headers.
+- **Returns:** List of representative sequences or tuples.
+
+**Example:**
+```python
+# Get representatives with sequences
+reps_with_seq = cluster_result.to_rep_list(with_seq=True)
+# Returns: [("seq1", "SEQWENCE"), ("seq3", "PRTEIN")]
+
+# Get only representative headers
+rep_headers = cluster_result.to_rep_list(with_seq=False)
+# Returns: ["seq1", "seq3"]
+```
+
+### `to_rep_gen()`
+- Returns a **generator** of representative sequences for memory-efficient processing.
+- **Parameters:**
+    - `with_seq` (bool): If True, yields tuples of (header, sequence). If False, yields only headers.
+- **Yields:** Representative sequences or tuples one at a time.
+
+**Example:**
+```python
+# Memory-efficient processing of representatives
+for rep_header, rep_seq in cluster_result.to_rep_gen(with_seq=True):
+    print(f"Representative: {rep_header}, Length: {len(rep_seq)}")
+```
+
+### `split_rep_as_list()`
+- Splits cluster representatives into train, validation, and test sets as lists.
+- **Parameters:**
+    - `train` (float): Proportion for training set
+    - `val` (float): Proportion for validation set  
+    - `test` (float): Proportion for test set
+    - `with_seq` (bool): Include sequences in output
+    - `shuffle` (bool): Shuffle data before splitting
+    - `seed` (int): Random seed for reproducibility
+- **Returns:** Tuple of three lists (train, validation, test)
+- **Note:** Proportions are automatically normalized if they don't sum to 1.0
+
+**Example:**
+```python
+# Split representatives for machine learning
+train_reps, val_reps, test_reps = cluster_result.split_rep_as_list(
+    train=0.7, 
+    val=0.15, 
+    test=0.15,
+    with_seq=True,
+    shuffle=True,
+    seed=42
+)
+```
+
+### `split_rep_as_fasta()`
+- Splits cluster representatives into train, validation, and test sets and saves as FASTA files.
+- **Parameters:**
+    - `train` (float): Proportion for training set
+    - `val` (float): Proportion for validation set
+    - `test` (float): Proportion for test set  
+    - `shuffle` (bool): Shuffle data before splitting
+    - `seed` (int): Random seed for reproducibility
+- **Returns:** Tuple of file paths (train_path, val_path, test_path)
+- **Note:** Files are saved with suffixes `_rep_train.fasta`, `_rep_val.fasta`, `_rep_test.fasta` and in the parent directory of the clustering outputs.
+
+**Example:**
+```python
+# Create train/val/test FASTA files for ML workflows
+train_file, val_file, test_file = cluster_result.split_rep_as_fasta(
+    train=0.8,
+    val=0.1, 
+    test=0.1,
+    shuffle=True,
+    seed=42
+)
+print(f"Training set saved to: {train_file}")
+print(f"Validation set saved to: {val_file}")
+print(f"Test set saved to: {test_file}")
+```
+
 ### `to_path()`
 - Returns a list of relevant output file paths:
     - `cluster_prefix_all_seqs.fasta`: All sequences in clusters
     - `cluster_prefix_cluster.tsv`: Cluster information
     - `cluster_prefix_rep_seqs.fasta`: Representative sequences
 
-**Note:** `to_list()`, `to_pandas()`, and `to_gen()` rely on `cluster_prefix_all_seqs.fasta`.
+**Note:** `to_list()`, `to_pandas()`, `to_gen()`, `to_rep_list()`, and `to_rep_gen()` rely on `cluster_prefix_all_seqs.fasta`.
 
 ## For Normal Users
 Using the `pymmseqs.commands.easy_cluster` command provides an `EasyClusterParser` object.
@@ -126,8 +207,24 @@ my_cluster = easy_cluster(
 )
 
 # If you have a small dataset...
-cluster_list = my_cluster.get_list()
+cluster_list = my_cluster.to_list()
 print(cluster_list[:2])
+
+# Get just the representative sequences
+representatives = my_cluster.to_rep_list(with_seq=True)
+print(f"Found {len(representatives)} clusters")
+
+# Split representatives for machine learning workflows
+train_reps, val_reps, test_reps = my_cluster.split_rep_as_list(
+    train=0.7, val=0.15, test=0.15, 
+    with_seq=True, shuffle=True, seed=42
+)
+print(f"Train: {len(train_reps)}, Val: {len(val_reps)}, Test: {len(test_reps)}")
+
+# Or save directly as FASTA files
+train_file, val_file, test_file = my_cluster.split_rep_as_fasta(
+    train=0.8, val=0.1, test=0.1, shuffle=True, seed=42
+)
 ```
 
 ## For Pro Users
@@ -153,13 +250,29 @@ easy_cluster_config.run()
 easy_cluster_parser = EasyClusterParser(easy_cluster_config)
 
 # Create a generator for clusters
-cluster_gen = easy_cluster_parser.get_gen()
+cluster_gen = easy_cluster_parser.to_gen()
 
 # Retrieve the representative sequence of a cluster with more than 10 members
 for cluster in cluster_gen:
     if len(cluster["members"]) > 10:
         print(cluster["rep"])
         break
+
+# Work with representative sequences efficiently
+for rep_header, rep_seq in easy_cluster_parser.to_rep_gen(with_seq=True):
+    if len(rep_seq) > 500:  # Process long sequences
+        print(f"Long representative: {rep_header}")
+
+# Split data for machine learning with custom configuration
+train_reps, val_reps, test_reps = easy_cluster_parser.split_rep_as_list(
+    train=0.6, val=0.2, test=0.2,
+    with_seq=True, shuffle=True, seed=123
+)
+
+# Save splits as FASTA files for downstream analysis
+train_file, val_file, test_file = easy_cluster_parser.split_rep_as_fasta(
+    train=0.7, val=0.15, test=0.15, shuffle=True, seed=456
+)
 ```
 
 ---

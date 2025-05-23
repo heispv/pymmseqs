@@ -105,6 +105,10 @@ Methods:
 - `to_list()`: Returns a list of clusters with their representative and member sequences.
 - `to_pandas()`: Converts cluster data into a pandas DataFrame for easy manipulation.
 - `to_gen()`: Generator that yields clusters one at a time for efficient processing of large files.
+- `to_rep_list()`: Returns a list of representative sequences (with or without sequences).
+- `to_rep_gen()`: Generator that yields representative sequences one at a time.
+- `split_rep_as_list()`: Splits cluster representatives into train/validation/test sets as lists.
+- `split_rep_as_fasta()`: Splits cluster representatives into train/validation/test sets and saves as FASTA files.
 
 [See an example](../examples/commands_module/easy_cluster_ex.py)
 
