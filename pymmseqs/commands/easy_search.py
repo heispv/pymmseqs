@@ -5,14 +5,15 @@ from typing import Union, List
 
 from ..config import EasySearchConfig
 from ..parsers import EasySearchParser
+from ..utils import tmp_dir_handler
 
 def easy_search(
     query_fasta: Union[str, Path, List[Union[str, Path]]],
     target_fasta_or_db: Union[str, Path],
     alignment_file: Union[str, Path],
-    tmp_dir: Union[str, Path],
 
     # Optional parameters
+    tmp_dir: Union[str, Path, None] = None,
     s: float = 5.7,
     e: float = 0.001,
     min_seq_id: float = 0.0,
@@ -31,12 +32,13 @@ def easy_search(
 
     `alignment_file` : Union[str, Path]
         Path to the output file where alignments will be stored.
-
-    `tmp_dir` : Union[str, Path]
-        Temporary directory for intermediate files. Will be created if not existing.
     
     Optional parameters
     -------------------
+    `tmp_dir` : Union[str, Path]
+        Temporary directory for intermediate files.
+        If not provided, a temporary directory will be created in the same directory as the alignment_file.
+
     `s` : float, optional
         Sensitivity
         - 1.0: faster
@@ -67,6 +69,11 @@ def easy_search(
     EasySearchParser object
         - An EasySearchParser instance that provides methods to access and parse the alignment data.
     """
+
+    tmp_dir = tmp_dir_handler(
+        tmp_dir=tmp_dir,
+        output_file_path=alignment_file
+    )
 
     config = EasySearchConfig(
         query_fasta=query_fasta,

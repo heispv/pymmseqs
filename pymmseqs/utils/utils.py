@@ -3,7 +3,7 @@
 import os
 import inspect
 from pathlib import Path
-from typing import Any, Tuple, List
+from typing import Any, Tuple, List, Union
 
 import os
 import sys
@@ -101,3 +101,14 @@ def add_arg(
             args.extend([flag, "1" if value else "0"])
         else:
             args.extend([flag, str(value)])
+
+def tmp_dir_handler(
+    tmp_dir: Union[str, Path, None],
+    output_file_path: Union[str, Path],
+) -> Path:
+    if tmp_dir is None:
+        output_parent_dir = Path(output_file_path).parent
+        tmp_dir = output_parent_dir / "tmp"
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+
+    return tmp_dir

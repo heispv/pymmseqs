@@ -5,15 +5,16 @@ from typing import Union
 
 from ..config import SearchConfig
 from ..parsers import SearchParser
+from ..utils import tmp_dir_handler
 
 def search(
     # Required parameters
     query_db: Union[str, Path],
     target_db: Union[str, Path],
     alignment_db: Union[str, Path],
-    tmp_dir: Union[str, Path],
 
     # Optional parameters
+    tmp_dir: Union[str, Path, None] = None,
     s: float = 5.7,
     e: float = 0.001,
     min_seq_id: float = 0.0,
@@ -37,11 +38,12 @@ def search(
     `alignment_db` : Union[str, Path]
         Path to the output file where alignments will be stored.
 
-    `tmp_dir` : Union[str, Path]
-        Temporary directory for intermediate files. Will be created if not existing.
-    
     Optional parameters
     -------------------
+    `tmp_dir` : Union[str, Path]
+        Temporary directory for intermediate files.
+        If not provided, a temporary directory will be created in the same directory as the alignment_db.
+
     `s` : float, optional
         Sensitivity
         - 1.0: faster
@@ -95,6 +97,11 @@ def search(
     SearchParser object
         - An SearchParser instance that provides methods to access and parse the alignment data.
     """
+
+    tmp_dir = tmp_dir_handler(
+        tmp_dir=tmp_dir,
+        output_file_path=alignment_db
+    )
 
     config = SearchConfig(
         query_db=query_db,

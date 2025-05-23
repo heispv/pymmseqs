@@ -5,14 +5,15 @@ from typing import Union, List
 
 from ..config import EasyClusterConfig
 from ..parsers import EasyClusterParser
+from ..utils import tmp_dir_handler
 
 def easy_cluster(
     # Required parameters
     fasta_files: Union[str, Path, List[Union[str, Path]]],
     cluster_prefix: Union[str, Path],
-    tmp_dir: Union[str, Path],
 
     # Optional parameters
+    tmp_dir: Union[str, Path, None] = None,
     min_seq_id: float = 0.0,
     s: float = 4.0,
     c: float = 0.8,
@@ -32,11 +33,12 @@ def easy_cluster(
     `cluster_prefix` : Union[str, Path]
         Output cluster database path prefix (will create multiple files with this prefix).
 
-    `tmp_dir` : Union[str, Path]
-        Temporary directory for intermediate files (will be created if not exists).
-    
     Optional parameters
     --------------------
+    `tmp_dir` : Union[str, Path]
+        Temporary directory for intermediate files.
+        If not provided, a temporary directory will be created in the same directory as the cluster_prefix.
+
     `min_seq_id` : float, optional
         Minimum sequence identity (range 0.0, 1.0)
         - 0.0 (default)
@@ -76,6 +78,11 @@ def easy_cluster(
         An EasyClusterParser instance that provides methods to access and parse the clustering results.
 
     """
+
+    tmp_dir = tmp_dir_handler(
+        tmp_dir=tmp_dir,
+        output_file_path=cluster_prefix
+    )
 
     config = EasyClusterConfig(
         fasta_files=fasta_files,

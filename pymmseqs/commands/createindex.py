@@ -5,10 +5,11 @@ from typing import Union
 
 from ..config import CreateIndexConfig
 from ..parsers import CreateIndexParser
+from ..utils import tmp_dir_handler
 
 def createindex(
     sequence_db: Union[str, Path],
-    tmp_dir: Union[str, Path],
+    tmp_dir: Union[str, Path] = None,
 
     s: float = 7.5,
     k: int = 0,
@@ -31,7 +32,8 @@ def createindex(
         Path to MMseqs2 sequence database created with createdb.
         
     `tmp_dir` : Union[str, Path]
-        Temporary directory for intermediate files (will be created if not exists).
+        Temporary directory for intermediate files.
+        If not provided, a temporary directory will be created in the same directory as the sequence_db.
     
     `s` : float, optional
         Sensitivity.
@@ -85,6 +87,11 @@ def createindex(
     CreateIndexParser
         Parser for the created index.
     """
+
+    tmp_dir = tmp_dir_handler(
+        tmp_dir=tmp_dir,
+        output_file_path=sequence_db
+    )
 
     config = CreateIndexConfig(
         sequence_db=sequence_db,

@@ -3,7 +3,8 @@
 from .utils import (
     get_caller_dir,
     resolve_path,
-    add_arg
+    add_arg,
+    tmp_dir_handler
 )
 from .binary import get_mmseqs_binary
 from .runner import run_mmseqs_command
@@ -16,5 +17,6 @@ __all__ = [
     "get_mmseqs_binary",
     "run_mmseqs_command",
     "has_header",
-    "to_superscript"
+    "to_superscript",
+    "tmp_dir_handler"
 ]
