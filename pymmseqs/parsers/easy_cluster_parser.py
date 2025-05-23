@@ -1,12 +1,13 @@
 # pymmseqs/parsers/easy_cluster_parser.py
 
-from typing import Generator
+import os
 import pandas as pd
+from typing import Generator, Union
+from sklearn.model_selection import train_test_split
 
-from ..tools.easy_cluster_tools import (
-    parse_fasta_clusters
-)
+from ..tools.easy_cluster_tools import parse_fasta_clusters
 from ..config import EasyClusterConfig
+from ..utils import write_fasta
 
 class EasyClusterParser:
     """
@@ -35,6 +36,198 @@ class EasyClusterParser:
         self.seq_id_separator = seq_id_separator
         self.seq_id_index = seq_id_index
     
+    def split_rep_as_fasta(
+        self,
+        train: float,
+        val: float,
+        test: float,
+        shuffle: bool = True,
+        seed: int = None
+    ) -> tuple[str, str, str]:
+        """
+        Splits the clusters into train, validation, and test sets.
+
+        - if train + val + test != 1.0, the proportions are normalized to sum to 1.0
+
+        Parameters
+        ----------
+        train: float
+            The proportion of the data to use for training.
+        val: float
+            The proportion of the data to use for validation.
+        test: float
+            The proportion of the data to use for testing.
+        shuffle: bool, optional
+            Whether to shuffle the data before splitting.
+            Default is True.
+        seed: int, optional
+            The seed for the random number generator.
+            Default is None.
+
+        Returns
+        -------
+        Pah
+            The path to the train file.
+        Path
+            The path to the validation file.
+        Path
+            The path to the test file.
+        """
+        train_reps, val_reps, test_reps = self.split_rep_as_list(
+            train=train,
+            val=val,
+            test=test,
+            with_seq=True,
+            shuffle=shuffle,
+            seed=seed
+        )
+        
+        parent_dir = os.path.dirname(self.cluster_prefix)
+        if not parent_dir:
+            parent_dir = "."
+        
+        base_name = os.path.basename(self.cluster_prefix)
+        
+        if train_reps:
+            train_path = os.path.join(parent_dir, f"{base_name}_rep_train.fasta")
+            write_fasta(train_reps, train_path)
+        
+        if val_reps:
+            val_path = os.path.join(parent_dir, f"{base_name}_rep_val.fasta")
+            write_fasta(val_reps, val_path)
+        
+        if test_reps:
+            test_path = os.path.join(parent_dir, f"{base_name}_rep_test.fasta")
+            write_fasta(test_reps, test_path)
+        
+        return train_path, val_path, test_path
+
+    def split_rep_as_list(
+        self,
+        train: float,
+        val: float,
+        test: float,
+        with_seq: bool = True,
+        shuffle: bool = True,
+        seed: int = None
+    ) -> tuple[list, list, list]:
+        """
+        Splits the representatives to train, validation, and test sets.
+
+        - if train + val + test != 1.0, the proportions are normalized to sum to 1.0
+
+        Parameters
+        ----------
+        train: float
+            The proportion of the data to use for training.
+        val: float
+            The proportion of the data to use for validation.
+        test: float
+            The proportion of the data to use for testing.
+        with_seq: bool, optional
+            If True, returns a list of tuples with the representative sequence.
+            Default is True.
+        shuffle: bool, optional
+            Whether to shuffle the data before splitting.
+            Default is True.
+        seed: int, optional
+            The seed for the random number generator.
+            Default is None.
+
+        Returns
+        -------
+        tuple[list, list, list]
+            A tuple of lists containing the train, validation, and test sets.
+        """
+        rep_seqs = self.to_rep_list(
+            with_seq=with_seq
+        )
+        
+        if train + val + test != 1.0:
+            train = train / (train + val + test)
+            val = val / (train + val + test)
+            test = test / (train + val + test)
+        
+        if val == 0 and test == 0:
+            return rep_seqs, [], []
+        
+        train_rep_seqs, temp_rep_seqs = train_test_split(
+            rep_seqs,
+            test_size=(val + test),
+            shuffle=shuffle,
+            random_state=seed
+        )
+        
+        if val == 0:
+            return train_rep_seqs, [], temp_rep_seqs
+        elif test == 0:
+            return train_rep_seqs, temp_rep_seqs, []
+        
+        test_proportion_in_temp = test / (val + test)
+        val_rep_seqs, test_rep_seqs = train_test_split(
+            temp_rep_seqs,
+            test_size=test_proportion_in_temp,
+            shuffle=shuffle,
+            random_state=seed
+        )
+        
+        return train_rep_seqs, val_rep_seqs, test_rep_seqs
+    
+    def to_rep_list(self, with_seq: bool = True) -> list[Union[tuple[str, str], str]]:
+        """
+        Returns a list of representatives.
+
+        Parameters
+        ----------
+        with_seq: bool, optional
+            If True, returns a list of tuples with the representative sequence.
+            Default is True.
+
+        Returns
+        -------
+        list[Union[tuple[str, str], str]]
+            A list of representatives.
+        """
+        gen = self.to_gen()
+        rep_seqs = []
+
+        if with_seq:
+            for cluster in gen:
+                rep = cluster["rep"]
+                rep_seq = cluster["members"][0]["sequence"]
+                rep_seqs.append((rep, rep_seq))
+        else:
+            for cluster in gen:
+                rep_seqs.append(cluster["rep"])
+
+        return rep_seqs
+    
+    def to_rep_gen(self, with_seq: bool = True) -> Generator:
+        """
+        Returns a generator of representatives.
+
+        Parameters
+        ----------
+        with_seq: bool, optional
+            If True, returns a generator of tuples with the representative sequence.
+            Default is True.
+
+        Returns
+        -------
+        Generator
+            A generator of representatives.
+        """
+        gen = self.to_gen()
+        
+        if with_seq:
+            for cluster in gen:
+                rep = cluster["rep"]
+                rep_seq = cluster["members"][0]["sequence"]
+                yield (rep, rep_seq)
+        else:
+            for cluster in gen:
+                yield cluster["rep"]
+
     def to_list(self) -> list:
         """
         Parses a FASTA file containing clustered sequences and returns a list of dictionaries,
