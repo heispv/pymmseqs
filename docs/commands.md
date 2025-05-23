@@ -43,6 +43,39 @@ Methods:
 
 ---
 
+## [createindex](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/commands/createindex.py)
+Wrapper around the `mmseqs createindex` command.
+
+```python
+from pymmseqs.commands import createindex
+
+index_result = createindex(
+  sequence_db="output/example_db"
+)
+```
+
+Optional parameters:
+- `tmp_dir`: Path = None,
+- `s`: float = 7.5,
+- `k`: int = 0,
+- `v`: int = 3,
+- `threads`: int = 14,
+- `compressed`: bool = False,
+- `create_lookup`: int = 0,
+- `search_type`: int = 0,
+- `headers_split_mode`: int = 0,
+- `max_seqs`: int = 300,
+- `max_seq_len`: int = 65535
+
+- Note: if `tmp_dir` is None, tmp folder would be created in the parent dir of `sequence_db`
+Output of `createindex` is a `CreateIndexParser` object.
+
+Methods:
+- `to_path()`: Get the path prefix of the indexed database.
+
+
+---
+
 ## [easy_cluster](https://github.com/heispv/pymmseqs/blob/master/pymmseqs/commands/easy_cluster.py)
 Wrapper around the mmseqs easy-cluster command.
 
@@ -51,12 +84,12 @@ from pymmseqs.commands import easy_cluster
 
 cluster_result = easy_cluster(
   fasta_files="data/example.fasta",
-  cluster_prefix="output/example_clusters",
-  tmp_dir="output/tmp"
+  cluster_prefix="output/example_clusters"
 )
 ```
 
 Optional parameters:
+- `tmp_dir`: Path = None,
 - `min_seq_id`: float = 0.0,
 - `s`: float = 4.0,
 - `c`: float = 0.8,
@@ -64,6 +97,7 @@ Optional parameters:
 - `e`: float = 0.001,
 - `cluster_mode`: int = 0,
 
+- Note: if `tmp_dir` is None, tmp folder would be created in the parent dir of `cluster_prefix`
 Output of `easy_cluster` is an `EasyClusterParser` object.
 
 Methods:
@@ -85,12 +119,12 @@ from pymmseqs.commands import search
 search_result = search(
   query_db="query_db",
   target_db="target_db",
-  alignment_db="output/search_db",
-  tmp_dir="output/tmp"
+  alignment_db="output/search_db"
 )
 ```
 
 Optional parameters:
+- `tmp_dir`: Path = None,
 - `s`: float = 5.7,
 - `e`: float = 0.001,
 - `min_seq_id`: float = 0.0,
@@ -101,6 +135,7 @@ Optional parameters:
 - `threads`: int = 14,
 - `compressed`: bool = False,
 
+- Note: if `tmp_dir` is None, tmp folder would be created in the parent dir of `alignment_db`
 Output of `search` is an `SearchParser` object.
 
 Methods:
@@ -124,18 +159,19 @@ from pymmseqs.commands import easy_search
 search_result = easy_search(
   query_fasta="query.fasta",
   target_fasta_or_db="target.fasta",
-  alignment_file="output/search_results.m8",
-  tmp_dir="output/tmp"
+  alignment_file="output/search_results.m8"
 )
 ```
 
 Optional parameters:
+- `tmp_dir`: Path = None,
 - `s`: float = 5.7,
 - `e`: float = 0.001,
 - `min_seq_id`: float = 0.0,
 - `c`: float = 0.0,
 - `max_seqs`: int = 300,
 
+- Note: if `tmp_dir` is None, tmp folder would be created in the parent dir of `alignment_file`
 Output of `easy_search` is an `EasySearchParser` object.
 
 Methods:
