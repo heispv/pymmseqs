@@ -112,3 +112,8 @@ def tmp_dir_handler(
         tmp_dir.mkdir(parents=True, exist_ok=True)
 
     return tmp_dir
+
+def write_fasta(sequences, filepath):
+    with open(filepath, 'w') as f:
+        for seq_id, sequence in sequences:
+            f.write(f">{seq_id}\n{sequence}\n")
