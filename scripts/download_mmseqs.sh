@@ -5,7 +5,7 @@
 set -ex
 
 # Configuration
-MMSEQS_VERSION="16-747c6"
+MMSEQS_VERSION="17-b804f"
 TARGET_DIR="$1"  # Accept target directory as the first argument
 BASE_URL="https://github.com/soedinglab/mmseqs2/releases/download/${MMSEQS_VERSION}"
 
