@@ -85,6 +85,9 @@ def resolve_path(
     if not path.is_absolute():
         path = caller_dir / path
 
+    # Normalize the path to remove .. and . components
+    path = path.resolve()
+
     # Optionally create the parent directory
     os.makedirs(path.parent, exist_ok=True)
 
