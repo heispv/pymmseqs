@@ -19,6 +19,7 @@ def easy_search(
     min_seq_id: float = 0.0,
     c: float = 0.0,
     max_seqs: int = 300,
+    format_output: str = "query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits",
 
 ) -> EasySearchParser:
     """
@@ -85,7 +86,8 @@ def easy_search(
         min_seq_id=min_seq_id,
         c=c,
         max_seqs=max_seqs,
-        format_mode=4
+        format_mode=4,
+        format_output=format_output
     )
 
     config.run()
